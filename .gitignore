@@ -1,0 +1,13 @@
+# Per-task run workspaces created by atlas-lead in consuming projects
+.atlas/runs/
+
+# SDK orchestrator (optional component)
+sdk/node_modules/
+sdk/dist/
+*.log
+.env
+.env.*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db

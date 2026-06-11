@@ -1,0 +1,17 @@
+{
+  "name": "atlas-sdk-orchestrator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Optional headless pipeline runner for the Atlas team, built on the Cursor SDK.",
+  "type": "module",
+  "scripts": {
+    "pipeline": "tsx orchestrator.ts"
+  },
+  "dependencies": {
+    "@cursor/sdk": "^0.1.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  }
+}
