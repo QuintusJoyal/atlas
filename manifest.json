@@ -1,19 +1,9 @@
 {
   "name": "atlas",
-  "version": "0.3.0",
-  "description": "Atlas: a self-contained, shareable team of Cursor subagents covering the full SDLC plus enterprise roles.",
-  "installTargets": {
-    "agents": "~/.cursor/agents",
-    "skills": "~/.cursor/skills",
-    "rules": "~/.cursor/rules",
-    "knowledge": "~/.cursor/atlas-knowledge"
-  },
-  "preserveOnUpdate": [
-    "knowledge/lessons.md",
-    "knowledge/proposed.md",
-    "knowledge/ways-of-working.md",
-    "knowledge/usage-insights.md"
-  ],
+  "version": "0.9.1",
+  "description": "Universal AI agent team framework for software delivery.",
+  "schema": "atlas-bundle/1.0",
+  "license": "MIT",
   "agents": [
     "atlas-lead.md",
     "atlas-pm.md",
@@ -41,6 +31,7 @@
     "atlas-compliance.md"
   ],
   "skills": [
+    "atlas-lead-playbook",
     "atlas-pm-playbook",
     "atlas-ba-playbook",
     "atlas-architect-playbook",
@@ -63,15 +54,197 @@
     "atlas-ent-arch-playbook",
     "atlas-delivery-playbook",
     "atlas-consultant-playbook",
-    "atlas-compliance-playbook",
-    "atlas-lead-playbook"
+    "atlas-compliance-playbook"
   ],
   "rules": [
-    "atlas-core.mdc",
-    "atlas-lead-orchestration.mdc",
-    "team-charter.mdc",
-    "engineering-standards.mdc",
-    "handoff-protocol.mdc",
-    "writing-style.mdc"
-  ]
+    "atlas-core.md",
+    "atlas-lead-orchestration.md",
+    "team-charter.md",
+    "engineering-standards.md",
+    "handoff-protocol.md",
+    "writing-style.md"
+  ],
+  "knowledge": [
+    "lessons.md",
+    "proposed.md",
+    "ways-of-working.md",
+    "usage-insights.md",
+    "model-resilience.md",
+    "collaboration.md",
+    "core-values-charter.md",
+    "enterprise-org-model.md",
+    "atlas-framework.md",
+    "budget-template.md",
+    "retro-template.md",
+    "branding-values.md",
+    "README.md",
+    "testing-pyramid.md",
+    "bdd-gherkin.md",
+    "istqb-test-levels.md",
+    "risk-based-testing.md",
+    "test-design-techniques.md",
+    "owasp-asvs.md",
+    "owasp-top-10.md",
+    "stride-threat-modeling.md",
+    "nist-800-53-controls.md",
+    "cwe-sans-top-25.md",
+    "c4-model.md",
+    "architecture-decision-records.md",
+    "domain-driven-design.md",
+    "swebok.md",
+    "trade-off-analysis.md",
+    "google-sre-practices.md",
+    "dora-metrics.md",
+    "gitops-principles.md",
+    "itil-incident-management.md",
+    "kimball-dimensional-modeling.md",
+    "dbt-best-practices.md",
+    "apache-airflow-patterns.md",
+    "great-expectations.md",
+    "crisp-dm.md",
+    "solid-principles.md",
+    "clean-code-practices.md",
+    "test-driven-development.md",
+    "refactoring-patterns.md",
+    "conventional-commits.md",
+    "pmbok-framework.md",
+    "babok-techniques.md",
+    "scrum-guide.md",
+    "raid-log-management.md",
+    "raci-matrix.md",
+    "gdpr-requirements.md",
+    "soc2-controls.md",
+    "iso-27001-annex-a.md",
+    "nist-csf.md",
+    "nist-ai-rmf.md",
+    "owasp-llm-top-10.md",
+    "anthropic-context-engineering.md",
+    "model-cards.md",
+    "wcag-2-1-checklist.md",
+    "nielsen-heuristics.md",
+    "material-design-principles.md",
+    "aws-well-architected.md",
+    "azure-well-architected.md",
+    "finops-practices.md",
+    "cis-benchmarks.md",
+    "mece-framework.md",
+    "socratic-method.md",
+    "spin-selling.md",
+    "minto-pyramid.md",
+    "5-whys-root-cause.md",
+    "definition-of-done.md",
+    "review-checklists.md",
+    "quality-gates.md",
+    "anti-patterns.md"
+  ],
+  "workflows": [
+    "feature.md",
+    "bugfix.md",
+    "data-project.md",
+    "infra-change.md",
+    "security-audit.md",
+    "discovery.md"
+  ],
+  "workflowMeta": {
+    "stateMachine": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"],
+    "variants": {
+      "small": "Lightweight path: skip unnecessary gates, no estimation huddle, start immediately. Auto-approves final gate if DoD is met. No tracking (no team.json, no budget.md). Compressed handoff (4 sections).",
+      "full": "Standard path: all gates, estimation huddle, token-budget approval. Full tracking. User approves all gates."
+    },
+    "optimizations": {
+      "auto-approve": "Small variant final gate auto-approved when all DoD items pass. No user interaction needed.",
+      "skip-tracking": "Small variants skip team.json and budget.md. Phase states tracked in memory only.",
+      "compressed-handoff": "Small variant handoffs use 4 sections: Summary, Outputs, Issues, Next.",
+      "auto-detect-conditions": "Lead auto-detects conditions from task description. User can override.",
+      "batch-delegation": "Parallel phases delegated in a single turn. Phases run concurrently.",
+      "auto-resume": "Lead auto-resumes from last completed phase on 'continue' or 'resume'."
+    },
+    "conditions": {
+      "regulated": "Adds compliance phase and atlas-compliance role",
+      "data-changes": "Adds atlas-data-eng and atlas-dba roles",
+      "security-sensitive": "Adds security-review phase and atlas-security role",
+      "security-impacting": "Adds security-review phase and atlas-security role",
+      "technical-deep-dive": "Adds atlas-architect role"
+    },
+    "autoDetect": {
+      "security-sensitive": ["auth", "payment", "secret", "token", "credential"],
+      "regulated": ["GDPR", "SOC2", "ISO", "compliance", "regulated"],
+      "data-changes": ["pipeline", "data model", "analytics", "SQL", "query"]
+    },
+    "gates": {
+      "requirements": "Requirements → Design (full only)",
+      "design": "Design → Implementation (full only)",
+      "final": "Implementation → Delivery (auto-approve if small)",
+      "scope": "Scoping → Audit (security-audit only)",
+      "research": "Research → Proposal (discovery only)"
+    },
+    "transitions": {
+      "pending→active": "Lead delegates to role",
+      "active→gated": "Role returns handoff",
+      "gated→completed": "User approves gate (or auto-approve if small)",
+      "gated→failed": "Gate criteria not met",
+      "active→failed": "Role fails or model exhausted",
+      "any→aborted": "User or lead cancels",
+      "active→paused": "Scope change detected",
+      "paused→active": "Re-evaluation complete, resume",
+      "paused→aborted": "Re-evaluation determines restart needed"
+    }
+  },
+  "tiers": {
+    "premium": {
+      "label": "Premium",
+      "capabilities": ["deep-reasoning", "long-context", "complex-planning"],
+      "description": "For gate roles requiring careful analysis: architect, security, reviewer, enterprise architect, cloud, compliance.",
+      "modelHints": {
+        "cursor": "claude-opus-4-8-thinking-high",
+        "claude-code": "opus",
+        "opencode": "anthropic/claude-opus-4",
+        "vscode-copilot": "gpt-4o",
+        "antigravity": "gemini-3-pro",
+        "windsurf": "anthropic/claude-opus-4"
+      }
+    },
+    "standard": {
+      "label": "Standard",
+      "capabilities": ["balanced", "general-purpose"],
+      "description": "For orchestrator and everyday specialist work: lead, PM, BA, UX, QA, DevOps, maintenance, and enterprise specialists.",
+      "modelHints": {
+        "cursor": "composer-2.5",
+        "claude-code": "sonnet",
+        "opencode": "anthropic/claude-sonnet-4",
+        "vscode-copilot": "gpt-4o-mini",
+        "antigravity": "gemini-2.5-flash",
+        "windsurf": "anthropic/claude-sonnet-4"
+      }
+    },
+    "fast": {
+      "label": "Fast",
+      "capabilities": ["high-volume", "low-latency"],
+      "description": "For implementation-heavy and documentation roles: dev, docs, data analyst.",
+      "modelHints": {
+        "cursor": "composer-2",
+        "claude-code": "haiku",
+        "opencode": "anthropic/claude-haiku-3.5",
+        "vscode-copilot": "gpt-3.5-turbo",
+        "antigravity": "gemini-2.5-flash",
+        "windsurf": "anthropic/claude-haiku-3.5"
+      }
+    }
+  },
+  "delegation": {
+    "protocol": "artifact-based",
+    "requires": ["spawn-subagent", "pass-context", "collect-artifact"],
+    "maxDepth": "varies-by-ide",
+    "description": "Roles communicate through structured handoff artifacts, not shared chat. The orchestrator spawns specialists with self-contained briefs and collects their output artifacts."
+  },
+  "dataHome": {
+    "envVar": "ATLAS_DATA_DIR",
+    "default": "~/.atlas/data",
+    "description": "Central directory for run artifacts, team manifests, gates, and budgets."
+  },
+  "knowledgeHome": {
+    "envVar": "ATLAS_KNOWLEDGE_DIR",
+    "default": "~/.atlas/knowledge",
+    "description": "Shared team knowledge base. Roles read lessons before acting and append proposals after."
+  }
 }
