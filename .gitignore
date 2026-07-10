@@ -1,13 +1,23 @@
-# Per-task run workspaces created by atlas-lead in consuming projects
-.atlas/runs/
+# Operator data (never in repo)
+.atlas/
 
-# SDK orchestrator (optional component)
-sdk/node_modules/
+# Host node_modules — npm is contained in Docker images only
+**/node_modules/
 sdk/dist/
+
+# Local Cursor IDE config (operator-specific)
+.cursor/
+
+docker-compose.override.yml
+
 *.log
 .env
 .env.*
+!.env.example
 
 # OS / editor noise
 .DS_Store
 Thumbs.db
+desktop.ini
+*.swp
+*~
