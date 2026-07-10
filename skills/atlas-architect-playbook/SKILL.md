@@ -1,39 +1,36 @@
 ---
 name: atlas-architect-playbook
-description: Architecture methodology for atlas-architect: C4, ADRs, NFRs, and trade-off tables. Use when atlas-architect runs.
-disable-model-invocation: true
+description: Architecture playbook for atlas-architect.
+type: playbook
+appliesTo: [atlas-architect]
+tags: [playbook, architecture, c4, adr]
 ---
 
-# Software architect playbook
+# atlas-architect
 
-Standards: C4 model, 12-Factor App, cloud well-architected pillars, ADR conventions.
+## Route
+- system design, architecture → architect
+- ADRs, design decisions → architect
+- NFRs, scalability → architect
+- technology selection → architect
+- trade-off analysis → architect
 
-## C4 (use what helps)
-Context, Container, Component. Diagram in mermaid. Skip levels that add no clarity.
+## Knowledge
+- C4 model (Context, Container, Component) → k/c4-model
+- ADR format → k/architecture-decision-records
+- DDD patterns → k/domain-driven-design
+- Trade-off analysis → k/trade-off-analysis
+- SWEBOK knowledge areas → k/swebok
 
-## Architecture Decision Record
-```
-# ADR <n>: <title>
-Status: proposed | accepted | superseded
-Context: <forces and constraints>
-Decision: <what and why>
-Consequences: <trade-offs, follow-ups>
-```
+## Scope
+system design, C4 diagrams, ADRs, NFRs, trade-off analysis, technology selection, API contracts | NOT implementation (→ dev), UI design (→ ux), security design (→ security), data modeling (→ dba/data-eng)
 
-## Non-functional requirements
-Performance, scalability, availability, security, cost, maintainability, observability. State targets, not adjectives.
+## Delegation Examples
+### Design phase
+"New authentication service." → architect: C4 container diagram, ADR for auth strategy, NFRs (latency, availability). Gate: design gates dev implementation.
 
-## Trade-off table
-| Option | Pros | Cons | Cost | Decision |
-| --- | --- | --- | --- | --- |
+### Legacy migration
+"Migrate monolith to microservices." → architect: strangler-fig ADR, first 3 service boundaries, incremental migration plan. No greenfield abstractions.
 
-## Simplicity check
-Prefer existing components and proven patterns. Each new abstraction must justify its complexity and its future scaling benefit.
-
-## Design artifact
-Component design, ADRs, NFRs, trade-offs, risks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/design.md`. Feeds the design gate.
-
-## References
-- https://c4model.com/
-- https://12factor.net/
-- https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html
+### Trade-off evaluation
+"Choose between REST and GraphQL." → architect: decision matrix (performance, tooling, team expertise, client needs), ADR with recommendation.

@@ -1,28 +1,32 @@
 ---
 name: atlas-cloud-playbook
-description: Cloud methodology for atlas-cloud: well-architected design, landing zones, and FinOps. Use when atlas-cloud runs.
-disable-model-invocation: true
+description: Cloud playbook for atlas-cloud.
+type: playbook
+appliesTo: [atlas-cloud]
+tags: [playbook, cloud, finops]
 ---
 
-# Cloud architect playbook
+# atlas-cloud
 
-Standards: cloud well-architected pillars (operational excellence, security, reliability, performance, cost, sustainability), landing zones, FinOps Foundation principles.
+## Route
+- cloud architecture → cloud
+- landing zone design → cloud
+- cost optimization → cloud
+- service selection → cloud
+- migration planning → cloud
 
-## Design
-Start from requirements and NFRs. Choose managed services over custom where they fit. Diagram in mermaid. Justify each service.
+## Knowledge
+- AWS Well-Architected Framework → k/aws-well-architected
+- Azure Well-Architected Framework → k/azure-well-architected
+- FinOps practices → k/finops-practices
+- CIS Benchmarks → k/cis-benchmarks
 
-## Landing zone
-Account and environment structure, identity and access, network baseline, guardrails, logging.
+## Scope
+cloud architecture, landing zones, cost optimization, service selection, migration planning | NOT network topology (→ network), server hardening (→ sysinfra), deployment (→ devops), application code (→ dev)
 
-## FinOps
-Estimate cost up front. Tag resources. Prefer autoscaling and right-sizing. Flag cost risks.
+## Delegation Examples
+### Cloud migration
+"Move to cloud." → cloud + network in parallel: landing zone + VPN/Direct Connect must be planned together.
 
-## Security
-Least privilege, encryption in transit and at rest, secrets management, and audit logging.
-
-## Cloud artifact
-Architecture, landing-zone and security decisions, cost estimate, trade-offs. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/cloud.md`.
-
-## References
-- https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html
-- https://www.finops.org/framework/
+### Sovereign cloud
+"Deploy to restricted region." → cloud: evaluate compliance certifications, data residency controls, regional service availability gaps.

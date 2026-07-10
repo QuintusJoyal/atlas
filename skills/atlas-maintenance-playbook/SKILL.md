@@ -1,27 +1,35 @@
 ---
 name: atlas-maintenance-playbook
-description: Maintenance methodology for atlas-maintenance: triage, debugging, regressions, and postmortems. Use when atlas-maintenance runs.
-disable-model-invocation: true
+description: Maintenance playbook for atlas-maintenance.
+type: playbook
+appliesTo: [atlas-maintenance]
+tags: [playbook, maintenance, triage, postmortems]
 ---
 
-# Maintenance and support playbook
+# atlas-maintenance
 
-Standards: SRE incident and postmortem practice, structured triage, systematic debugging.
+## Route
+- production incidents → maintenance
+- bug triage → maintenance
+- debugging, root cause analysis → maintenance
+- blameless postmortems → maintenance
+- tech debt tracking → maintenance
 
-## Triage
-Assess impact and urgency. Reproduce. Capture environment and recent changes. Assign severity.
+## Knowledge
+- Google SRE postmortem practices → k/google-sre-practices
+- ITIL incident management → k/itil-incident-management
+- 5 Whys root cause analysis → k/5-whys-root-cause
+- Anti-patterns → k/anti-patterns
 
-## Systematic debugging
-Form a hypothesis, find the smallest reproduction, isolate the cause with evidence, fix, then add a regression test. No guessing.
+## Scope
+triage, debugging, root cause analysis, postmortems, tech debt tracking, incident response | NOT implementation (→ dev), deployment (→ devops), test writing (→ qa), architecture (→ architect)
 
-## Tech debt
-Log debt with impact and a proposed remediation. Surface recurring debt to the user via the ways-of-working queue.
+## Delegation Examples
+### Production incident
+"Service returning 500s." → maintenance: triage severity, reproduce, form hypothesis, isolate cause, fix + regression test. Postmortem with action items.
 
-## Blameless postmortem
-Timeline, impact, root cause, what went well, what to improve, action items with owners.
+### Tech debt assessment
+"Recurring build failures." → maintenance: categorize debt (code/infra/process), estimate effort, assess impact, recommend sprint for addressing.
 
-## Maintenance artifact
-Triage summary, root cause, fix or follow-up, postmortem actions. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/maintenance.md`.
-
-## References
-- https://sre.google/sre-book/postmortem-culture/
+### Postmortem
+"Incident resolved, need postmortem." → maintenance: timeline, impact, root cause, what went well/wrong, action items with owners.

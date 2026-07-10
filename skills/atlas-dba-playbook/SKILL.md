@@ -1,24 +1,31 @@
 ---
 name: atlas-dba-playbook
-description: Database methodology for atlas-dba: schema, tuning, and recovery. Use when atlas-dba runs.
-disable-model-invocation: true
+description: Database playbook for atlas-dba.
+type: playbook
+appliesTo: [atlas-dba]
+tags: [playbook, dba, schema, tuning]
 ---
 
-# Database administrator playbook
+# atlas-dba
 
-Standards: normalization, indexing and query tuning, ACID, backup with HA and DR.
+## Route
+- schema design, migrations → dba
+- query tuning, indexing → dba
+- backup, recovery, HA/DR → dba
+- data integrity → dba
+- PostgreSQL/database operations → dba
 
-## Schema
-Normalize to remove redundancy, denormalize only with a measured reason. Choose keys and constraints deliberately.
+## Knowledge
+- Kimball dimensional modeling → k/kimball-dimensional-modeling
+- PostgreSQL documentation → k/kimball-dimensional-modeling
+- Great Expectations (data quality) → k/great-expectations
 
-## Performance
-Index for the real query patterns. Read query plans. Avoid N+1. Measure before and after.
+## Scope
+schema design, query tuning, indexing, backup/recovery, HA/DR, database operations | NOT data pipelines (→ data-eng), analytics (→ data-analyst), application code (→ dev), cloud architecture (→ cloud)
 
-## Reliability
-Backup strategy with tested restore. Define RPO and RTO. Plan high availability and failover.
+## Delegation Examples
+### Real-time analytics DB
+"Set up analytics database." → dba + data-eng in parallel: schema design + ingestion pipeline must coordinate.
 
-## Database artifact
-Schema, indexing and tuning decisions, backup and recovery plan. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/dba.md`.
-
-## References
-- https://www.postgresql.org/docs/current/index.html
+### Data corruption
+"Production DB corrupted, no recent backups." → dba: assess WAL/archival recovery, point-in-time recovery feasibility, data integrity verification before remediation.

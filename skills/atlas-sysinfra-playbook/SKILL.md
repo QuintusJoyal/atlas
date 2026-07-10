@@ -1,24 +1,31 @@
 ---
 name: atlas-sysinfra-playbook
-description: Systems methodology for atlas-sysinfra: hardening, virtualization, and operations. Use when atlas-sysinfra runs.
-disable-model-invocation: true
+description: Systems playbook for atlas-sysinfra.
+type: playbook
+appliesTo: [atlas-sysinfra]
+tags: [playbook, sysinfra, hardening]
 ---
 
-# Systems and infrastructure playbook
+# atlas-sysinfra
 
-Standards: CIS Benchmarks, OS and server hardening, virtualization best practices.
+## Route
+- server hardening → sysinfra
+- virtualization, capacity planning → sysinfra
+- backup, recovery → sysinfra
+- CIS Benchmark application → sysinfra
+- operational runbooks → sysinfra
 
-## Hardening
-Apply CIS Benchmarks for the OS. Minimal install, patched, least privilege, disabled unused services, audited access.
+## Knowledge
+- CIS Benchmarks → k/cis-benchmarks
+- ITIL incident management → k/itil-incident-management
+- AWS/Azure Well-Architected → k/aws-well-architected
 
-## Virtualization and capacity
-Right-size resources. Isolate workloads. Plan capacity and failure domains.
+## Scope
+server hardening, virtualization, capacity planning, backup/recovery, operational runbooks | NOT network topology (→ network), cloud architecture (→ cloud), deployment (→ devops), application code (→ dev)
 
-## Operations
-Backups, monitoring, log shipping, and a recovery procedure. Document the runbook with atlas-docs.
+## Delegation Examples
+### Full hybrid setup
+"Hybrid environment provisioning." → sysinfra + network in parallel: server hardening + host firewalls must align with network rules.
 
-## Systems artifact
-Configuration, hardening steps, operational notes. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/sysinfra.md`.
-
-## References
-- https://www.cisecurity.org/cis-benchmarks
+### Compromised server
+"Server compromised, need forensics." → sysinfra: capture disk images, memory dumps, logs BEFORE remediation.

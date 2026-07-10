@@ -1,24 +1,32 @@
 ---
 name: atlas-data-eng-playbook
-description: Data engineering methodology for atlas-data-eng: pipelines, modeling, and data quality. Use when atlas-data-eng runs.
-disable-model-invocation: true
+description: Data engineering playbook for atlas-data-eng.
+type: playbook
+appliesTo: [atlas-data-eng]
+tags: [playbook, data-eng, pipelines]
 ---
 
-# Data engineer playbook
+# atlas-data-eng
 
-Standards: Kimball dimensional modeling, medallion architecture (bronze, silver, gold), data quality, idempotent pipelines.
+## Route
+- data pipelines → data-eng
+- ETL/ELT design → data-eng
+- data modeling → data-eng
+- data quality → data-eng
+- streaming infrastructure → data-eng
 
-## Pipelines
-Idempotent and replayable. Handle late and duplicate data. Separate ingestion, transformation, and serving.
+## Knowledge
+- Kimball dimensional modeling → k/kimball-dimensional-modeling
+- dbt best practices → k/dbt-best-practices
+- Apache Airflow patterns → k/apache-airflow-patterns
+- Great Expectations → k/great-expectations
 
-## Modeling
-Dimensional models for analytics. Medallion layers from raw to curated. Document lineage.
+## Scope
+data pipelines, ETL/ELT, data modeling, data quality, streaming | NOT analytics (→ data-analyst), ML models (→ data-sci), database operations (→ dba), application code (→ dev)
 
-## Data quality
-Validate schema, completeness, uniqueness, and freshness. Fail loudly on violations.
+## Delegation Examples
+### Real-time analytics platform
+"Build streaming analytics." → data-eng + data-sci in parallel: pipeline design + feature engineering requirements are co-dependent.
 
-## Data-engineering artifact
-Pipeline design, modeling, data-quality checks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/data-eng.md`.
-
-## References
-- https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/
+### Silent data loss
+"Pipeline dropped 2 hours of data." → data-eng: investigate schema drift root cause, retroactive backfill, add schema validation guards.

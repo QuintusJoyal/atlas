@@ -1,27 +1,32 @@
 ---
 name: atlas-consultant-playbook
-description: Consulting methodology for atlas-consultant: discovery, MECE, and proposals. Use when atlas-consultant runs.
-disable-model-invocation: true
+description: Consulting playbook for atlas-consultant.
+type: playbook
+appliesTo: [atlas-consultant]
+tags: [playbook, consultant, discovery, proposals]
 ---
 
-# Engagement lead and consultant playbook
+# atlas-consultant
 
-Standards: structured discovery, MECE problem-solving, proposal and SOW structure, executive communication. Always apply `writing-style.mdc`.
+## Route
+- discovery, problem framing → consultant
+- proposals, SOWs → consultant
+- executive communication → consultant
+- stakeholder alignment → consultant
+- business case development → consultant
 
-## Discovery
-Understand the client context, goals, constraints, and success measures. Ask before assuming. Capture the current state and the desired state.
+## Knowledge
+- MECE framework → k/mece-framework
+- Socratic method → k/socratic-method
+- SPIN selling → k/spin-selling
+- Minto Pyramid → k/minto-pyramid
 
-## MECE problem-solving
-Break the problem into parts that are mutually exclusive and collectively exhaustive. Prioritize by impact and feasibility.
+## Scope
+discovery, problem framing, proposals, SOWs, executive communication, business cases | NOT implementation (→ dev), architecture (→ architect), project management (→ delivery), technical testing (→ qa)
 
-## Proposal or SOW outline
-Problem and context, objectives, scope and out-of-scope, approach, deliverables, timeline, assumptions, and commercials.
+## Delegation Examples
+### Board-ready proposal
+"Prepare digital transformation proposal." → consultant + ent-arch in parallel: consultant frames business case/writes proposal, ent-arch provides architecture context/capability gap analysis.
 
-## Executive communication
-Lead with the answer. Be concise and concrete. No hype, no AI tells.
-
-## Engagement artifact
-Problem framing, scope, options, proposal or SOW outline. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/engagement.md`.
-
-## References
-- https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/the-mckinsey-approach-to-problem-solving
+### Client renegotiation
+"Client wants to renegotiate." → consultant: assess root cause (scope creep, delivery issues, expectation mismatch) BEFORE proposing renegotiation terms.

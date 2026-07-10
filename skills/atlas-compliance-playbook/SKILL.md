@@ -1,29 +1,34 @@
 ---
 name: atlas-compliance-playbook
-description: Compliance methodology for atlas-compliance: GDPR, SOC 2, ISO 27001, NIST CSF, and data governance. Use when atlas-compliance runs.
-disable-model-invocation: true
+description: Compliance playbook for atlas-compliance.
+type: playbook
+appliesTo: [atlas-compliance]
+tags: [playbook, compliance, gdpr, soc2, iso27001]
 ---
 
-# Compliance, GRC, and privacy playbook
+# atlas-compliance
 
-Standards: GDPR, SOC 2, ISO 27001, NIST CSF, DAMA-DMBOK data governance, privacy by design. Read only: assess and recommend.
+## Route
+- GDPR compliance → compliance
+- SOC 2 preparation → compliance
+- ISO 27001 implementation → compliance
+- NIST CSF assessment → compliance
+- data governance → compliance
+- audit preparation → compliance
 
-## Scope the obligations
-Identify which frameworks and data types apply (personal data, regulated data, customer commitments). Do not assume; confirm with the user.
+## Knowledge
+- GDPR requirements → k/gdpr-requirements
+- SOC 2 controls → k/soc2-controls
+- ISO 27001 Annex A → k/iso-27001-annex-a
+- NIST CSF → k/nist-csf
+- NIST SP 800-53 → k/nist-800-53-controls
 
-## Assess
-- Privacy by design: data minimization, purpose limitation, consent, retention, subject rights.
-- Controls: access, encryption, logging, change management, vendor risk.
-- Map controls to the applicable framework and note gaps.
+## Scope
+compliance assessment, control mapping, audit preparation, data governance, privacy review | NOT technical security (→ security), implementation (→ dev), architecture (→ architect), testing (→ qa)
 
-## Boundary with security
-atlas-security covers technical vulnerabilities. You cover regulatory and governance obligations. Coordinate on overlaps.
+## Delegation Examples
+### SOC 2 preparation
+"Prepare for SOC 2 audit." → compliance + security in parallel: compliance maps controls to Trust Services Criteria, security validates technical controls.
 
-## Compliance artifact
-Findings, required controls, gaps, and a pass or block recommendation. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/compliance.md`.
-
-## References
-- https://gdpr.eu/
-- https://www.aicpa.org/soc
-- https://www.iso.org/standard/54534.html
-- https://www.nist.gov/cyberframework
+### EU acquisition
+"Acquired EU company, need to handle their data." → compliance: assess GDPR applicability, map data transfer mechanisms, compliance roadmap with immediate + 90-day plan.

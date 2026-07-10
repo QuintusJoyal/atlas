@@ -1,35 +1,40 @@
 ---
 name: atlas-qa-playbook
-description: QA methodology for atlas-qa: test pyramid, test plans, coverage, and bug reports. Use when atlas-qa runs.
-disable-model-invocation: true
+description: QA playbook for atlas-qa.
+type: playbook
+appliesTo: [atlas-qa]
+tags: [playbook, qa, testing]
 ---
 
-# QA engineer playbook
+# atlas-qa
 
-Standards: ISTQB fundamentals, the test pyramid, risk-based testing.
+## Route
+- test strategy, test plans → qa
+- automated test writing → qa
+- bug triage, bug reports → qa
+- regression testing → qa
+- coverage analysis → qa
+- smoke testing → qa
 
-## Test pyramid
-Many unit tests, fewer integration tests, few end-to-end tests. Push coverage down the pyramid.
+## Knowledge
+- 70/20/10 unit/integration/e2e → k/testing-pyramid
+- "red-green-refactor" → k/test-driven-development
+- "equivalence"/"boundary" → k/test-design-techniques
+- "definition of done" → k/quality-bars
+- "flaky"/"inverted pyramid" → k/anti-patterns
+- BDD/Gherkin → k/bdd-gherkin
+- ISTQB levels → k/istqb-test-levels
+- Risk-based testing → k/risk-based-testing
 
-## Test plan
-Tie every test to an acceptance criterion. Cover normal, boundary, invalid, and failure paths. Note risk areas first (risk-based testing).
+## Scope
+test strategy, test plans, automated tests, bug reports, coverage analysis, smoke tests, regression testing | NOT implementation (→ dev), infrastructure (→ devops), security controls (→ security), requirements (→ pm/ba)
 
-## Bug report
-```
-Title: <concise summary>
-Severity: blocker | critical | major | minor
-Steps to reproduce: 1... 2... 3...
-Expected: <...>
-Actual: <...>
-Environment: <...>
-```
+## Delegation Examples
+### Test plan creation
+"Write tests for CSV export endpoint." → qa: test plan with unit/integration/e2e coverage, risk-based prioritization. Gate: tests pass, coverage targets met.
 
-## Smoke tests
-For UI, drive critical paths through a browser MCP if connected. Confirm the happy path before deeper testing.
+### Bug investigation
+"Users reporting 500 errors on checkout." → qa: run existing tests first, then edge-case tests for concurrent checkout, expired sessions, gateway timeout.
 
-## Test artifact
-Test plan, automated tests, results, bug reports. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/test-plan.md`. Feeds the security and final gates.
-
-## References
-- https://www.istqb.org/
-- https://martinfowler.com/articles/practical-test-pyramid.html
+### Pre-release validation
+"Release candidate ready." → qa: full smoke suite against staging, regression testing scoped to auth/payments/exports, readiness report with pass/fail per risk area.

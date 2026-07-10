@@ -1,24 +1,32 @@
 ---
 name: atlas-data-analyst-playbook
-description: Analytics methodology for atlas-data-analyst: metrics, SQL, and visualization. Use when atlas-data-analyst runs.
-disable-model-invocation: true
+description: Analytics playbook for atlas-data-analyst.
+type: playbook
+appliesTo: [atlas-data-analyst]
+tags: [playbook, data-analyst, sql, metrics]
 ---
 
-# Data and BI analyst playbook
+# atlas-data-analyst
 
-Standards: clear metric definition, SQL optimization, visualization principles (clarity over decoration).
+## Route
+- metrics definition, KPI reporting → data-analyst
+- SQL queries, data exploration → data-analyst
+- dashboard design → data-analyst
+- data validation → data-analyst
+- business insights → data-analyst
 
-## Metrics
-Define each metric precisely: numerator, denominator, grain, and filters. Agree definitions before reporting.
+## Knowledge
+- Kimball dimensional modeling → k/kimball-dimensional-modeling
+- dbt best practices → k/dbt-best-practices
+- Great Expectations → k/great-expectations
+- Minto Pyramid (structured communication) → k/minto-pyramid
 
-## SQL
-Filter early, select only needed columns, use indexes, avoid needless joins. Validate row counts and edge cases.
+## Scope
+metrics definition, SQL queries, dashboards, data validation, business insights | NOT ML models (→ data-sci), data pipelines (→ data-eng), database operations (→ dba), application code (→ dev)
 
-## Visualization
-Choose the chart for the question. Label axes and units. Remove clutter. Do not mislead with scales.
+## Delegation Examples
+### Churn analysis
+"Understand user churn." → data-analyst + data-sci in parallel: analyst defines descriptive metrics/segments, data-sci builds predictive model.
 
-## Analysis artifact
-Queries, metrics, findings, and a clear visualization or summary. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/analysis.md`.
-
-## References
-- https://www.edwardtufte.com/tufte/
+### Numbers look wrong
+"Dashboard numbers don't match." → data-analyst: validate pipeline output, cross-check against source systems, produce data quality assessment before re-running analysis.

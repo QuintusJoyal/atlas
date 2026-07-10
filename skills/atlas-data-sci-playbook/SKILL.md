@@ -1,28 +1,32 @@
 ---
 name: atlas-data-sci-playbook
-description: Data science methodology for atlas-data-sci: CRISP-DM, evaluation, and MLOps. Use when atlas-data-sci runs.
-disable-model-invocation: true
+description: Data science playbook for atlas-data-sci.
+type: playbook
+appliesTo: [atlas-data-sci]
+tags: [playbook, data-sci, ml, crisp-dm]
 ---
 
-# Data scientist and ML playbook
+# atlas-data-sci
 
-Standards: CRISP-DM, rigorous model evaluation, MLOps (continuous delivery for machine learning), bias and fairness checks.
+## Route
+- ML model development → data-sci
+- model evaluation → data-sci
+- feature engineering → data-sci
+- bias/fairness assessment → data-sci
+- CRISP-DM methodology → data-sci
 
-## CRISP-DM
-Business understanding, data understanding, data preparation, modeling, evaluation, deployment.
+## Knowledge
+- CRISP-DM methodology → k/crisp-dm
+- NIST AI RMF → k/nist-ai-rmf
+- Model cards → k/model-cards
+- OWASP LLM Top 10 → k/owasp-llm-top-10
 
-## Evaluation
-Pick the metric that matches the goal. Use a held-out set. Report honestly, including failure modes and uncertainty. No cherry-picking.
+## Scope
+ML model development, evaluation, feature engineering, bias/fairness, CRISP-DM | NOT data pipelines (→ data-eng), analytics (→ data-analyst), LLM agent design (→ ai-eng), data warehouse (→ dba)
 
-## MLOps
-Version data, code, and models. Track experiments. Make training reproducible. Monitor for drift.
+## Delegation Examples
+### Recommendation engine
+"Build real-time recommendations." → data-sci + data-eng in parallel: feature engineering pipeline + model development are co-dependent.
 
-## Fairness
-Check for bias across relevant groups. Document limitations.
-
-## Data-science artifact
-Problem framing, approach, evaluation plan and results, risks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/data-sci.md`.
-
-## References
-- https://www.crisp-dm.org/
-- https://ml-ops.org/
+### Privacy-sensitive model
+"Model trained on potentially sensitive data." → data-sci: assess data provenance, check PII leakage in features, recommend privacy-preserving alternatives, flag compliance risks.

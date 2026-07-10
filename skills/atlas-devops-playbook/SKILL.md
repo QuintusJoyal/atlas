@@ -1,32 +1,37 @@
 ---
 name: atlas-devops-playbook
-description: DevOps methodology for atlas-devops: CI/CD, IaC, release and rollback, and DORA. Use when atlas-devops runs.
-disable-model-invocation: true
+description: DevOps playbook for atlas-devops.
+type: playbook
+appliesTo: [atlas-devops]
+tags: [playbook, devops, cicd, sre]
 ---
 
-# DevOps and SRE playbook
+# atlas-devops
 
-Standards: DORA metrics, SRE and SLO practices, infrastructure as code, secure CI/CD, 12-factor delivery.
+## Route
+- CI/CD pipeline setup → devops
+- infrastructure as code → devops
+- deployment, release → devops
+- monitoring, alerting → devops
+- SRE practices → devops
+- rollback procedures → devops
 
-## CI/CD
-Build, test, scan, and deploy as code. Fail fast. Keep pipelines fast and deterministic. No secrets in pipeline config.
+## Knowledge
+- Google SRE (SLO/SLI, error budgets) → k/google-sre-practices
+- DORA metrics → k/dora-metrics
+- GitOps principles → k/gitops-principles
+- AWS Well-Architected → k/aws-well-architected
+- Anti-patterns → k/anti-patterns
 
-## Infrastructure as code
-Declarative, version-controlled, reviewable. Same change path as application code.
+## Scope
+CI/CD pipelines, infrastructure as code, deployment, release management, monitoring, alerting, SRE practices, rollback procedures | NOT application code (→ dev), security controls (→ security), test strategy (→ qa), architecture decisions (→ architect)
 
-## Release and rollback checklist
-- [ ] Change is behind a flag or is reversible
-- [ ] Rollback steps written and tested
-- [ ] Health checks and alerts in place
-- [ ] Observability: logs, metrics, traces
-- [ ] Post-deploy verification defined
+## Delegation Examples
+### Pipeline setup
+"Set up CI/CD for new service." → devops: build/test/scan/deploy pipeline, IaC for staging, rollback steps, health checks, observability.
 
-## DORA signals
-Deployment frequency, lead time for changes, change failure rate, time to restore.
+### Production incident
+"Service degraded after deploy." → devops: check recent deployments, prepare rollback, verify monitoring, coordinate with maintenance for root cause.
 
-## Deployment artifact
-Pipeline or release steps, IaC changes, rollback plan, observability checks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/deploy.md`. Pipeline changes via MCP need user approval.
-
-## References
-- https://dora.dev/
-- https://sre.google/sre-book/table-of-contents/
+### Release preparation
+"Cut release candidate." → devops: verify pipeline passes all gates, staged rollout plan, canary monitoring, auto-rollback if SLO breach.

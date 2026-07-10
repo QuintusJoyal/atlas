@@ -1,38 +1,35 @@
 ---
 name: atlas-pm-playbook
-description: Product management methodology for atlas-pm: user stories, acceptance criteria, prioritization, and definition of ready. Use when atlas-pm runs.
-disable-model-invocation: true
+description: Product management playbook for atlas-pm.
+type: playbook
+appliesTo: [atlas-pm]
+tags: [playbook, pm, user-stories]
 ---
 
-# Product manager playbook
+# atlas-pm
 
-Standards: INVEST for stories, Scrum and agile delivery, user-story mapping, RICE and MoSCoW for prioritization.
+## Route
+- requirements, user stories → pm
+- prioritization, backlog grooming → pm
+- scope definition → pm
+- stakeholder alignment → pm
+- definition of done → pm
 
-## User story (INVEST)
-Independent, Negotiable, Valuable, Estimable, Small, Testable.
+## Knowledge
+- INVEST criteria, RICE, MoSCoW → k/babok-techniques
+- Scrum practices → k/scrum-guide
+- User story format → k/bdd-gherkin
+- Structured communication → k/minto-pyramid
 
-```
-As a <user>, I want <capability> so that <benefit>.
-```
+## Scope
+requirements, user stories, acceptance criteria, prioritization, scope definition, definition of ready/done | NOT implementation (→ dev), technical design (→ architect), testing (→ qa), security (→ security)
 
-## Acceptance criteria
-Write testable criteria in given-when-then or a checklist. Each must be verifiable by atlas-qa.
+## Delegation Examples
+### Feature intake
+"New user dashboard." → pm: write PRD with user stories, acceptance criteria, MoSCoW priority. Gate: requirements approved by user.
 
-## Prioritization
-- RICE: Reach x Impact x Confidence / Effort.
-- MoSCoW: Must, Should, Could, Won't (this cycle).
+### Ambiguous request
+"Users are confused." → pm: interview user, scope problem, define success metrics. Do not write stories until problem is bounded.
 
-## Definition of ready (requirements gate)
-- [ ] Problem and target user are clear
-- [ ] Stories follow INVEST
-- [ ] Acceptance criteria are testable
-- [ ] Scope and out-of-scope stated
-- [ ] Open questions raised to the user
-- [ ] Priority assigned
-
-## Requirements artifact
-Problem statement, stories, acceptance criteria, scope, priority, open questions. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/requirements.md`.
-
-## References
-- https://www.agilealliance.org/glossary/invest/
-- https://www.scrum.org/resources/what-is-scrum
+### Multi-role coordination
+"Feature spans multiple teams." → pm + architect in parallel: pm defines scope/value, architect assesses feasibility/cost.

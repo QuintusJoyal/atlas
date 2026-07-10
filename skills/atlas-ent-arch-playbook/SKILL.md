@@ -1,28 +1,32 @@
 ---
 name: atlas-ent-arch-playbook
-description: Enterprise architecture methodology for atlas-ent-arch: TOGAF, integration patterns, and capability mapping. Use when atlas-ent-arch runs.
-disable-model-invocation: true
+description: Enterprise architecture playbook for atlas-ent-arch.
+type: playbook
+appliesTo: [atlas-ent-arch]
+tags: [playbook, ent-arch, togaf, ddd]
 ---
 
-# Enterprise and solution architect playbook
+# atlas-ent-arch
 
-Standards: TOGAF, enterprise integration patterns, domain-driven design, capability mapping.
+## Route
+- enterprise architecture → ent-arch
+- capability mapping → ent-arch
+- integration patterns → ent-arch
+- domain-driven design (strategic) → ent-arch
+- platform redesign → ent-arch
 
-## Approach
-Start from business capabilities and outcomes. Map current and target state. Identify gaps and a phased path.
+## Knowledge
+- TOGAF framework → k/pmbok-framework
+- DDD strategic patterns → k/domain-driven-design
+- Enterprise integration patterns → k/trade-off-analysis
+- Trade-off analysis → k/trade-off-analysis
 
-## Integration
-Choose integration styles deliberately (events, APIs, batch). Define contracts and ownership. Avoid point-to-point sprawl.
+## Scope
+enterprise architecture, capability mapping, integration patterns, DDD strategic design, platform strategy | NOT technical architecture (→ architect), cloud architecture (→ cloud), implementation (→ dev), data modeling (→ dba/data-eng)
 
-## Domain-driven design
-Bounded contexts, clear ownership, and a shared language. Align services to domains.
+## Delegation Examples
+### Platform redesign
+"Redesign platform for scale." → ent-arch + cloud in parallel: ent-arch defines logical architecture/integration patterns, cloud maps to infrastructure capabilities.
 
-## Capability map
-List capabilities, the systems that serve them, and gaps or overlaps.
-
-## Enterprise-architecture artifact
-Target design, integration approach, capability map, trade-offs. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/ent-arch.md`. Diagrams in mermaid.
-
-## References
-- https://www.opengroup.org/togaf
-- https://www.enterpriseintegrationpatterns.com/
+### Disconnected systems
+"12 systems that don't talk to each other." → ent-arch: current-state capability map + integration gap analysis BEFORE proposing target architecture.

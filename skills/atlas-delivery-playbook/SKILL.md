@@ -1,27 +1,33 @@
 ---
 name: atlas-delivery-playbook
-description: Delivery management methodology for atlas-delivery: planning, RAID, and stakeholders. Use when atlas-delivery runs.
-disable-model-invocation: true
+description: Delivery playbook for atlas-delivery.
+type: playbook
+appliesTo: [atlas-delivery]
+tags: [playbook, delivery, pmbok, raid]
 ---
 
-# Project and delivery manager playbook
+# atlas-delivery
 
-Standards: PMBOK and agile delivery, RAID risk management, stakeholder management.
+## Route
+- project planning, milestones → delivery
+- RAID tracking → delivery
+- stakeholder management → delivery
+- timeline, resource planning → delivery
+- status reporting → delivery
 
-## Plan
-Break work into milestones with clear outcomes and owners. Make dependencies explicit. Keep the plan light and current.
+## Knowledge
+- PMBOK framework → k/pmbok-framework
+- RAID log management → k/raid-log-management
+- RACI matrix → k/raci-matrix
+- Scrum Guide → k/scrum-guide
+- Minto Pyramid (executive communication) → k/minto-pyramid
 
-## RAID log
-Risks, Assumptions, Issues, Dependencies. Track each with an owner and a next action.
+## Scope
+project planning, milestones, RAID tracking, stakeholder management, status reporting | NOT requirements (→ pm/ba), architecture (→ architect), implementation (→ dev), testing (→ qa)
 
-| Type | Item | Impact | Owner | Action |
-| --- | --- | --- | --- | --- |
+## Delegation Examples
+### Feature launch planning
+"Plan new feature launch." → delivery + pm in parallel: delivery builds timeline/RAID, pm defines requirements/acceptance criteria.
 
-## Stakeholders
-Identify stakeholders, their interest and influence, and the cadence and format of updates. Communicate in the human-authored voice.
-
-## Delivery artifact
-Plan, milestones, RAID log, stakeholder notes. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/delivery.md`.
-
-## References
-- https://www.pmi.org/standards/pmbok
+### Behind schedule
+"We're behind and stakeholders are nervous." → delivery: recovery plan, critical path compression, stakeholder communication addressing the delay.

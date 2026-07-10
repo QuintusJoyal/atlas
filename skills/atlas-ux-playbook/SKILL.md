@@ -1,31 +1,35 @@
 ---
 name: atlas-ux-playbook
-description: UX methodology for atlas-ux: user flows, accessibility, wireframes, and design tokens. Use when atlas-ux runs.
-disable-model-invocation: true
+description: UX playbook for atlas-ux.
+type: playbook
+appliesTo: [atlas-ux]
+tags: [playbook, ux, wcag, wireframes]
 ---
 
-# UX and UI playbook
+# atlas-ux
 
-Standards: WCAG 2.2 accessibility, Nielsen's 10 usability heuristics, design-token conventions. No Figma (rate limits).
+## Route
+- user flows, wireframes → ux
+- accessibility review → ux
+- design tokens → ux
+- usability concerns → ux
+- interaction patterns → ux
 
-## User flow
-Map the steps from intent to outcome. Use mermaid for the flow.
+## Knowledge
+- WCAG 2.1 checklist → k/wcag-2-1-checklist
+- Nielsen's 10 heuristics → k/nielsen-heuristics
+- Material Design patterns → k/material-design-principles
+- BDD scenarios (for user flows) → k/bdd-gherkin
 
-## Wireframe (markdown)
-Describe layout by region (header, content, actions) with hierarchy and states (empty, loading, error, success).
+## Scope
+user flows, wireframes, accessibility, design tokens, interaction patterns, usability heuristics | NOT implementation (→ dev), backend design (→ architect), requirements (→ pm/ba), security (→ security)
 
-## Accessibility (WCAG)
-Color contrast, keyboard navigation, focus order, labels and alt text, target size, motion safety.
+## Delegation Examples
+### New feature design
+"Redesign checkout flow." → ux: user flow diagram, wireframes for each state (empty, loading, error, success), accessibility notes, design tokens.
 
-## Heuristics check
-Visibility of status, match to the real world, user control, consistency, error prevention, recognition over recall, flexibility, minimalist design, help users recover from errors, help and docs.
+### Accessibility audit
+"Check accessibility of existing UI." → ux: WCAG 2.1 AA audit, contrast checks, keyboard navigation, screen reader testing recommendations.
 
-## Design tokens (in code)
-Define color, spacing, type, and radius as named tokens so developers consume them directly.
-
-## UX artifact
-Flows, wireframes, accessibility notes, tokens. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/ux.md`.
-
-## References
-- https://www.w3.org/WAI/WCAG22/quickref/
-- https://www.nngroup.com/articles/ten-usability-heuristics/
+### Constraint-driven design
+"Complex form with conditional fields." → ux: map every visibility combination as decision table, wireframe each unique layout state, flag states with >3 visible fields.

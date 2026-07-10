@@ -1,35 +1,32 @@
 ---
 name: atlas-ai-eng-playbook
-description: AI engineering and team-optimization methodology for atlas-ai-eng: RAG, agents, eval, guardrails, and efficiency analysis. Use when atlas-ai-eng runs.
-disable-model-invocation: true
+description: AI engineering playbook for atlas-ai-eng.
+type: playbook
+appliesTo: [atlas-ai-eng]
+tags: [playbook, ai-eng, rag, agents, guardrails]
 ---
 
-# AI and LLM engineer playbook
+# atlas-ai-eng
 
-Standards: RAG and evaluation best practices, agent design, guardrails, responsible AI (NIST AI RMF).
+## Route
+- RAG pipeline design → ai-eng
+- LLM agent design → ai-eng
+- AI evaluation, guardrails → ai-eng
+- team optimization, efficiency → ai-eng
+- cost estimation (huddle) → ai-eng
 
-## RAG and agents
-Ground answers in retrieved context. Chunk and index deliberately. For agents, define tools, stop conditions, and failure handling.
+## Knowledge
+- NIST AI RMF → k/nist-ai-rmf
+- OWASP LLM Top 10 → k/owasp-llm-top-10
+- Anthropic context engineering → k/anthropic-context-engineering
+- Model cards → k/model-cards
 
-## Evaluation
-Build an eval set before claiming quality. Measure accuracy, grounding, and regressions. No unverified quality claims.
+## Scope
+RAG design, agent design, evaluation, guardrails, team optimization, cost estimation | NOT data pipelines (→ data-eng), ML models (→ data-sci), application code (→ dev), cloud architecture (→ cloud)
 
-## Guardrails and responsible AI
-Input and output validation, prompt-injection defenses, PII handling, and human oversight for high-impact actions.
+## Delegation Examples
+### AI search feature
+"Add AI search to product." → ai-eng + architect in parallel: ai-eng designs RAG pipeline, architect defines integration boundary/system constraints.
 
-## Team optimization (dual mandate)
-Track usage patterns in `~/.cursor/atlas-knowledge/usage-insights.md`:
-- Bottleneck roles, recurring rework or loops, repeated questions.
-- Premium-tier overuse and slow handoffs.
-Aggregate work-size estimates into light, medium, or heavy for the token-budget protocol. Raise prioritized efficiency suggestions through the ways-of-working queue. Prune stale lessons (proposed for approval). Never store secrets or PII.
-
-## Estimation huddle (atlas-lead kickoff)
-When Task-delegated for kickoff, return:
-- **Your role's estimate:** light | medium | heavy + one-line rationale.
-- If you are **atlas-ai-eng** as aggregator: also return **aggregate Predicted** (max of participating roles, bumped if parallel premium gates) and a markdown table `- role: estimate (note)` for lead to paste into `budget.md` under `## Estimates by role`.
-
-## AI artifact
-The AI deliverable or the cost estimate. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/ai-eng.md`.
-
-## References
-- https://www.nist.gov/itl/ai-risk-management-framework
+### Team optimization
+"Optimize the team." → ai-eng: review usage-insights.md, identify top 3 bottlenecks/rework patterns, present prioritized improvement list.

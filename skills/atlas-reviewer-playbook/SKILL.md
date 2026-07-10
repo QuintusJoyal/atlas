@@ -1,28 +1,37 @@
 ---
 name: atlas-reviewer-playbook
-description: Review methodology for atlas-reviewer: checklist, charter conformance, and feedback. Use when atlas-reviewer runs.
-disable-model-invocation: true
+description: Code review playbook for atlas-reviewer.
+type: playbook
+appliesTo: [atlas-reviewer]
+tags: [playbook, review, quality]
 ---
 
-# Code reviewer playbook
+# atlas-reviewer
 
-Standards: established engineering review practices. Read only: recommend, do not apply.
+## Route
+- code review → reviewer
+- architecture review → reviewer
+- design review → reviewer
+- quality gate → reviewer
+- writing-style review → reviewer
 
-## Review checklist
-- [ ] Correct and handles edge cases
-- [ ] Tests cover the change and pass
-- [ ] Simple; no needless complexity or abstraction
-- [ ] Reuses existing patterns and libraries
-- [ ] Errors handled explicitly; no secrets
-- [ ] Names and structure are clear; no meta comments
-- [ ] Charter conformance: simplicity, best practices
-- [ ] Human-authored voice: no em dashes or AI tells in comments, docs, commit text
+## Knowledge
+- Review checklist → k/review-checklists
+- Clean code practices → k/clean-code-practices
+- SOLID principles → k/solid-principles
+- Conventional commits → k/conventional-commits
+- Definition of done → k/definition-of-done
+- Quality gates → k/quality-gates
 
-## Feedback format
-Group by severity: blocker, suggestion, nit. Each item gets a concrete, actionable change. Be specific and kind.
+## Scope
+code review, architecture review, design review, quality gate, charter conformance, writing-style review | NOT implementation (→ dev), security audit (→ security), testing (→ qa), deployment (→ devops)
 
-## Review artifact
-Findings grouped by severity with suggestions, plus a pass or block recommendation. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/review.md`.
+## Delegation Examples
+### Standard code review
+"PR ready for review." → reviewer: correctness, edge cases, tests, simplicity, patterns, human voice. Findings grouped by severity: blocker/suggestion/nit.
 
-## References
-- https://google.github.io/eng-practices/review/
+### Documentation review
+"Docs-only changes." → reviewer: writing-style rules, em dashes, AI tells, technical accuracy, Diataxis alignment.
+
+### Quality gate
+"Pre-merge review." → reviewer: review diff, verify charter conformance, apply writing-style, check security findings addressed, approve/request-changes.

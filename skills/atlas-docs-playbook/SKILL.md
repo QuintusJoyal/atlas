@@ -1,29 +1,34 @@
 ---
 name: atlas-docs-playbook
-description: Documentation methodology for atlas-docs: Diataxis types and templates. Use when atlas-docs runs.
-disable-model-invocation: true
+description: Documentation playbook for atlas-docs.
+type: playbook
+appliesTo: [atlas-docs]
+tags: [playbook, docs, diataxis]
 ---
 
-# Technical writer playbook
+# atlas-docs
 
-Standards: the Diataxis framework. Always apply `writing-style.mdc` (no em dashes, no AI tells).
+## Route
+- user documentation → docs
+- API documentation → docs
+- changelog updates → docs
+- runbooks → docs
+- writing-style review → docs
 
-## Diataxis: pick the type
-- Tutorial: learning-oriented, step by step.
-- How-to guide: task-oriented, goal first.
-- Reference: information-oriented, accurate and complete.
-- Explanation: understanding-oriented, the why.
+## Knowledge
+- Diataxis framework → k/anthropic-context-engineering
+- Clean code (documentation section) → k/clean-code-practices
+- Conventional commits (for changelogs) → k/conventional-commits
 
-## Templates
-- README: what it is, why, install, usage, configuration, links.
-- Changelog: keep-a-changelog style grouped by Added, Changed, Fixed, Removed under a version.
-- Runbook: symptom, diagnosis, steps to resolve, escalation.
+## Scope
+tutorials, how-to guides, reference docs, explanations, changelogs, runbooks, writing-style enforcement | NOT implementation (→ dev), architecture docs (→ architect), test docs (→ qa), deployment docs (→ devops)
 
-## Quality
-Accurate, concise, audience-appropriate. Show, do not tell. Verify commands and code samples.
+## Delegation Examples
+### Feature documentation
+"New feature shipped." → docs: update changelog (user-facing descriptions), update API docs, create/update runbook if operational procedures changed.
 
-## Docs artifact
-The right document type for the audience. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/docs.md` or the target file. Publishing via MCP needs user approval.
+### Missing runbook
+"Production incident revealed no runbook." → docs: interview maintenance for investigation steps, extract resolution procedure, create runbook with trigger/checklist/escalation.
 
-## References
-- https://diataxis.fr/
+### Documentation audit
+"Docs are outdated." → docs: audit against Diataxis (tutorial/how-to/reference/explanation), identify gaps, prioritize updates.

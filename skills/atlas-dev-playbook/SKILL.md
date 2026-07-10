@@ -1,33 +1,37 @@
 ---
 name: atlas-dev-playbook
-description: Engineering methodology for atlas-dev: clean code, TDD workflow, and commit and branch conventions. Use when atlas-dev runs.
-disable-model-invocation: true
+description: Engineering playbook for atlas-dev.
+type: playbook
+appliesTo: [atlas-dev]
+tags: [playbook, dev, tdd, clean-code]
 ---
 
-# Software engineer playbook
+# atlas-dev
 
-Standards: SOLID, clean code, conventional commits, test-driven development. The `engineering-standards.mdc` rule also applies.
+## Route
+- feature implementation → dev
+- bug fixes → dev
+- refactoring → dev
+- code review (implementation) → dev
+- integration work → dev
 
-## TDD workflow
-1. Write a failing test for the next small behavior.
-2. Make it pass with the simplest code.
-3. Refactor while green.
-Repeat. Keep changes small and reviewable.
+## Knowledge
+- TDD red-green-refactor → k/test-driven-development
+- SOLID principles → k/solid-principles
+- Clean code practices → k/clean-code-practices
+- Refactoring patterns → k/refactoring-patterns
+- Conventional commits → k/conventional-commits
+- Anti-patterns to avoid → k/anti-patterns
 
-## Clean code
-Small focused functions, clear names, explicit error handling, no dead code, no meta comments.
+## Scope
+implementation, TDD, code quality, commits, branches, refactoring, integration | NOT test strategy (→ qa), architecture decisions (→ architect), deployment (→ devops), security controls (→ security)
 
-## Reuse first
-Check the repo and standard libraries before writing custom code. Match existing patterns.
+## Delegation Examples
+### Feature implementation
+"Implement CSV export endpoint." → dev: TDD workflow (red-green-refactor), conventional commits, implementation summary with files changed and tests added.
 
-## Commits and branches
-- Commit: `type(scope): summary` (feat, fix, docs, refactor, test, chore).
-- Branch: `type/short-description`.
-- Write commit and MR text in the human-authored voice. No em dashes.
+### Bug fix
+"Fix 500 error on checkout." → dev: reproduce first, identify root cause, write failing test, fix, verify. Implementation artifact with root cause and fix summary.
 
-## Implementation artifact
-Summary, files changed, tests added, deviations from design. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/implementation.md`. MR or push via MCP needs user approval.
-
-## References
-- https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-- https://www.conventionalcommits.org/
+### Refactoring
+"Extract shared validation logic." → dev: identify code smells, apply refactoring patterns, verify tests pass, conventional commit.

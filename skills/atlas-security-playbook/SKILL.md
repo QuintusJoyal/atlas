@@ -1,29 +1,37 @@
 ---
 name: atlas-security-playbook
-description: Security methodology for atlas-security: OWASP checks, STRIDE threat modeling, and secrets scanning. Use when atlas-security runs.
-disable-model-invocation: true
+description: Security playbook for atlas-security.
+type: playbook
+appliesTo: [atlas-security]
+tags: [playbook, security, owasp, stride]
 ---
 
-# Security engineer playbook
+# atlas-security
 
-Standards: OWASP ASVS and OWASP Top 10, NIST SSDF, STRIDE threat modeling. Read only: recommend fixes, do not apply them.
+## Route
+- security review, threat modeling → security
+- OWASP checks → security
+- secrets scanning → security
+- vulnerability assessment → security
+- security architecture → security
 
-## OWASP Top 10 quick checks
-Injection, broken access control, cryptographic failures, insecure design, security misconfiguration, vulnerable dependencies, auth failures, integrity failures, logging gaps, SSRF.
+## Knowledge
+- OWASP ASVS v5.0 → k/owasp-asvs
+- OWASP Top 10 (2021) → k/owasp-top-10
+- STRIDE threat modeling → k/stride-threat-modeling
+- NIST SP 800-53 → k/nist-800-53-controls
+- CWE/SANS Top 25 → k/cwe-sans-top-25
+- GDPR requirements → k/gdpr-requirements
 
-## STRIDE threat model
-Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege. For each asset and entry point, list threats and mitigations.
+## Scope
+security review, threat modeling, OWASP checks, secrets scanning, vulnerability assessment, security architecture recommendations | NOT implementation (→ dev), testing (→ qa), compliance audit (→ compliance), deployment (→ devops)
 
-## Secrets scan
-Check for hardcoded secrets, tokens, and keys in code, config, and history. Confirm secrets come from environment or a manager.
+## Delegation Examples
+### Pre-deploy security gate
+"Release ready for security review." → security: scan diff for secrets, verify threat model updated, SAST on changed files, pass/block verdict.
 
-## Input and authz
-Validate and sanitize all external input. Verify authorization on every sensitive path.
+### API endpoint security
+"New endpoint handles PII." → security: audit auth/data handling, verify rate limiting, check TLS config. Findings with severity + concrete fixes.
 
-## Security artifact
-Findings by severity (Critical, High, Medium), each with a concrete fix, plus a pass or block recommendation. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/security.md`.
-
-## References
-- https://owasp.org/www-project-application-security-verification-standard/
-- https://owasp.org/www-project-top-ten/
-- https://csrc.nist.gov/publications/detail/sp/800-218/final
+### Dependency vulnerability
+"CVE disclosed in dependency." → security: assess exploitability in our context, true/false positive determination, emergency triage report with patch recommendation.

@@ -1,24 +1,31 @@
 ---
 name: atlas-network-playbook
-description: Network methodology for atlas-network: topology, segmentation, and zero-trust. Use when atlas-network runs.
-disable-model-invocation: true
+description: Network playbook for atlas-network.
+type: playbook
+appliesTo: [atlas-network]
+tags: [playbook, network, zero-trust]
 ---
 
-# Network engineer playbook
+# atlas-network
 
-Standards: OSI model, network segmentation, zero-trust architecture (NIST 800-207), secure-by-design connectivity.
+## Route
+- network topology, segmentation → network
+- zero-trust architecture → network
+- VPN, firewall rules → network
+- DNS strategy → network
+- hybrid connectivity → network
 
-## Design
-Map topology, trust zones, and data paths. Segment by sensitivity. Default deny; allow by explicit rule. Diagram in mermaid.
+## Knowledge
+- NIST SP 800-207 zero trust → k/nist-800-53-controls
+- CIS Benchmarks → k/cis-benchmarks
+- AWS/Azure networking → k/aws-well-architected
 
-## Zero-trust principles
-Verify explicitly, least privilege, assume breach. No implicit trust by network location.
+## Scope
+network topology, segmentation, zero-trust, VPN, firewalls, DNS, monitoring | NOT server hardening (→ sysinfra), cloud architecture (→ cloud), deployment (→ devops)
 
-## Controls
-Firewalls and security groups, VPN or private connectivity, DNS strategy, monitoring and logging of flows.
+## Delegation Examples
+### Hybrid network design
+"Full hybrid environment." → network + cloud in parallel: topology/VPC design, addressing/routing alignment.
 
-## Network artifact
-Topology, segmentation, controls, risks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/network.md`.
-
-## References
-- https://csrc.nist.gov/publications/detail/sp/800-207/final
+### DNS issues
+"DNS propagation affecting production." → network: diagnose split-horizon misconfiguration, fix without downtime.
