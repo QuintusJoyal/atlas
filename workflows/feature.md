@@ -1,32 +1,121 @@
+---
+name: feature
+description: Full pipeline for net-new work. All three approval gates plus token-budget kickoff.
+type: pipeline
+triggers:
+  - net-new-work
+  - feature-request
+  - enhancement
+variants:
+  small:
+    description: Small feature, single gate. Skip design phase and requirements/design gates.
+    gates: [final]
+    skip: [requirements-gate, design-gate, design]
+    token-estimate: light
+    kickoff: lightweight
+    auto-approve: true
+    tracking: none
+  full:
+    description: Full pipeline with all gates. Standard kickoff with estimation huddle.
+    gates: [requirements, design, final]
+    token-estimate: medium-heavy
+    kickoff: standard
+    auto-approve: false
+    tracking: full
+conditions:
+  - if: regulated
+    add: [compliance]
+    add-roles: [atlas-compliance]
+  - if: data-changes
+    add-roles: [atlas-data-eng, atlas-dba]
+  - if: security-sensitive
+    add: [security-review]
+    add-roles: [atlas-security]
+state-machine: [pending, active, gated, completed, failed, paused, aborted]
+---
+
 # Workflow: feature
 
 Full pipeline for net-new work. All three approval gates plus token-budget kickoff.
 
-## Phase 0: Kickoff (before requirements)
-1. atlas-lead: pick this preset, tell the user **workflow + rationale**, create run folder, seed `team.json`.
-2. Estimation huddle via **Task**: atlas-ai-eng aggregates; participating roles each return light | medium | heavy for their phase.
-3. atlas-lead writes `budget.md` (use `budget-template.md`): **Predicted**, **Estimates by role**, workflow line.
-4. **Gate: token-budget** (user approves if heavy; light/medium may proceed with acknowledgment).
-5. Do **not** start requirements or build Tasks until kickoff artifacts exist.
+## Variant selection
 
-## Phases and roles
-1. Requirements: atlas-pm (with atlas-ba)
-2. Analysis: atlas-ba
-3. Gate 1: requirements (user)
-4. Design: atlas-architect, atlas-ux (parallel)
-5. Gate 2: design (user)
-6. Implementation: atlas-dev (atlas-docs drafts in parallel)
-7. Testing: atlas-qa
-8. Review: atlas-reviewer
-9. Security gate: atlas-security (atlas-compliance if regulated)
-10. Gate 3: final delivery (user)
-11. Deploy: atlas-devops
-12. Maintenance handoff: atlas-maintenance
+Pick variant based on scope and complexity:
+- **small:** scope is clear, <3 files changed, no new services, no security/compliance concerns
+- **full:** new service, new API, auth changes, data model changes, regulated domain, or unclear scope
 
-## Default tiers
-Premium: atlas-architect, atlas-security, atlas-reviewer, atlas-lead. Standard: atlas-pm, atlas-ba, atlas-ux, atlas-qa, atlas-devops. Fast: atlas-dev, atlas-docs.
+Tell the user which variant you picked and why.
+
+## Phase 0: Kickoff
+
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
+
+## Phases
+
+### requirements
+- **Gate:** requirements
+- **Parallel:** false
+- **Roles:** atlas-pm (standard), atlas-ba (fast)
+- **Skip-if:** variant=small
+- **Input:** user goal or feature request
+- **Output:** requirements.md (user stories, acceptance criteria, MoSCoW, scope)
+
+### design
+- **Gate:** design
+- **Parallel:** true
+- **Roles:** atlas-architect (premium), atlas-ux (standard)
+- **Skip-if:** variant=small
+- **Input:** requirements.md
+- **Output:** design.md (C4 diagrams, ADRs, NFRs, trade-offs)
+
+### implementation
+- **Gate:** null
+- **Parallel:** false
+- **Roles:** atlas-dev (fast)
+- **Input:** design.md (full) or requirements.md (small), API contracts
+- **Output:** implementation summary (files changed, approach, test results)
+
+### testing
+- **Gate:** null
+- **Parallel:** false
+- **Roles:** atlas-qa (standard)
+- **Input:** implementation summary, acceptance criteria
+- **Output:** test-plan.md (test results, coverage, bug reports)
+
+### review
+- **Gate:** final
+- **Parallel:** true
+- **Roles:** atlas-reviewer (premium), atlas-security (premium)
+- **Input:** implementation diff, test results, security findings
+- **Output:** review.md (verdict, findings by severity)
+
+### deploy
+- **Gate:** null
+- **Parallel:** false
+- **Roles:** atlas-devops (standard)
+- **Input:** merge approval, security clearance
+- **Output:** deployment artifact (pipeline, IaC, rollback plan)
 
 ## Definition of Done per gate
-- Requirements: testable acceptance criteria; scope clear; open questions closed or escalated.
-- Design: NFRs stated; key decisions recorded as ADRs; trade-offs noted.
-- Final delivery: tests pass; security and review clear or risks accepted; docs updated.
+
+### Requirements gate (full only)
+- [ ] All user stories have testable acceptance criteria
+- [ ] Non-functional requirements specified (performance, security, availability)
+- [ ] Edge cases documented
+- [ ] Scope and out-of-scope explicit
+- [ ] User has signed off
+
+### Design gate (full only)
+- [ ] Architecture approved (ADR recorded)
+- [ ] Security review complete (atlas-security sign-off)
+- [ ] API contracts defined (request/response schemas)
+- [ ] NFRs measurable (specific targets, not vague aspirations)
+- [ ] Trade-offs noted
+
+### Final delivery gate (auto-approve if small)
+- [ ] All tests pass (unit, integration, E2E as applicable)
+- [ ] Security scan clean (no critical/high findings)
+- [ ] Documentation complete (README, changelog, runbook as applicable)
+- [ ] Rollback plan exists and has been tested
+- [ ] User has signed off (full only; small auto-approves if all above pass)
