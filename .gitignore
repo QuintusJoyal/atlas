@@ -3,7 +3,6 @@
 
 # Host node_modules — npm is contained in Docker images only
 **/node_modules/
-sdk/dist/
 
 # Local Cursor IDE config (operator-specific)
 .cursor/
