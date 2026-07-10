@@ -1,3 +1,11 @@
+---
+name: retro-template
+category: template
+description: Retrospective template for post-run reviews — what went well, actions, token efficiency, and gate summary.
+audience: [atlas-lead, atlas-ai-eng, atlas-qa]
+tags: [retro, template, token-efficiency, quality]
+---
+
 # Retro: <run-id>
 
 Run: <run-id>
@@ -35,14 +43,14 @@ Structured FinOps slice for atlas-ai-eng and the next kickoff envelope.
 
 ### Wins
 
-What saved tokens or model tier without hurting quality (parallel Tasks, reuse of artifacts, right tier on role, skipped regeneration).
+What saved tokens or model tier without hurting quality (parallel delegations, reuse of artifacts, right tier on role, skipped regeneration).
 
 -
 -
 
 ### Waste
 
-Where tokens went unnecessarily (lead monologue, duplicate specs, premium on low-risk work, failed Task retries without brief fix, context bloat).
+Where tokens went unnecessarily (lead monologue, duplicate specs, premium on low-risk work, failed retries without brief fix, context bloat).
 
 -
 -

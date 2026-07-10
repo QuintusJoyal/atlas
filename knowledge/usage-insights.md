@@ -1,3 +1,11 @@
+---
+name: usage-insights
+category: reference
+description: Observed usage patterns and efficiency recommendations logged by atlas-ai-eng during high usage.
+audience: [atlas-ai-eng, atlas-lead]
+tags: [usage, patterns, efficiency, downgrades]
+---
+
 # Usage insights
 
 atlas-ai-eng logs observed usage patterns and efficiency recommendations here, especially during high usage. The user approves changes through `ways-of-working.md`. No secrets or PII.

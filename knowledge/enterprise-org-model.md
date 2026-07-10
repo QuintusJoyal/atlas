@@ -1,3 +1,11 @@
+---
+name: enterprise-org-model
+category: reference
+description: Maps enterprise governance patterns (RACI, three lines of defense, CAB) to Atlas roles, gates, and workflows.
+audience: [atlas-lead, atlas-architect, atlas-security, atlas-compliance]
+tags: [enterprise, governance, raci, three-lines-of-defense]
+---
+
 # Enterprise org model → Atlas mappings
 
 How familiar enterprise governance patterns map to Atlas roles, gates, and workflows. Atlas is not a replacement for your CAB or SOC; it gives each line of defense a named agent, artifact, and gate.
@@ -41,7 +49,7 @@ Change Advisory Board discipline maps to Atlas **approval gates** and workflow p
 
 Gate sidecars and chat approval are the CAB packet queue: review artifact, approve or reject, comment stored in `gates/<gate>.json`.
 
-## PDCA (Plan–Do–Check–Act)
+## PDCA (Plan-Do-Check-Act)
 
 | Phase | Atlas phase | Roles |
 | --- | --- | --- |
@@ -87,7 +95,7 @@ Engage when domain requires; see `ROLES.md` and lead playbook enterprise section
 
 ## References
 
-- `rules/team-charter.mdc`
+- `rules/team-charter.md`
 - `workflows/feature.md`, `workflows/bugfix.md`, `workflows/infra-change.md`
 - `skills/atlas-lead-playbook/SKILL.md`
 - `knowledge/collaboration.md`

@@ -1,10 +1,18 @@
+---
+name: atlas-framework
+category: reference
+description: Explanation of where Atlas sits among agentic SDLC frameworks, runtime architecture, and operator usage guide.
+audience: [atlas-lead, atlas-dev, atlas-architect]
+tags: [framework, architecture, operator-guide, runtime]
+---
+
 # Atlas framework
 
 Explanation of where Atlas sits among agentic SDLC frameworks, how the runtime works, and how operators use the bundle day to day.
 
 ## What Atlas is
 
-Atlas is a **self-contained Cursor subagent bundle**: 24 specialist roles, workflow presets, approval gates, and shared knowledge base. Execution stays in Cursor; governance and visibility live in chat plus run artifacts under `$ATLAS_DATA_DIR/runs/<run-id>/` (default `~/.cursor/atlas-data/runs/<run-id>/`). Project repos do not hold Atlas state. An optional SDK orchestrator ships with Control Center, not this bundle.
+Atlas is a **self-contained IDE subagent bundle**: 24 specialist roles, workflow presets, approval gates, and shared knowledge base. Execution stays in your IDE; governance and visibility live in chat plus run artifacts under `$ATLAS_DATA_DIR/runs/<run-id>/`. Project repos do not hold Atlas state. An optional SDK orchestrator ships with Control Center, not this bundle.
 
 Tagline: *One team. Every discipline. Under your command.*
 
@@ -16,19 +24,19 @@ High-level positioning. Each project evolves quickly; verify current docs before
 | --- | --- | --- | --- |
 | **BMAD** (Breakthrough Method for Agile AI-Driven Development) | Agent personas + agile ceremonies in chat | Strong product and scrum framing; story-driven flow | No bundled enterprise roles, token FinOps, or gate sidecars |
 | **GSD** (Get Shit Done) | Task lists and execution loops in IDE | Fast iteration; minimal ceremony | Light governance; no multi-gate enterprise model or specialist roster |
-| **Hermes** | Multi-agent orchestration runtime | Agent routing and tool use at scale | External runtime; Atlas stays Cursor-native with optional SDK |
-| **MetaGPT** | Role-based company simulation (PM, architect, engineer) | Clear role split; familiar SOP pattern | Python-centric; less IDE-integrated; Atlas maps roles to Cursor subagents + disk artifacts |
+| **Hermes** | Multi-agent orchestration runtime | Agent routing and tool use at scale | External runtime; Atlas stays IDE-native with optional SDK |
+| **MetaGPT** | Role-based company simulation (PM, architect, engineer) | Clear role split; familiar SOP pattern | Python-centric; less IDE-integrated; Atlas maps roles to IDE subagents + disk artifacts |
 | **Spec Kit** (GitHub) | Spec-driven: constitution, specify, plan, tasks | Excellent spec and plan artifacts in repo | No 24-role enterprise map or token budget protocol |
 
-**Atlas hybrid**: BMAD-style roles and gates + Spec Kit-style repo artifacts + Hermes-style delegation (Cursor Task). MetaGPT-like role clarity without replacing Cursor as the executor.
+**Atlas hybrid**: BMAD-style roles and gates + Spec Kit-style repo artifacts + Hermes-style delegation. MetaGPT-like role clarity without replacing the IDE as the executor.
 
 ## Runtime architecture
 
 ```
 User
   │
-  ├─ Cursor chat (/atlas-lead, /atlas-<role>)
-  │     └─ Task tool → subagents (separate model allocation)
+  ├─ IDE chat (/atlas-lead, /atlas-<role>)
+  │     └─ Delegation → subagents (separate model allocation)
   │
   └─ Central data home: $ATLAS_DATA_DIR/runs/<run-id>/
         artifacts, team.json, gates/, budget.md
@@ -36,12 +44,12 @@ User
 
 | Layer | Responsibility |
 | --- | --- |
-| **Cursor Task** | Specialist work at assigned model tier; re-delegate on quota per `model-resilience.md` |
+| **IDE Delegation** | Specialist work at assigned model tier; re-delegate on quota per `model-resilience.md` |
 | **atlas-lead** | Orchestration only: kickoff, briefs, `team.json`, gate sequencing, summaries |
 | **Run workspace** | Source of truth under `$ATLAS_DATA_DIR/runs/<run-id>/`; not in project repos |
 | **Signal Deck + SDK** ([`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center), `./sdk/`) | Optional operator UI and headless pipeline runner; not installed by the bundle |
 
-Install copies bundle to `~/.cursor/` and knowledge to `~/.cursor/atlas-knowledge/`. Repo `knowledge/` is the ship source; after install, roles read the installed copy.
+Install copies bundle to your IDE config directory and knowledge to `$ATLAS_DATA_DIR/knowledge/`. Repo `knowledge/` is the ship source; after install, roles read the installed copy.
 
 ## Operator guide
 
@@ -50,13 +58,13 @@ Install copies bundle to `~/.cursor/` and knowledge to `~/.cursor/atlas-knowledg
 1. Atlas bundle installed (`install.ps1` or `install.sh`).
 2. Fresh orchestrator chat after install or bundle update (see below).
 
-### Fresh `/atlas-lead` chat after install
+### Fresh atlas-lead chat after install
 
 After install or update:
 
-1. Open a **new** Cursor chat (do not continue a pre-install thread).
+1. Open a **new** IDE chat (do not continue a pre-install thread).
 2. Run `/atlas-lead help` to confirm agents and rules loaded.
-3. Start pipeline work from that chat so kickoff, Task delegations, and summaries use current rules.
+3. Start pipeline work from that chat so kickoff, delegations, and summaries use current rules.
 
 Stale chats may miss new orchestration rules (delegation-only lead, kickoff mandatory, model resilience).
 
@@ -68,7 +76,7 @@ Use this to accept a real Atlas run on a small feature.
 | --- | --- | --- |
 | 1 | New `/atlas-lead` chat; kick off a small feature run | Run folder created; `team.json` and `budget.md` present |
 | 2 | Complete kickoff | Workflow announced; role estimates in `budget.md` |
-| 3 | Requirements phase via Task | `requirements.md` exists; gate 1 pending user approval |
+| 3 | Requirements phase via delegation | `requirements.md` exists; gate 1 pending user approval |
 | 4 | Approve requirements in chat | `gates/requirements.json` status `approved` |
 | 5 | Design + build phases | Artifacts on disk; `team.json` shows delegation progress |
 | 6 | Final gate | User sign-off; retro notes optional |

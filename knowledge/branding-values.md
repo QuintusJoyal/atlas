@@ -1,6 +1,14 @@
+---
+name: branding-values
+category: charter
+description: Canonical branding reference for Atlas — name, tagline, core values, visual identity, and voice.
+audience: [all]
+tags: [branding, identity, values, voice]
+---
+
 # Atlas identity and values
 
-Canonical branding reference for roles and humans. Installed to `~/.cursor/atlas-knowledge/`.
+Canonical branding reference for roles and humans. Installed to `$ATLAS_DATA_DIR/knowledge/`.
 
 ## Name and tagline
 
@@ -26,7 +34,7 @@ Canonical branding reference for roles and humans. Installed to `~/.cursor/atlas
 
 ## Voice
 
-Precise, calm, evidence-led. No hype. Mirrors the no-guesswork charter and `writing-style.mdc`.
+Precise, calm, evidence-led. No hype. Mirrors the no-guesswork charter and `writing-style.md`.
 
 ## Tagline usage
 
