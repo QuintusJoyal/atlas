@@ -12,7 +12,7 @@ set -uo pipefail
 BUNDLE="$(cd "$(dirname "$0")" && pwd)"
 ERRORS=0
 err() { echo "  - $1"; ERRORS=$((ERRORS + 1)); }
-ALLOWED="claude-opus-4-8-thinking-high composer-2.5 composer-2.5-fast inherit"
+ALLOWED="claude-opus-4-8-thinking-high composer-2.5 composer-2 inherit"
 
 # 1. Agent frontmatter, name, model
 for f in "$BUNDLE"/agents/*.md; do
@@ -43,7 +43,8 @@ while IFS= read -r f; do
   for t in "${TELLS[@]}"; do
     grep -qiF "$t" "$f" && err "$(basename "$f"): contains AI tell '$t'"
   done
-done < <(find "$BUNDLE" -type f \( -name '*.md' -o -name '*.mdc' \) -not -path '*/.git/*')
+done < <(find "$BUNDLE" -type f \( -name '*.md' -o -name '*.mdc' \) \
+  -not -path '*/.git/*' -not -path '*/node_modules/*' -not -name 'writing-style.mdc')
 
 if [ "$ERRORS" -gt 0 ]; then
   echo "Validation FAILED:"

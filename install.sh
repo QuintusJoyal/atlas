@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Atlas installer (macOS/Linux).
+# Run artifacts live in ~/.cursor/atlas-data/ (ATLAS_DATA_DIR); project repos stay clean.
 # Usage:
 #   ./install.sh            # install (default)
 #   ./install.sh install
@@ -19,6 +20,7 @@ AGENTS="$CURSOR/agents"
 SKILLS="$CURSOR/skills"
 RULES="$CURSOR/rules"
 KB="$CURSOR/atlas-knowledge"
+DATA="$CURSOR/atlas-data"
 
 install_agent_name() {
   local a="$1"
@@ -49,7 +51,7 @@ if [ "$MODE" = "uninstall" ]; then
 fi
 
 echo "Atlas $MODE -> $CURSOR${UNPREFIXED:+ (unprefixed)}"
-mkdir -p "$AGENTS" "$SKILLS" "$RULES" "$KB"
+mkdir -p "$AGENTS" "$SKILLS" "$RULES" "$KB" "$DATA"
 
 for a in $AGENT_FILES; do cp -f "$BUNDLE/agents/$a" "$AGENTS/$(install_agent_name "$a")"; done
 for s in $SKILL_DIRS; do
@@ -73,3 +75,5 @@ done
 
 if [ "$UNPREFIXED" = true ]; then echo "Atlas $MODE complete. Open Cursor and try: /lead help"
 else echo "Atlas $MODE complete. Open Cursor and try: /atlas-lead help"; fi
+echo "Run artifacts: $DATA/runs/ (project repos stay clean; no .atlas/ in code trees)."
+echo "Control Center (Signal Deck) is a separate sibling repo; this script does not install it."

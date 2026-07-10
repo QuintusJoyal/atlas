@@ -2,6 +2,9 @@
 
 Fast lane for defects. One final gate. Keep it cheap.
 
+## Phase 0: Kickoff
+Lead announces **bugfix** workflow + rationale, seeds `team.json`, runs a **short** estimation huddle via Task (atlas-maintenance + atlas-dev + atlas-ai-eng), writes `budget.md` with Predicted and role estimates. Token-budget gate if heavy.
+
 ## Phases and roles
 1. Reproduce and triage: atlas-maintenance (or atlas-dev)
 2. Fix: atlas-dev

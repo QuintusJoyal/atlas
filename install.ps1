@@ -1,5 +1,6 @@
 <#
 Atlas installer (Windows PowerShell).
+Run artifacts live in ~/.cursor/atlas-data/ (ATLAS_DATA_DIR); project repos stay clean.
 Usage:
   ./install.ps1               # install (default)
   ./install.ps1 -Mode install
@@ -22,6 +23,7 @@ $agentsDst = Join-Path $cursor "agents"
 $skillsDst = Join-Path $cursor "skills"
 $rulesDst  = Join-Path $cursor "rules"
 $kbDst     = Join-Path $cursor "atlas-knowledge"
+$dataDst   = Join-Path $cursor "atlas-data"
 
 function Ensure-Dir($p) { if (-not (Test-Path $p)) { New-Item -ItemType Directory -Force -Path $p | Out-Null } }
 
@@ -51,7 +53,7 @@ if ($Mode -eq "uninstall") {
 }
 
 Write-Host "Atlas $Mode -> $cursor$(if ($Unprefixed) { ' (unprefixed)' })"
-Ensure-Dir $agentsDst; Ensure-Dir $skillsDst; Ensure-Dir $rulesDst
+Ensure-Dir $agentsDst; Ensure-Dir $skillsDst; Ensure-Dir $rulesDst; Ensure-Dir $dataDst
 
 foreach ($a in $manifest.agents) {
   $dstName = Get-InstallName $a
@@ -82,3 +84,5 @@ Get-ChildItem (Join-Path $bundle "knowledge") -File | ForEach-Object {
 }
 
 Write-Host "Atlas $Mode complete. Open Cursor and try: $(if ($Unprefixed) { '/lead help' } else { '/atlas-lead help' })"
+Write-Host "Run artifacts: $dataDst/runs/ (project repos stay clean; no .atlas/ in code trees)."
+Write-Host "Control Center (Signal Deck) is a separate sibling repo; this script does not install it."

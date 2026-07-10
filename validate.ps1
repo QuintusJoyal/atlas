@@ -11,7 +11,7 @@ Exits non-zero on any failure.
 $ErrorActionPreference = "Stop"
 $bundle = $PSScriptRoot
 $errors = New-Object System.Collections.Generic.List[string]
-$allowedModels = @("claude-opus-4-8-thinking-high", "composer-2.5", "composer-2.5-fast", "inherit")
+$allowedModels = @("claude-opus-4-8-thinking-high", "composer-2.5", "composer-2", "inherit")
 
 # 1. Agents frontmatter + model + name
 Get-ChildItem (Join-Path $bundle "agents") -Filter *.md | ForEach-Object {
@@ -45,9 +45,10 @@ Get-ChildItem (Join-Path $bundle "agents") -Filter *.md | ForEach-Object {
 # 3. Em dashes and AI tells across bundle text (writing-style.mdc lists banned phrases as examples)
 $tells = @("as an AI", "delve", "tapestry", "in conclusion", "it is important to note", "it is worth noting")
 Get-ChildItem $bundle -Recurse -Include *.md, *.mdc -File | Where-Object {
-  $_.FullName -notlike "*\.git\*" -and $_.Name -ne "writing-style.mdc"
+  $_.FullName -notlike "*\.git\*" -and $_.FullName -notlike "*\node_modules\*" -and $_.Name -ne "writing-style.mdc"
 } | ForEach-Object {
   $text = Get-Content $_.FullName -Raw
+  if ($null -eq $text) { return }
   if ($text.Contains([char]0x2014)) { $errors.Add("$($_.Name): contains an em dash") }
   foreach ($t in $tells) {
     if ($text -match [regex]::Escape($t)) { $errors.Add("$($_.Name): contains AI tell '$t'") }

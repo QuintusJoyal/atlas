@@ -12,3 +12,5 @@ atlas-lead picks a preset to right-size the pipeline. Each preset lists its phas
 | discovery | Consulting: scope and proposal, no build |
 
 Gates pause for user sign-off. A gate cannot pass until its Definition of Done is met.
+
+**Every pipeline run starts with Phase 0 kickoff:** workflow selection (lead announces + persists), estimation huddle (roles via Task, atlas-ai-eng aggregates), `budget.md` with Predicted and per-role estimates. See `knowledge/budget-template.md`.

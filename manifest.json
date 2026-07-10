@@ -1,6 +1,6 @@
 {
   "name": "atlas",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Atlas: a self-contained, shareable team of Cursor subagents covering the full SDLC plus enterprise roles.",
   "installTargets": {
     "agents": "~/.cursor/agents",
@@ -68,6 +68,7 @@
   ],
   "rules": [
     "atlas-core.mdc",
+    "atlas-lead-orchestration.mdc",
     "team-charter.mdc",
     "engineering-standards.mdc",
     "handoff-protocol.mdc",
