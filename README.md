@@ -39,7 +39,7 @@ After installing, **start a fresh `/atlas-lead` chat** so new rules and agents l
 
 ## Not included
 
-- **Control Center** (Signal Deck operator UI) is a separate repo: [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center) (or clone as a sibling directory). Install scripts here do not deploy it.
+- **Control Center** (Signal Deck operator UI and SDK runner) is a separate repo: [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center) (clone as a sibling directory). Install scripts here do not deploy it. The Cursor SDK orchestrator lives in that repo under `sdk/`, not in this bundle.
 - **No credentials** ship with this bundle. Do not commit secrets or PII into `knowledge/` or run artifacts.
 
 ## What you get
@@ -107,10 +107,6 @@ See [knowledge/README.md](knowledge/README.md) for shipped vs installed files. `
 
 Run `./validate.ps1` or `./validate.sh` to lint frontmatter, check model IDs and playbook references, and flag em dashes and AI tells.
 
-## Optional SDK orchestrator
-
-`sdk/` holds an optional script that runs the same pipeline headlessly with the Cursor SDK, for CI or automation. It is not required to use Atlas. See [sdk/README.md](sdk/README.md).
-
 ## Control Center (optional)
 
-Signal Deck operator UI lives in the sibling repo [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center). Install scripts here do not deploy it. From that repo: `cp .env.example .env` then `docker compose up -d --build` (see its `README.md` and `REFERENCE.md`). Archived product history: [docs/archive/CONTROL-CENTER-PLAN.md](docs/archive/CONTROL-CENTER-PLAN.md).
+Signal Deck operator UI and the optional SDK runner live in the sibling repo [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center). Install scripts here do not deploy them. From that repo: `cp .env.example .env` then `docker compose up -d --build` (see its `README.md`, `REFERENCE.md`, and `sdk/README.md`). Archived product history: [docs/archive/CONTROL-CENTER-PLAN.md](docs/archive/CONTROL-CENTER-PLAN.md).

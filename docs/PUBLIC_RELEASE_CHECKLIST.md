@@ -15,16 +15,17 @@ The tracked bundle is documentation and Cursor configuration, not a deployed ser
 | **Workflows** | `workflows/*.md` | Preset pipeline definitions |
 | **Install** | `install.ps1`, `install.sh`, `manifest.json` | Copies bundle into `~/.cursor/` |
 | **Validate** | `validate.ps1`, `validate.sh` | Frontmatter, model IDs, playbook refs, writing-style lint |
-| **SDK (optional)** | `sdk/*.ts`, `Dockerfile`, `README.md` | Headless orchestrator; reads `CURSOR_API_KEY` from env only |
 | **Scripts** | `scripts/merge-knowledge.ps1`, `scripts/migrate-to-atlas-data.*` | KB merge and data-dir migration helpers |
 | **Docs** | `README.md`, `ROLES.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE` | Public-facing project docs |
 | **Archive** | `docs/archive/CONTROL-CENTER-PLAN.md` | Historical product plan (see flagged items) |
 
-**Env var names only (not values):** `CURSOR_API_KEY`, `ATLAS_CC_URL`, `ATLAS_CC_TOKEN`, `ATLAS_DATA_DIR`, `ATLAS_HOME` appear in docs and SDK code as expected configuration surface.
+**Not in this bundle:** Cursor SDK orchestrator and runner (`sdk/`) live in sibling repo [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center). See that repo's `sdk/README.md` and release checklist there.
+
+**Env var names only (not values):** `CURSOR_API_KEY`, `ATLAS_CC_URL`, `ATLAS_CC_TOKEN`, `ATLAS_DATA_DIR`, `ATLAS_HOME` appear in docs and Control Center SDK code as expected configuration surface.
 
 **Placeholder paths only:** Examples use `C:/Users/you`, `~/.cursor/`, `$ATLAS_DATA_DIR`. No `qujolk` or machine-specific paths in tracked text.
 
-**`.gitignore` covers:** `.env`, `.env.*`, `.atlas/`, `**/node_modules/`, `sdk/dist/`, `.cursor/`, `docker-compose.override.yml`, logs, OS noise.
+**`.gitignore` covers:** `.env`, `.env.*`, `.atlas/`, `**/node_modules/`, `.cursor/`, `docker-compose.override.yml`, logs, OS noise.
 
 ---
 
@@ -37,11 +38,10 @@ Decisions for the repository owner before `git push` and flipping visibility to 
 | **Control Center archive** | `docs/archive/CONTROL-CENTER-PLAN.md` | Internal run IDs (`2026-06-14-control-center-sdk`), product history, GitHub org link | **Keep** as archived context (already prefixed with historical notice) **or** trim run-specific IDs. Do not delete without deciding whether public users need CC history. |
 | **Proposed lessons (run detail)** | `knowledge/proposed.md` | Multiple lines reference internal run `2026-06-14-control-center-sdk` and CC integration debugging | Safe for a transparent OSS project; **trim or redact run IDs** if you prefer a cleaner public KB. |
 | **GitHub username / org** | `README.md`, archive plan | Links to `QuintusJoyal/atlas-control-center` | Intentional if that is your public org; change links if publishing under a different account. |
-| **Untracked release files** | `git status` shows many `??` paths (`docs/`, new `knowledge/*`, full `sdk/*`, `rules/atlas-lead-orchestration.mdc`) | Incomplete release if only partial commit | Stage and review all files intended for v0.3.0 public drop. |
-| **Deleted tracked files** | `knowledge/control-center-brief.md`, `scripts/patch-playbooks.ps1` | Changelog drift if deletion not documented | Confirm deletions are intentional; update `CHANGELOG.md` if needed. |
-| **`sdk/package-lock.json`** | Untracked | Large lockfile; no secrets found | Commit for reproducible SDK builds, or document that SDK is best-effort optional. |
+| **Untracked release files** | `git status` shows many `??` paths (`docs/`, new `knowledge/*`, `rules/atlas-lead-orchestration.mdc`) | Incomplete release if only partial commit | Stage and review all files intended for the public drop. |
+| **Deleted tracked files** | `knowledge/control-center-brief.md`, `scripts/patch-playbooks.ps1`, former `sdk/` tree | Changelog drift if deletion not documented | Confirm deletions are intentional; update `CHANGELOG.md` (SDK now in `atlas-control-center`). |
+| **Sibling repos** | `atlas-control-center` (includes `sdk/`) | Separate visibility and secrets surface | Publish order: decide whether CC repo is public first; this bundle links to it for operator UI and SDK. |
 | **Git history** | `.git/` | Prior private commits may predate sanitization | Run secret scan on **full history** before first public push (commands below). Consider `git filter-repo` only if history contained real credentials. |
-| **Sibling repos** | `atlas-control-center` | Separate visibility and secrets surface | Publish order: decide whether CC repo is public first; this bundle references it. |
 
 ---
 
@@ -56,7 +56,7 @@ Never add these to the repository or to `knowledge/` / run artifacts:
 | **Override compose** | `docker-compose.override.yml` | Often contains host bind paths; gitignored |
 | **Operator run data** | `.atlas/`, `$ATLAS_DATA_DIR/runs/`, `team.json`, `budget.md`, gate sidecars | Local pipeline state; never in project repos |
 | **IDE-local config** | `.cursor/` (project-specific) | Gitignored |
-| **Dependencies** | `node_modules/`, `sdk/dist/` | Gitignored; rebuild from lockfile |
+| **Dependencies** | `node_modules/` | Gitignored; rebuild from lockfile in each repo |
 | **PII** | Real names, emails, customer IDs in lessons or proposed items | Redact before commit |
 | **Internal ticket IDs** | `PLAT-*`, `JIRA-*`, customer ticket prefixes | Use generic "user feedback" in KB (see fixes below) |
 

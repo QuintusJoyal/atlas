@@ -12,12 +12,12 @@ Control Center was **restored and extended** in run `2026-06-14-control-center-s
 | --- | --- | --- |
 | Quick start, stack summary | `atlas-control-center` repo `README.md` | - |
 | API, types, deploy, runner | `atlas-control-center` repo `REFERENCE.md` | - |
-| Host SDK runner and ingest | `sdk/README.md` (this repo) | - |
+| Host SDK runner and ingest | [`atlas-control-center/sdk/README.md`](https://github.com/QuintusJoyal/atlas-control-center/blob/main/sdk/README.md) | `sdk/README.md` (this repo, removed) |
 | Run artifacts (requirements, design, implementation) | `$ATLAS_DATA_DIR/runs/<run-id>/` (e.g. `~/.cursor/atlas-data/runs/2026-06-14-control-center-sdk/`) | `<repo>/.atlas/runs/<run-id>/` |
 | Tickets, config, jobs, activity | `$ATLAS_DATA_DIR/work-items.json`, `config.json`, `runner-jobs.json`, `activity.jsonl` | `<repo>/.atlas/work-items.json`, `config.json` |
 | Docker bind (host) | `.env`: `ATLAS_HOME`, `ATLAS_WORKSPACE_HOST`, `ATLAS_KB_HOST`; single `docker compose up` from sibling `atlas-control-center/` | `docker-compose.override.yml` with hard-coded paths |
 
-Architecture: CC stays **keyless in Docker**; Cursor SDK runs on the **host** via `sdk/runner.ts`. Disk-backed features (runs, gates, inbox, KB, tickets) work without a runner; agent paths degrade explicitly when no runner heartbeat is present.
+Architecture: CC stays **keyless in Docker**; the Cursor SDK runner ships in the same repo under `sdk/` and runs via the `sdk-runner` Compose service (`docker compose up` from `atlas-control-center/`). Disk-backed features (runs, gates, inbox, KB, tickets) work without a runner; agent paths degrade explicitly when no runner heartbeat is present.
 
 The sections below are **historical** (pre-purge archive, June 2026). They document product evolution and lessons learned; they are not the current operator guide.
 
@@ -205,7 +205,7 @@ Control Center (Express + Vite SPA, localhost:3847)
 
 **Status: archived, not maintained.**
 
-Control Center was removed from the Atlas repo in run `2026-06-13-control-center-purge-final`. The product had consumed significant iteration on UI parity (multiple greenfield rebuilds) while the core Atlas bundle (24 roles, rules, knowledge, SDK) remained the primary deliverable. Maintaining a separate full-stack app alongside the agent bundle was judged out of scope for the repo going forward.
+Control Center was removed from the Atlas repo in run `2026-06-13-control-center-purge-final`. The product had consumed significant iteration on UI parity (multiple greenfield rebuilds) while the core Atlas bundle (24 roles, rules, knowledge) remained the primary deliverable. The SDK orchestrator later moved into the Control Center repo (`sdk/`). Maintaining a separate full-stack app alongside the agent bundle was judged out of scope for the atlas repo going forward.
 
 Gates, kickoff, token budget, and team visibility still work through **Cursor chat and disk artifacts** (`$ATLAS_DATA_DIR/runs/`, `team.json`, gate sidecars; formerly `.atlas/runs/` in project repos). No local dashboard enforces runtime blockers unless someone rebuilds from this plan.
 

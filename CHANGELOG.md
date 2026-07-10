@@ -4,12 +4,16 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+### Changed
+
+- **SDK colocation:** Cursor SDK orchestrator and runner moved to [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center) (`sdk/`). This bundle ships agents, rules, skills, and knowledge only.
+
 ## [0.4.0] - 2026-06-17
 
 ### Added
 
 - **Central data home:** run state, gates, tickets, config, jobs, and activity live under `$ATLAS_DATA_DIR` (default `~/.cursor/atlas-data/`), not in project repos. Migration scripts: `scripts/migrate-to-atlas-data.ps1` and `.sh`.
-- **Control Center split:** Signal Deck UI moved to standalone sibling repo `atlas-control-center`. This bundle keeps agents, rules, skills, knowledge, and optional SDK only.
+- **Control Center split:** Signal Deck UI moved to standalone sibling repo `atlas-control-center`. This bundle keeps agents, rules, skills, and knowledge only (SDK followed in a later release; see Unreleased).
 
 ### Changed
 

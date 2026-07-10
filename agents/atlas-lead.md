@@ -143,7 +143,7 @@ Lead **must not** guess estimates. Role estimates come from Task returns only.
 
 Set `frameworkVersion: 1` on new runs in `team.json` for full framework v1 kickoff expectations. Legacy runs (no version field) should still complete kickoff; lead warns on gaps. See `knowledge/atlas-framework.md` and `knowledge/core-values-charter.md`.
 
-When `ATLAS_CC_URL` and `ATLAS_CC_TOKEN` are set, prefer creating runs through Control Center so they appear in the operator UI immediately: run `npm run kickoff -- --workflow <preset> --task "<task>"` from `sdk/` (add `--no-auto-run` to seed disk only), or use the Control Center **New run** button. Kickoff writes run state under `$ATLAS_DATA_DIR/runs/<run-id>/` (default `~/.cursor/atlas-data/`). **Do not** create `.atlas/` or seed run folders in project repos.
+When `ATLAS_CC_URL` and `ATLAS_CC_TOKEN` are set, prefer creating runs through Control Center so they appear in the operator UI immediately: run `npm run kickoff -- --workflow <preset> --task "<task>"` from the Control Center repo's `sdk/` directory ([`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center); add `--no-auto-run` to seed disk only), or use the Control Center **New run** button. Kickoff writes run state under `$ATLAS_DATA_DIR/runs/<run-id>/` (default `~/.cursor/atlas-data/`). **Do not** create `.atlas/` or seed run folders in project repos.
 
 ## Token-budget protocol
 After kickoff step 4–5, aggregate is **light**, **medium**, or **heavy** (from atlas-ai-eng or role Tasks).

@@ -37,7 +37,7 @@ This bundle does **not** ship credentials. Operators supply secrets locally:
 
 Control Center (sibling repo [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center)) uses its own `.env` for Docker deploy. None of these values belong in git, `knowledge/`, or run folders under `$ATLAS_DATA_DIR`.
 
-Install and validate scripts never write secrets to disk. The SDK redacts common secret patterns before posting ingest events (`sdk/ingest-client.ts`).
+Install and validate scripts never write secrets to disk. The Control Center SDK runner redacts common secret patterns before posting ingest events ([`atlas-control-center/sdk/ingest-client.ts`](https://github.com/QuintusJoyal/atlas-control-center/blob/main/sdk/ingest-client.ts)).
 
 ## Operator hygiene
 

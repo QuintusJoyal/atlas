@@ -13,7 +13,7 @@ Retry the affected step at the next tier down, in order:
 | composer-2 | inherit |
 | inherit | (exhausted: address the user) |
 
-IDE Task/subagent and agent frontmatter use **IDE slugs** (e.g. `composer-2.5-fast`, `claude-opus-4-8-thinking-high`). The Cursor SDK `Agent.create` API only accepts ids from `Cursor.models.list()`. The SDK runner resolves aliases at runtime via `sdk/models.ts` `resolveModel()` before every `Agent.create` call.
+IDE Task/subagent and agent frontmatter use **IDE slugs** (e.g. `composer-2.5-fast`, `claude-opus-4-8-thinking-high`). The Cursor SDK `Agent.create` API only accepts ids from `Cursor.models.list()`. The Control Center SDK runner resolves aliases at runtime via `models.ts` `resolveModel()` in [`atlas-control-center/sdk/`](https://github.com/QuintusJoyal/atlas-control-center/tree/main/sdk) before every `Agent.create` call.
 
 | IDE / frontmatter slug | SDK slug (`Agent.create`) | Tier |
 | --- | --- | --- |
@@ -24,7 +24,7 @@ IDE Task/subagent and agent frontmatter use **IDE slugs** (e.g. `composer-2.5-fa
 | composer-2 | composer-2 | fast |
 | inherit | default | inherit |
 
-Agent frontmatter and rules keep IDE slugs for documentation and IDE Task parity. Do not change every `agents/*.md` file; runtime resolution in `sdk/models.ts` is preferred.
+Agent frontmatter and rules keep IDE slugs for documentation and IDE Task parity. Do not change every `agents/*.md` file; runtime resolution in the Control Center SDK (`atlas-control-center/sdk/models.ts`) is preferred.
 
 ## Task tool: starting model and invoke cascade
 

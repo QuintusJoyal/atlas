@@ -4,7 +4,7 @@ Explanation of where Atlas sits among agentic SDLC frameworks, how the runtime w
 
 ## What Atlas is
 
-Atlas is a **self-contained Cursor subagent bundle**: 24 specialist roles, workflow presets, approval gates, shared knowledge base, and an optional SDK orchestrator. Execution stays in Cursor; governance and visibility live in chat plus run artifacts under `$ATLAS_DATA_DIR/runs/<run-id>/` (default `~/.cursor/atlas-data/runs/<run-id>/`). Project repos do not hold Atlas state.
+Atlas is a **self-contained Cursor subagent bundle**: 24 specialist roles, workflow presets, approval gates, and shared knowledge base. Execution stays in Cursor; governance and visibility live in chat plus run artifacts under `$ATLAS_DATA_DIR/runs/<run-id>/` (default `~/.cursor/atlas-data/runs/<run-id>/`). Project repos do not hold Atlas state. An optional SDK orchestrator ships with Control Center, not this bundle.
 
 Tagline: *One team. Every discipline. Under your command.*
 
@@ -39,8 +39,7 @@ User
 | **Cursor Task** | Specialist work at assigned model tier; re-delegate on quota per `model-resilience.md` |
 | **atlas-lead** | Orchestration only: kickoff, briefs, `team.json`, gate sequencing, summaries |
 | **Run workspace** | Source of truth under `$ATLAS_DATA_DIR/runs/<run-id>/`; not in project repos |
-| **SDK** (`sdk/orchestrator.ts`) | Optional headless pipeline for CI or automation |
-| **Signal Deck** (sibling `../atlas-control-center/`) | Optional operator UI; not installed by the bundle |
+| **Signal Deck + SDK** ([`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center), `./sdk/`) | Optional operator UI and headless pipeline runner; not installed by the bundle |
 
 Install copies bundle to `~/.cursor/` and knowledge to `~/.cursor/atlas-knowledge/`. Repo `knowledge/` is the ship source; after install, roles read the installed copy.
 
@@ -74,7 +73,7 @@ Use this to accept a real Atlas run on a small feature.
 | 5 | Design + build phases | Artifacts on disk; `team.json` shows delegation progress |
 | 6 | Final gate | User sign-off; retro notes optional |
 
-Optional: SDK run (`npm run pipeline`) surfaces gate prompts in the console.
+Optional: from the Control Center repo, `docker compose run --rm sdk-runner npm run pipeline -- "<task>"` surfaces gate prompts in the console (see `sdk/README.md` in [`atlas-control-center`](https://github.com/QuintusJoyal/atlas-control-center)).
 
 ### Legacy run warn-only behavior
 
@@ -116,4 +115,4 @@ See `workflows/*.md` and `skills/atlas-lead-playbook/SKILL.md`.
 - `README.md`, `ROLES.md`
 - `knowledge/model-resilience.md`
 - `knowledge/budget-template.md`
-- `sdk/README.md`
+- [`atlas-control-center/sdk/README.md`](https://github.com/QuintusJoyal/atlas-control-center/blob/main/sdk/README.md)
