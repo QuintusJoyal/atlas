@@ -21,7 +21,7 @@ Risks, Assumptions, Issues, Dependencies. Track each with an owner and a next ac
 Identify stakeholders, their interest and influence, and the cadence and format of updates. Communicate in the human-authored voice.
 
 ## Delivery artifact
-Plan, milestones, RAID log, stakeholder notes. Persist to `.atlas/runs/<run-id>/delivery.md`.
+Plan, milestones, RAID log, stakeholder notes. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/delivery.md`.
 
 ## References
 - https://www.pmi.org/standards/pmbok

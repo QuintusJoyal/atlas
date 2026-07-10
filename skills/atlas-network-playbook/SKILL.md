@@ -18,7 +18,7 @@ Verify explicitly, least privilege, assume breach. No implicit trust by network 
 Firewalls and security groups, VPN or private connectivity, DNS strategy, monitoring and logging of flows.
 
 ## Network artifact
-Topology, segmentation, controls, risks. Persist to `.atlas/runs/<run-id>/network.md`.
+Topology, segmentation, controls, risks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/network.md`.
 
 ## References
 - https://csrc.nist.gov/publications/detail/sp/800-207/final

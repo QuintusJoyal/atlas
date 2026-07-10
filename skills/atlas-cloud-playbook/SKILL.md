@@ -21,7 +21,7 @@ Estimate cost up front. Tag resources. Prefer autoscaling and right-sizing. Flag
 Least privilege, encryption in transit and at rest, secrets management, and audit logging.
 
 ## Cloud artifact
-Architecture, landing-zone and security decisions, cost estimate, trade-offs. Persist to `.atlas/runs/<run-id>/cloud.md`.
+Architecture, landing-zone and security decisions, cost estimate, trade-offs. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/cloud.md`.
 
 ## References
 - https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html

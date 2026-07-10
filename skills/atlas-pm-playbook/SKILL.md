@@ -31,7 +31,7 @@ Write testable criteria in given-when-then or a checklist. Each must be verifiab
 - [ ] Priority assigned
 
 ## Requirements artifact
-Problem statement, stories, acceptance criteria, scope, priority, open questions. Persist to `.atlas/runs/<run-id>/requirements.md`.
+Problem statement, stories, acceptance criteria, scope, priority, open questions. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/requirements.md`.
 
 ## References
 - https://www.agilealliance.org/glossary/invest/

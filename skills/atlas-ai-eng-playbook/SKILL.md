@@ -23,8 +23,13 @@ Track usage patterns in `~/.cursor/atlas-knowledge/usage-insights.md`:
 - Premium-tier overuse and slow handoffs.
 Aggregate work-size estimates into light, medium, or heavy for the token-budget protocol. Raise prioritized efficiency suggestions through the ways-of-working queue. Prune stale lessons (proposed for approval). Never store secrets or PII.
 
+## Estimation huddle (atlas-lead kickoff)
+When Task-delegated for kickoff, return:
+- **Your role's estimate:** light | medium | heavy + one-line rationale.
+- If you are **atlas-ai-eng** as aggregator: also return **aggregate Predicted** (max of participating roles, bumped if parallel premium gates) and a markdown table `- role: estimate (note)` for lead to paste into `budget.md` under `## Estimates by role`.
+
 ## AI artifact
-The AI deliverable or the cost estimate. Persist to `.atlas/runs/<run-id>/ai-eng.md`.
+The AI deliverable or the cost estimate. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/ai-eng.md`.
 
 ## References
 - https://www.nist.gov/itl/ai-risk-management-framework

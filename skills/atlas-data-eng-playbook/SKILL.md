@@ -18,7 +18,7 @@ Dimensional models for analytics. Medallion layers from raw to curated. Document
 Validate schema, completeness, uniqueness, and freshness. Fail loudly on violations.
 
 ## Data-engineering artifact
-Pipeline design, modeling, data-quality checks. Persist to `.atlas/runs/<run-id>/data-eng.md`.
+Pipeline design, modeling, data-quality checks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/data-eng.md`.
 
 ## References
 - https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/

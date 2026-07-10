@@ -21,7 +21,7 @@ Problem and context, objectives, scope and out-of-scope, approach, deliverables,
 Lead with the answer. Be concise and concrete. No hype, no AI tells.
 
 ## Engagement artifact
-Problem framing, scope, options, proposal or SOW outline. Persist to `.atlas/runs/<run-id>/engagement.md`.
+Problem framing, scope, options, proposal or SOW outline. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/engagement.md`.
 
 ## References
 - https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/the-mckinsey-approach-to-problem-solving

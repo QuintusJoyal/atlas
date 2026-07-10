@@ -18,7 +18,7 @@ Right-size resources. Isolate workloads. Plan capacity and failure domains.
 Backups, monitoring, log shipping, and a recovery procedure. Document the runbook with atlas-docs.
 
 ## Systems artifact
-Configuration, hardening steps, operational notes. Persist to `.atlas/runs/<run-id>/sysinfra.md`.
+Configuration, hardening steps, operational notes. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/sysinfra.md`.
 
 ## References
 - https://www.cisecurity.org/cis-benchmarks

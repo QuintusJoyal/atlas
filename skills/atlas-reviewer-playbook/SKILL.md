@@ -22,7 +22,7 @@ Standards: established engineering review practices. Read only: recommend, do no
 Group by severity: blocker, suggestion, nit. Each item gets a concrete, actionable change. Be specific and kind.
 
 ## Review artifact
-Findings grouped by severity with suggestions, plus a pass or block recommendation. Persist to `.atlas/runs/<run-id>/review.md`.
+Findings grouped by severity with suggestions, plus a pass or block recommendation. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/review.md`.
 
 ## References
 - https://google.github.io/eng-practices/review/

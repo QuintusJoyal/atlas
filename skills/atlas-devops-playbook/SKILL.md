@@ -25,7 +25,7 @@ Declarative, version-controlled, reviewable. Same change path as application cod
 Deployment frequency, lead time for changes, change failure rate, time to restore.
 
 ## Deployment artifact
-Pipeline or release steps, IaC changes, rollback plan, observability checks. Persist to `.atlas/runs/<run-id>/deploy.md`. Pipeline changes via MCP need user approval.
+Pipeline or release steps, IaC changes, rollback plan, observability checks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/deploy.md`. Pipeline changes via MCP need user approval.
 
 ## References
 - https://dora.dev/

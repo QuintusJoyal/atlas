@@ -21,7 +21,7 @@ Version data, code, and models. Track experiments. Make training reproducible. M
 Check for bias across relevant groups. Document limitations.
 
 ## Data-science artifact
-Problem framing, approach, evaluation plan and results, risks. Persist to `.atlas/runs/<run-id>/data-sci.md`.
+Problem framing, approach, evaluation plan and results, risks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/data-sci.md`.
 
 ## References
 - https://www.crisp-dm.org/

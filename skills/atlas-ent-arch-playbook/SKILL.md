@@ -21,7 +21,7 @@ Bounded contexts, clear ownership, and a shared language. Align services to doma
 List capabilities, the systems that serve them, and gaps or overlaps.
 
 ## Enterprise-architecture artifact
-Target design, integration approach, capability map, trade-offs. Persist to `.atlas/runs/<run-id>/ent-arch.md`. Diagrams in mermaid.
+Target design, integration approach, capability map, trade-offs. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/ent-arch.md`. Diagrams in mermaid.
 
 ## References
 - https://www.opengroup.org/togaf

@@ -31,7 +31,7 @@ Performance, scalability, availability, security, cost, maintainability, observa
 Prefer existing components and proven patterns. Each new abstraction must justify its complexity and its future scaling benefit.
 
 ## Design artifact
-Component design, ADRs, NFRs, trade-offs, risks. Persist to `.atlas/runs/<run-id>/design.md`. Feeds the design gate.
+Component design, ADRs, NFRs, trade-offs, risks. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/design.md`. Feeds the design gate.
 
 ## References
 - https://c4model.com/

@@ -21,7 +21,7 @@ Check for hardcoded secrets, tokens, and keys in code, config, and history. Conf
 Validate and sanitize all external input. Verify authorization on every sensitive path.
 
 ## Security artifact
-Findings by severity (Critical, High, Medium), each with a concrete fix, plus a pass or block recommendation. Persist to `.atlas/runs/<run-id>/security.md`.
+Findings by severity (Critical, High, Medium), each with a concrete fix, plus a pass or block recommendation. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/security.md`.
 
 ## References
 - https://owasp.org/www-project-application-security-verification-standard/

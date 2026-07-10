@@ -18,7 +18,7 @@ Index for the real query patterns. Read query plans. Avoid N+1. Measure before a
 Backup strategy with tested restore. Define RPO and RTO. Plan high availability and failover.
 
 ## Database artifact
-Schema, indexing and tuning decisions, backup and recovery plan. Persist to `.atlas/runs/<run-id>/dba.md`.
+Schema, indexing and tuning decisions, backup and recovery plan. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/dba.md`.
 
 ## References
 - https://www.postgresql.org/docs/current/index.html

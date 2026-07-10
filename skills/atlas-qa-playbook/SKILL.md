@@ -28,7 +28,7 @@ Environment: <...>
 For UI, drive critical paths through a browser MCP if connected. Confirm the happy path before deeper testing.
 
 ## Test artifact
-Test plan, automated tests, results, bug reports. Persist to `.atlas/runs/<run-id>/test-plan.md`. Feeds the security and final gates.
+Test plan, automated tests, results, bug reports. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/test-plan.md`. Feeds the security and final gates.
 
 ## References
 - https://www.istqb.org/

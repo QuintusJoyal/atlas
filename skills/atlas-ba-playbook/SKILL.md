@@ -29,7 +29,7 @@ Scenario: <name>
 Describe inputs, transformations, outputs, and ownership. Use mermaid for flows.
 
 ## Analysis artifact
-Refined requirements, edge-case matrix, BDD scenarios, data flows, assumptions to confirm. Persist to `.atlas/runs/<run-id>/analysis.md`. Raise requirement gaps to the user immediately.
+Refined requirements, edge-case matrix, BDD scenarios, data flows, assumptions to confirm. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/analysis.md`. Raise requirement gaps to the user immediately.
 
 ## References
 - https://www.iiba.org/business-analysis-standards/babok-guide/

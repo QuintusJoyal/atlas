@@ -24,7 +24,7 @@ Visibility of status, match to the real world, user control, consistency, error 
 Define color, spacing, type, and radius as named tokens so developers consume them directly.
 
 ## UX artifact
-Flows, wireframes, accessibility notes, tokens. Persist to `.atlas/runs/<run-id>/ux.md`.
+Flows, wireframes, accessibility notes, tokens. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/ux.md`.
 
 ## References
 - https://www.w3.org/WAI/WCAG22/quickref/

@@ -26,7 +26,7 @@ Check the repo and standard libraries before writing custom code. Match existing
 - Write commit and MR text in the human-authored voice. No em dashes.
 
 ## Implementation artifact
-Summary, files changed, tests added, deviations from design. Persist to `.atlas/runs/<run-id>/implementation.md`. MR or push via MCP needs user approval.
+Summary, files changed, tests added, deviations from design. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/implementation.md`. MR or push via MCP needs user approval.
 
 ## References
 - https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html

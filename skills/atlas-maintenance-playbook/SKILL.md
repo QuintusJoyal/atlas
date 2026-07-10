@@ -21,7 +21,7 @@ Log debt with impact and a proposed remediation. Surface recurring debt to the u
 Timeline, impact, root cause, what went well, what to improve, action items with owners.
 
 ## Maintenance artifact
-Triage summary, root cause, fix or follow-up, postmortem actions. Persist to `.atlas/runs/<run-id>/maintenance.md`.
+Triage summary, root cause, fix or follow-up, postmortem actions. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/maintenance.md`.
 
 ## References
 - https://sre.google/sre-book/postmortem-culture/

@@ -18,7 +18,7 @@ Filter early, select only needed columns, use indexes, avoid needless joins. Val
 Choose the chart for the question. Label axes and units. Remove clutter. Do not mislead with scales.
 
 ## Analysis artifact
-Queries, metrics, findings, and a clear visualization or summary. Persist to `.atlas/runs/<run-id>/analysis.md`.
+Queries, metrics, findings, and a clear visualization or summary. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/analysis.md`.
 
 ## References
 - https://www.edwardtufte.com/tufte/

@@ -23,7 +23,7 @@ Standards: the Diataxis framework. Always apply `writing-style.mdc` (no em dashe
 Accurate, concise, audience-appropriate. Show, do not tell. Verify commands and code samples.
 
 ## Docs artifact
-The right document type for the audience. Persist to `.atlas/runs/<run-id>/docs.md` or the target file. Publishing via MCP needs user approval.
+The right document type for the audience. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/docs.md` or the target file. Publishing via MCP needs user approval.
 
 ## References
 - https://diataxis.fr/

@@ -20,7 +20,7 @@ Identify which frameworks and data types apply (personal data, regulated data, c
 atlas-security covers technical vulnerabilities. You cover regulatory and governance obligations. Coordinate on overlaps.
 
 ## Compliance artifact
-Findings, required controls, gaps, and a pass or block recommendation. Persist to `.atlas/runs/<run-id>/compliance.md`.
+Findings, required controls, gaps, and a pass or block recommendation. Persist to `$ATLAS_DATA_DIR/runs/<run-id>/compliance.md`.
 
 ## References
 - https://gdpr.eu/
