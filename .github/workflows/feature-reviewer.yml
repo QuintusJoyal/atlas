@@ -13,6 +13,7 @@ jobs:
   review:
     if: contains(github.event.issue.labels.*.name, 'type:feature')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -24,35 +25,20 @@ jobs:
           model: opencode/big-pickle
           use_github_token: "true"
           prompt: |
-            You are Atlas's feature reviewer. Review this feature request and post a structured evaluation.
+            Review this feature request and post a concise evaluation comment.
 
             Issue: ${{ github.event.issue.title }}
-            Body: ${{ github.event.issue.body }}
 
-            Evaluate:
-            1. **Feasibility**: How feasible is this with current Atlas architecture?
-            2. **Priority**: Rate P0 (critical) to P3 (low)
-            3. **Effort**: Estimate effort (S/M/L/XL)
-            4. **Approach**: High-level implementation approach
-            5. **Risks**: Key risks and dependencies
-            6. **Atlas Impact**: How does this affect Atlas's unique capabilities?
+            Post a comment with:
+            ## Evaluation
+            | Feasibility | Priority | Effort | Risk |
+            |-------------|----------|--------|------|
+            | <H/M/L> | <P0-P3> | <S/M/L> | <L/M/H> |
 
-            Post your evaluation as a comment with this format:
+            ### Approach
+            <2-3 sentences>
 
-            ## Feature Evaluation
+            ### Key Risks
+            <1-2 bullets>
 
-            | Aspect | Assessment |
-            |--------|------------|
-            | Feasibility | <High/Medium/Low> |
-            | Priority | <P0/P1/P2/P3> |
-            | Effort | <S/M/L/XL> |
-            | Risk | <Low/Medium/High> |
-
-            ### Implementation Approach
-            <description>
-
-            ### Risks & Dependencies
-            <list>
-
-            ### Atlas Impact
-            <how this affects Atlas>
+            Keep response under 150 words.

@@ -15,6 +15,7 @@ jobs:
       startsWith(github.event.comment.body, '/develop') &&
       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -34,42 +35,12 @@ jobs:
           model: opencode/big-pickle
           use_github_token: "true"
           prompt: |
-            You are Atlas's auto developer. Implement the feature request from this issue.
+            Implement this feature: ${{ github.event.issue.title }}
 
-            Issue: ${{ github.event.issue.title }}
-            Body: ${{ github.event.issue.body }}
+            Steps:
+            1. Read the issue body for requirements
+            2. Explore relevant Atlas files
+            3. Make minimal, focused changes
+            4. Update knowledge/manifest if needed
 
-            Follow these steps:
-            1. Read the issue and understand the requirements
-            2. Explore the Atlas codebase to understand current architecture
-            3. Implement the feature following Atlas conventions
-            4. Update knowledge files if new knowledge is needed
-            5. Update manifest.json if new components are added
-            6. Update CHANGELOG.md with the change
-            7. Validate cross-references are intact
-
-            Atlas conventions:
-            - Follow existing code patterns
-            - Keep token budgets (atlas-core < 800, playbooks < 180)
-            - Maintain lite/full mode consistency
-            - Use knowledge index for cross-references
-            - Follow the handoff protocol for role exchanges
-
-      - name: Create PR
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          ISSUE_NUM=${{ github.event.issue.number }}
-          BRANCH="${{ steps.branch.outputs.branch }}"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add -A
-          git commit -m "feat: implement issue #${ISSUE_NUM}" || true
-          git push origin "$BRANCH"
-
-          gh pr create \
-            --title "Implement #${ISSUE_NUM}: ${{ github.event.issue.title }}" \
-            --body "Closes #${ISSUE_NUM}" \
-            --label "status:review"
+            Keep changes small and targeted. Follow existing patterns.
