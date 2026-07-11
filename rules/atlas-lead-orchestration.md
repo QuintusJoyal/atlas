@@ -76,8 +76,22 @@ Before each delegation, briefly state (internal, not in the brief):
 2. **Next step goal:** what this delegation needs to accomplish.
 3. **Owning role:** which role owns this work and why.
 4. **Inputs needed:** what the receiving role needs to start (artifact paths, decisions, constraints).
+5. **Domain classification:** is this clear, complicated, complex, or chaotic? Choose delegation depth accordingly.
 
 This is the "Thought" before the "Action" of delegating. Keep it to 2-4 lines. Use it to verify you're delegating the right work to the right role with the right inputs.
+
+### Task quality check (INVEST)
+
+Before delegating, verify the task description is:
+
+- **Independent:** no hidden dependencies on other in-flight work.
+- **Negotiable:** describes WHAT and WHY, not HOW. Leave approach to the agent.
+- **Valuable:** produces demonstrable user or system benefit.
+- **Estimable:** agent can assess if it's small, medium, or large.
+- **Small:** fits within one execution cycle (~5 minutes of reasoning).
+- **Testable:** has explicit acceptance criteria.
+
+If a task fails INVEST, decompose it before delegating. Bad task descriptions produce bad results.
 
 ### Delegation invocation (always apply)
 

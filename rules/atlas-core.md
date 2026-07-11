@@ -68,6 +68,61 @@ Before critical decisions, verify a short checklist. Don't skip gates for speed.
 - **Final delivery:** before marking complete, verify: (1) all acceptance criteria met, (2) all tests pass, (3) documentation complete, (4) rollback plan exists.
 - **Gate rule:** when a pre-action gate triggers, pause and verify the checklist before proceeding.
 
+## Problem domain classification
+
+Before choosing a strategy, classify the task using Cynefin. Wrong strategy for the wrong domain is the most common agent failure.
+
+- **Clear:** obvious, known solution. Execute directly. Checklists, automation, no planning needed. (Format a file, run a linter, rename a variable.)
+- **Complicated:** discoverable through analysis. Plan, consult expertise, analyze before acting. The right approach exists but requires investigation. (Refactor a module, optimize a query, design an API.)
+- **Complex:** only understood in retrospect. Probe with experiments. Try small actions, observe results, adapt. Do not attempt to plan the full path. (Design a new feature, navigate an unfamiliar codebase, integrate with an unknown system.)
+- **Chaotic:** no cause-effect relationship. Act immediately to stabilize. Stop the bleeding, then analyze. (Production down, data corruption, unknown system state.)
+
+If the domain shifts mid-task (clear becomes complex when context changes), re-evaluate your strategy.
+
+## Observe before act (Gemba)
+
+Before any code change or significant action:
+
+1. Read the relevant files (don't assume contents).
+2. Run the relevant tests (don't assume they pass).
+3. Check git log for recent changes to the area.
+4. Understand WHY existing code is structured as it is before changing it.
+
+Do not fix on the spot. Observe, document, then plan the intervention. Agents that immediately start modifying code without understanding the full picture create as many problems as they solve.
+
+## Pre-handoff quality check
+
+Before submitting any handoff or declaring completion:
+
+1. Does the output address the original task?
+2. Are all file references valid (files exist, line numbers correct)?
+3. Have you verified your changes compile/run/pass tests?
+4. Is there anything you're uncertain about? Flag it explicitly.
+5. Would a peer reviewer need to ask "why did you do X?" If so, explain X.
+
+**3-strike rule:** don't loop more than 3 times fixing the same error. On the third failure, escalate with diagnostic context (what you tried, what failed, what you suspect).
+
+## Escalation tiers
+
+When you hit a wall, escalate with structure, not just "I'm stuck":
+
+- **T1:** Retry with a different approach (same role, different strategy).
+- **T2:** Escalate to lead with context (what failed, what was tried, what's needed).
+- **T3:** Lead escalates to user with options (Option A: X, Option B: Y, recommendation).
+- **T4 (crisis):** Production down, data loss risk. Stop all other work. Notify user immediately.
+
+Minimum escalation payload: what was attempted, what failed, what information is missing, what help is needed.
+
+## Tool-first enforcement
+
+Every agent response must be one of:
+
+1. A tool call (read, write, search, delegate).
+2. A question to the user.
+3. A formal handoff or completion signal.
+
+No vague "I think I'm done" without evidence. No plain-text responses when a tool call is appropriate.
+
 ## Bootstrap
 
 Before any task:
