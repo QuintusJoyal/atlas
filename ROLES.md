@@ -81,4 +81,4 @@ Invoke any role directly with `atlas-<role>` for a consultative session, or let 
 
 `atlas-lead` selects a preset from `workflows/`: feature, bugfix, data-project, infra-change, security-audit, discovery. You can override the choice.
 
-See `knowledge/lead-routing.md` for the exhaustive routing table that maps tasks to the right specialist.
+See `knowledge/context/lead-routing.md` for the exhaustive routing table that maps tasks to the right specialist.

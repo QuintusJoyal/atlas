@@ -4,6 +4,25 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-07-12
+
+### Added
+
+- **GitHub Actions pipelines** — 5 agentic workflows driven by OpenCode AI with big-pickle model:
+  - `promote-dispatch.yml` + `promote.yml`: `/promote` command to merge dev → main
+  - `trend-investigator.yml`: weekly research on AI trends, security, devops innovations
+  - `feature-reviewer.yml`: automatic evaluation of feature requests
+  - `auto-developer.yml`: automatic PR creation from approved issues
+  - `auto-reviewer.yml`: code review using 5 adversarial critics
+- **OpenCode configuration** — `opencode.json`: configured big-pickle as default model for GitHub Actions
+- **Project management** — GitHub Projects v2 integration with built-in automations for status tracking
+- **Label system** — 12 labels: 5 status (backlog, ready, in-progress, review, done), 4 priority (P0-P3), 3 type (bug, feature, improvement)
+
+### Changed
+
+- **Pipeline architecture** — project management handled by GitHub Projects built-in automations (zero tokens), AI agent tasks handled by OpenCode workflows (tokens only for intelligence work)
+- **Branch strategy** — `main` (production, promoted manually), `dev` (integration, weekly merge), `feat/issue-XX` (feature branches)
+
 ## [0.14.0] - 2026-07-11
 
 ### Added

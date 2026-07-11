@@ -96,7 +96,7 @@ Trend: atlas-qa rework rate decreasing (0.20 → 0.15 → 0.10 over 3 runs)
 When roles consistently struggle with the same type of task:
 ```
 Gap: "No knowledge file for handling concurrent database migrations"
-Action: create knowledge/data/concurrent-migrations.md
+Action: create new knowledge file in appropriate subdirectory
 Approved: pending
 ```
 

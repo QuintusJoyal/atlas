@@ -1,0 +1,56 @@
+name: Promote Command
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  dispatch:
+    if: |
+      github.event.issue.state == 'open' &&
+      startsWith(github.event.comment.body, '/promote') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Acknowledge command
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
+
+      - name: Parse arguments
+        id: parse
+        run: |
+          BODY="${{ github.event.comment.body }}"
+          SOURCE=$(echo "$BODY" | awk '{print $2}')
+          TARGET=$(echo "$BODY" | awk '{print $3}')
+          SOURCE="${SOURCE:-dev}"
+          TARGET="${TARGET:-main}"
+          echo "source=${SOURCE}" >> "$GITHUB_OUTPUT"
+          echo "target=${TARGET}" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch promote
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROMOTE_PAT }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'promote-branch',
+              client_payload: {
+                source: '${{ steps.parse.outputs.source }}',
+                target: '${{ steps.parse.outputs.target }}',
+                issue_number: '${{ github.event.issue.number }}',
+                actor: '${{ github.actor }}'
+              }
+            });

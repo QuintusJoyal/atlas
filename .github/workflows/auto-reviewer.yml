@@ -1,0 +1,62 @@
+name: Auto Reviewer
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run OpenCode
+        uses: anomalyco/opencode/github@latest
+        with:
+          model: opencode/big-pickle
+          prompt: |
+            You are Atlas's auto reviewer. Review this PR using Atlas's adversarial critics.
+
+            PR: ${{ github.event.pull_request.title }}
+            Changes: ${{ github.event.pull_request.diff }}
+
+            Review using these 5 critics:
+
+            1. **Spec Integrity**: Does the implementation match the issue requirements?
+            2. **Oracle**: Are there tests that pass but verify wrong behavior?
+            3. **Implementation**: Code quality, patterns, regressions?
+            4. **Socratic Quality**: What hidden assumptions exist?
+            5. **Regression Gate**: Does this break existing functionality?
+
+            Check Atlas-specific concerns:
+            - Knowledge cross-references are valid
+            - Frontmatter schema is correct
+            - Token budgets are maintained
+            - Lite/full mode consistency
+            - Manifest.json is updated if needed
+
+            Post your review as a comment with this format:
+
+            ## Code Review
+
+            ### Critics Summary
+            | Critic | Verdict | Notes |
+            |--------|---------|-------|
+            | Spec Integrity | ✅/⚠️/❌ | <notes> |
+            | Oracle | ✅/⚠️/❌ | <notes> |
+            | Implementation | ✅/⚠️/❌ | <notes> |
+            | Socratic Quality | ✅/⚠️/❌ | <notes> |
+            | Regression Gate | ✅/⚠️/❌ | <notes> |
+
+            ### Atlas Compliance
+            - [ ] Knowledge cross-references valid
+            - [ ] Frontmatter schema correct
+            - [ ] Token budgets maintained
+            - [ ] Lite/full consistency
+            - [ ] Manifest updated
+
+            ### Recommendation
+            <APPROVE / REQUEST_CHANGES / COMMENT>
