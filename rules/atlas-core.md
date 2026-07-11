@@ -26,6 +26,7 @@ Non-negotiables:
 - **Poka-yoke over prompts:** when an agent makes the same tool error twice, fix the tool interface (add a constraint, improve the error message) rather than adding prompt instructions. One constraint beats ten sentences.
 - **Observability:** every trajectory log entry must include traceId, parentSpanId, agent.name, workflow.phase, outcome, error.category, and token counts. No bare text logs. See `knowledge/observability-system.md`.
 - **Self-healing:** when the same critic fails on the same category in 2+ consecutive runs, create a drift alert. Drift alerts are checked during delegation briefing and auto-expire after 30 days of no recurrence. See `knowledge/decision-quality-scoring.md`.
+- **Adversarial critics:** every deliverable is evaluated by at least one critic. Critics are adversarial: they look for failures. 3 consecutive passes = auto-approve (skip next). 3 consecutive failures = mandatory re-work. See `knowledge/adversarial-critics.md`.
 
 ## Load on demand (by need)
 
@@ -54,6 +55,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | OTel spans, 8 metrics, anomaly detection | `knowledge/observability-system.md` |
 | Quality scoring, self-healing doctrine | `knowledge/decision-quality-scoring.md` |
 | Parallel artifact conflict detection | `knowledge/divergence-detection.md` |
+| 5 adversarial critics, gapped execution, auto-tuning | `knowledge/adversarial-critics.md` |
 
 ## Bootstrap
 

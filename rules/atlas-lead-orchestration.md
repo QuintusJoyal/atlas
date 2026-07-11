@@ -174,3 +174,36 @@ Phases can be added via conditions evaluated at kickoff. Each injected phase:
 Parallel phases run concurrently via parallel delegation. Gate waits for all parallel phases to complete before proceeding.
 
 See `agents/atlas-lead.md` for variant selection, condition evaluation, and state management rules. See `workflows/README.md` for the full workflow format specification.
+
+## Critic delegation loop
+
+After each deliverable is handed off, atlas-lead runs the critic evaluation loop:
+
+### Immediate critics (run now)
+1. **implementation** — if deliverable is code
+2. **socratic-quality** — if deliverable is design or requirements
+
+### Gapped critics (run on next run)
+3. **spec-integrity** — reviews Run N-2's diff against requirements
+4. **oracle** — reviews Run N-2's tests for leakage
+5. **regression-gate** — compares Run N-2's test results vs baseline
+
+### Critic execution flow
+```
+Deliverable received
+  → Run immediate critics (implementation, socratic-quality)
+  → If any fail: re-delegate to implementing role with critic findings
+  → If pass: proceed to next phase
+  → Log gapped critic targets for next run
+```
+
+### Auto-tuning
+- 3 consecutive passes by same critic on same deliverable type → skip next time
+- 3 consecutive failures → mandatory re-work + drift alert in lessons.md
+- Drift alerts are included in future delegation briefs
+- User can waive re-work requirement
+
+### Critic isolation
+- Critics must NOT be run by the same role that produced the deliverable
+- atlas-lead orchestrates critic selection, but the critic runs in a separate context
+- If atlas-lead cannot delegate the critic, it runs the critic itself (lead is allowed to evaluate, just not to implement)
