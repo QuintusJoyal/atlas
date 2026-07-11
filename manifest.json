@@ -182,6 +182,7 @@
     "process/runtime-execution.md",
     "process/dashboard-spec.md",
     "benchmark/frontier-benchmark.md",
+    "benchmark/performance-benchmarks.md",
     "critic-prompts/spec-integrity.md",
     "critic-prompts/oracle.md",
     "critic-prompts/implementation.md",
