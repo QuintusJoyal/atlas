@@ -19,6 +19,7 @@ Reference for atlas-lead when classifying intent, matching keywords, and routing
 - Bugfix pipeline: maintenance → dev → qa → reviewer → devops
 - Parallel when independent: architect+ux, security+compliance, dev+docs
 - Sequential when dependent: pm→architect, architect→dev, dev→qa
+- Consult trust profiles before tier allocation (ARTS)
 
 ## Intent classification
 
@@ -43,6 +44,25 @@ When the user gives you a task, classify the **intent** first:
 | Network | firewall, VPN, DNS, zero-trust, VPC, subnet | atlas-network | atlas-cloud | infra-change |
 | Database | schema, index, query, backup, HA, DR, SQL | atlas-dba | atlas-data-eng | data-project |
 | Compliance | GDPR, SOC2, ISO27001, privacy, governance, HIPAA | atlas-compliance | atlas-security | security-audit |
+
+## Trust-based routing
+
+Before delegating, atlas-lead consults role trust profiles (`knowledge/role-trust-profiles.md`):
+
+### Tier allocation
+1. Look up role's trust score in `trust-profiles.json`
+2. Map score to tier: UNTRUSTED→premium, PROBATION→premium(prefer), STANDARD→standard, TRUSTED→fast
+3. Override if task is on critical path or user requests specific tier
+4. Log tier selection in team.json
+
+### Trust-informed delegation
+- **TRUSTED roles:** can handle parallel tasks, critical path, complex work
+- **STANDARD roles:** normal delegation, standard tier
+- **PROBATION roles:** assign simpler tasks, premium tier, closer monitoring
+- **UNTRUSTED roles:** only simple tasks, premium tier, mandatory review
+
+### Trust updates
+After each task, trust scores update based on quality scores and critic pass rates. See `knowledge/role-trust-profiles.md` for the full scoring formula.
 | Enterprise | integration, capability, domain, TOGAF, strategy | atlas-ent-arch | atlas-consultant | discovery |
 | Planning | timeline, milestone, RAID, risk, stakeholder | atlas-delivery | atlas-pm | feature |
 | Discovery | research, explore, spike, POC, investigate | atlas-consultant | atlas-architect | discovery |

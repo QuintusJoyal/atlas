@@ -97,6 +97,15 @@ Tell the user which variant you picked and why.
 - **Input:** merge approval, security clearance
 - **Output:** deployment artifact (pipeline, IaC, rollback plan)
 
+### retrospective
+- **Gate:** null
+- **Parallel:** false
+- **Roles:** atlas-lead (standard)
+- **Input:** trajectory.jsonl, quality scores, critic results, trust profiles
+- **Output:** proposed changes (lessons, tool improvements, role corrections)
+- **Human approval:** required for all knowledge updates
+- **See:** `knowledge/knowledge-compounding.md`
+
 ## Definition of Done per gate
 
 ### Requirements gate (full only)

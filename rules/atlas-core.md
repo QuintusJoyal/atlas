@@ -29,6 +29,8 @@ Non-negotiables:
 - **Adversarial critics:** every deliverable is evaluated by at least one critic. Critics are adversarial: they look for failures. 3 consecutive passes = auto-approve (skip next). 3 consecutive failures = mandatory re-work. See `knowledge/adversarial-critics.md`.
 - **Checkpointing:** every phase transition creates a standard checkpoint. Deep checkpoint when context > 80%. Checkpoints enable multi-day work and cross-surface recovery. See `knowledge/checkpoint-protocol.md`.
 - **DAG orchestration:** atlas-lead constructs a DAG for each workflow. Critical path gets premium tier priority. Parallel tasks must be artifact-conflict-free. Visual DAG in budget.md. See `knowledge/dag-orchestration.md`.
+- **Trust-based routing:** atlas-lead consults role trust profiles before tier allocation. TRUSTED roles get fast tier, UNTRUSTED get premium. Overrides documented in team.json. See `knowledge/role-trust-profiles.md`.
+- **Knowledge compounding:** every workflow ends with a retrospective phase. Lessons, tool improvements, and role corrections are extracted and require human approval before updating knowledge files. See `knowledge/knowledge-compounding.md`.
 
 ## Load on demand (by need)
 
@@ -61,6 +63,8 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Session persistence, 3-level fork, cross-surface | `knowledge/checkpoint-protocol.md` |
 | Checkpoint create, restore, fork, list operations | `knowledge/checkpoint-operations.md` |
 | DAG construction, critical path, parallel safety | `knowledge/dag-orchestration.md` |
+| ARTS trust scoring, tier allocation, decay | `knowledge/role-trust-profiles.md` |
+| Post-run extraction, retrospective, cross-run learning | `knowledge/knowledge-compounding.md` |
 
 ## Bootstrap
 
