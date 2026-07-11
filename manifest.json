@@ -180,6 +180,7 @@
     "process/knowledge-compounding.md",
     "process/self-assessment-protocol.md",
     "process/runtime-execution.md",
+    "process/dashboard-spec.md",
     "benchmark/frontier-benchmark.md",
     "critic-prompts/spec-integrity.md",
     "critic-prompts/oracle.md",
