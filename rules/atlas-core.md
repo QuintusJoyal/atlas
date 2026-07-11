@@ -65,6 +65,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | DAG construction, critical path, parallel safety | `knowledge/process/dag-orchestration.md` |
 | ARTS trust scoring, tier allocation, decay | `knowledge/process/role-trust-profiles.md` |
 | Post-run extraction, retrospective, cross-run learning | `knowledge/process/knowledge-compounding.md` |
+| Tool API, error recovery, context passing | `knowledge/process/runtime-execution.md` |
 
 ## Bootstrap
 

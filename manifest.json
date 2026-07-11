@@ -147,7 +147,7 @@
     "infra/api-design.md",
     "infra/event-driven-architecture.md",
     "infra/developer-experience.md",
-    "infra/observability-tooling.md",
+    "process/observability-tooling.md",
     "enterprise/togaf-framework.md",
     "enterprise/scrum-guide.md",
     "enterprise/raid-log-management.md",
@@ -178,7 +178,13 @@
     "process/role-trust-profiles.md",
     "process/knowledge-compounding.md",
     "process/self-assessment-protocol.md",
-    "benchmark/frontier-benchmark.md"
+    "process/runtime-execution.md",
+    "benchmark/frontier-benchmark.md",
+    "critic-prompts/spec-integrity.md",
+    "critic-prompts/oracle.md",
+    "critic-prompts/implementation.md",
+    "critic-prompts/socratic-quality.md",
+    "critic-prompts/regression-gate.md"
   ],
   "workflows": [
     "feature.md",
