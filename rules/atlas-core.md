@@ -66,6 +66,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | ARTS trust scoring, tier allocation, decay | `knowledge/process/role-trust-profiles.md` |
 | Post-run extraction, retrospective, cross-run learning | `knowledge/process/knowledge-compounding.md` |
 | Tool API, error recovery, context passing | `knowledge/process/runtime-execution.md` |
+| File discovery, search strategies, context budget | `knowledge/context/codebase-context.md` |
 
 ## Bootstrap
 

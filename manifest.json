@@ -164,6 +164,7 @@
     "context/memory-hierarchy.md",
     "context/prompt-cache-strategy.md",
     "context/lead-routing.md",
+    "context/codebase-context.md",
     "process/tool-registry.md",
     "process/trajectory-logging.md",
     "process/aci-enforcement.md",
