@@ -24,6 +24,8 @@ Non-negotiables:
 - **Semantic output:** return human-readable identifiers in tool outputs, not raw UUIDs or internal codes. Technical IDs are secondary fields only. See `knowledge/aci-enforcement.md`.
 - **Tool provenance:** when delegating or handing off, include what tools were called, what files were touched, and what errors occurred. The receiving role must not re-derive this from raw context.
 - **Poka-yoke over prompts:** when an agent makes the same tool error twice, fix the tool interface (add a constraint, improve the error message) rather than adding prompt instructions. One constraint beats ten sentences.
+- **Observability:** every trajectory log entry must include traceId, parentSpanId, agent.name, workflow.phase, outcome, error.category, and token counts. No bare text logs. See `knowledge/observability-system.md`.
+- **Self-healing:** when the same critic fails on the same category in 2+ consecutive runs, create a drift alert. Drift alerts are checked during delegation briefing and auto-expire after 30 days of no recurrence. See `knowledge/decision-quality-scoring.md`.
 
 ## Load on demand (by need)
 
@@ -49,6 +51,9 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Routing and delegation | `knowledge/lead-routing.md` |
 | ACI rules, error protocol, output standards | `knowledge/aci-enforcement.md` |
 | Phase-aware tool scoping | `knowledge/role-tool-scoping.md` |
+| OTel spans, 8 metrics, anomaly detection | `knowledge/observability-system.md` |
+| Quality scoring, self-healing doctrine | `knowledge/decision-quality-scoring.md` |
+| Parallel artifact conflict detection | `knowledge/divergence-detection.md` |
 
 ## Bootstrap
 

@@ -35,3 +35,11 @@ Format:
 
 ## Data home
 - Atlas global state (runs, tickets, config, jobs, activity) lives under `ATLAS_DATA_DIR` (default `$ATLAS_DATA_DIR`), not repo `.atlas/`; `meta.workspace` ties each run to a code checkout. (source: run 2026-06-14-central-data-home design.md, approved: 2026-06-17)
+
+## Observability
+- Trajectory logs use OTel GenAI semantic conventions. Every span includes traceId (run-id), parentSpanId, agent.name, workflow.phase, outcome, error.category, and token counts. (source: observability-system.md, approved: 2026-07-11)
+- Eight multi-agent metrics (IAHQS, DAS, EJR, GYR, REI, CPS, PER, MTAS) are tracked per run. Composite quality score weighted toward handoff quality (0.25). (source: decision-quality-scoring.md, approved: 2026-07-11)
+
+## Self-healing
+- When a critic fails on the same category in 2+ consecutive runs, a drift alert is created in lessons.md. The alert is checked during delegation briefing and auto-expires after 30 days of no recurrence. (source: observability-system.md, approved: 2026-07-11)
+- Quality score thresholds: composite < 0.70 triggers mandatory review, < 0.80 triggers role retraining, < 0.90 triggers process audit. (source: decision-quality-scoring.md, approved: 2026-07-11)

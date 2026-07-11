@@ -34,4 +34,36 @@ Log automatic downgrades so premium-tier pressure is visible over time. See `mod
 - downgrade: <role> <from-tier> to <to-tier>, reason <quota|rate-limit|unavailable|blocked>, run <run-id>, date <when>
 ```
 
-(empty)
+## OTel spans
+Structured spans from trajectory.jsonl. Upgraded to OpenTelemetry GenAI semantic conventions in v0.13.0. See `observability-system.md` for the full span schema and 8 multi-agent metrics.
+
+```
+- traceId: <run-id>
+  spanId: <span>
+  parentSpanId: <parent>
+  agent.name: <role>
+  workflow.phase: <phase>
+  workflow.variant: <small|full>
+  outcome: <success|failure|escalated|skipped>
+  error.category: <none|timeout|rate_limit|validation|delegation|context|resource>
+  tokens.input/output/total: <n>
+  duration.ms: <n>
+```
+
+## Anomaly detections
+Patterns detected across runs. See `observability-system.md` for detection rules.
+```
+- anomaly: <repeater|wanderer|looper|budget_bleed|escalation_storm|gate_blockade>, role <role>, detected <date>, action <taken>
+```
+
+## Quality scores
+Composite scores per run. See `decision-quality-scoring.md` for the 6 dimensions and weights.
+```
+- run <id>: roleAdherence <0-1>, gateEffectiveness <0-1>, handoffQuality <0-1>, delegationAccuracy <0-1>, escalationQuality <0-1>, planFidelity <0-1>, composite <0-1>
+```
+
+## Drift alerts
+Auto-created when patterns degrade. Auto-expires after 30 days of no recurrence.
+```
+- drift: <role> <finding>, detected <date>, expires <date>, status <active|expired>
+```
