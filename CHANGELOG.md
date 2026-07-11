@@ -4,6 +4,27 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-07-11
+
+### Added
+
+- **9 extracted knowledge files** — moved tactical sections from atlas-core.md into load-on-demand knowledge files: context-engineering, structured-reasoning, clarification-strategy, document-sharding, pre-action-gates, problem-domain-classification (Cynefin), observe-before-act (Gemba), pre-handoff-quality-check, escalation-tiers. atlas-core.md slimmed from ~2,600 to ~800 tokens for optimal prefix caching.
+- **Tool registry** — new `knowledge/tool-registry.md`: structured catalog of tool patterns (file ops, search, shell, delegation, web), Atlas-specific batch/read-before-edit/workdir patterns. Agents load on-demand when unsure which tool to use.
+- **Trajectory logging** — new `knowledge/trajectory-logging.md`: JSONL decision trail schema (who, what, why, outcome) for post-hoc analysis, debugging, and feeding lessons.md. IDE-agnostic: each IDE implements appending via tool hooks or post-action callbacks.
+- **Prompt cache strategy** — new `knowledge/prompt-cache-strategy.md`: cache-optimized ordering (static rules first, dynamic context last), `cache_control` breakpoint concept, anti-patterns for progressive loading defeating caching.
+- **Memory hierarchy** — new `knowledge/memory-hierarchy.md`: L1 (personal lessons) > L2 (project knowledge) > L3 (shared patterns). Conflict resolution rules, lesson writing format, cross-project leakage prevention.
+
+### Changed
+
+- **atlas-core.md slimmed** — extracted 9 tactical sections into knowledge files. Now ~800 tokens (down from ~2,600). Non-negotiables + bootstrap + knowledge loading + load-on-demand table (16 entries). Cache-optimized: stable prefix across turns.
+- **collaboration.md expanded** — added trajectory logging section and memory hierarchy section with pointers to new knowledge files.
+- **lite/rules/atlas-core.md expanded** — added deep guidance section with pointers to 10 extracted knowledge files for complex tasks that overflow lite mode.
+- **manifest.json** — added 13 new knowledge files, bumped to 0.12.0.
+
+### Version
+
+- **Version** — bumped to 0.12.0
+
 ## [0.11.0] - 2026-07-11
 
 ### Added

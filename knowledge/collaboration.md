@@ -84,6 +84,28 @@ Multiple roles may share an artifact (e.g. `requirements.md` → atlas-pm + atla
 
 Use the appropriate IDE invocation for your environment (e.g. `atlas-dev`). Copy the command from `team.json` or ask lead for the invoke string.
 
+## Trajectory logging
+
+Every pipeline run records decisions to `$ATLAS_DATA_DIR/runs/<run-id>/trajectory.jsonl`. Each entry captures: who, what, why, outcome. Purpose: post-hoc analysis, debugging, feeding lessons.md.
+
+Record entries when: making non-obvious decisions, escalating, delegating, hitting gates, encountering errors, completing phases. Don't record routine reads or formatting.
+
+See `knowledge/trajectory-logging.md` for the full schema and implementation guidance.
+
+## Memory hierarchy
+
+Atlas has three tiers of memory. When sources conflict, higher tiers win:
+
+| Tier | Source | Priority | Scope |
+|------|--------|----------|-------|
+| L1 Personal | `lessons.md` per-role entries | Highest | This agent, this project |
+| L2 Project | `knowledge/` project-specific | Medium | All roles, this project |
+| L3 Shared | `knowledge/` universal patterns | Lowest | Any project |
+
+L1 > L2 > L3. Project context overrides universal rules. Explicit decisions (ADRs) override patterns.
+
+See `knowledge/memory-hierarchy.md` for full spec, writing lessons, and cross-project leakage prevention.
+
 ## When delegation is unavailable
 
 Stop and tell the user. Do not silently do all roles in one thread unless the user explicitly agrees to collapse scope.

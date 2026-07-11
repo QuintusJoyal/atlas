@@ -25,3 +25,20 @@ Your playbook has a Knowledge Index. Use it to find relevant knowledge files:
 - `knowledge/<topic>.md` — standalone reference files
 - If you need more than the playbook provides, read the knowledge file directly
 - Stop after reading one knowledge file per task unless you need more
+
+## Deep guidance (complex tasks only)
+
+When a task overflows lite mode (cross-role coordination, architecture decisions, debugging complex failures), load the relevant knowledge file:
+
+| Need | File |
+|------|------|
+| Context management | `knowledge/context-engineering.md` |
+| Reasoning patterns | `knowledge/structured-reasoning.md` |
+| Verification checklists | `knowledge/pre-action-gates.md` |
+| Problem classification | `knowledge/problem-domain-classification.md` |
+| Before making changes | `knowledge/observe-before-act.md` |
+| Before declaring done | `knowledge/pre-handoff-quality-check.md` |
+| Stuck / need help | `knowledge/escalation-tiers.md` |
+| Which tool to use | `knowledge/tool-registry.md` |
+| Recording decisions | `knowledge/trajectory-logging.md` |
+| Which source to trust | `knowledge/memory-hierarchy.md` |

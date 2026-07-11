@@ -1,6 +1,6 @@
 {
   "name": "atlas",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Universal AI agent team framework for software delivery.",
   "schema": "atlas-bundle/1.0",
   "license": "MIT",
@@ -151,7 +151,20 @@
     "event-driven-architecture.md",
     "developer-experience.md",
     "incident-response.md",
-    "observability-tooling.md"
+    "observability-tooling.md",
+    "context-engineering.md",
+    "structured-reasoning.md",
+    "clarification-strategy.md",
+    "document-sharding.md",
+    "pre-action-gates.md",
+    "problem-domain-classification.md",
+    "observe-before-act.md",
+    "pre-handoff-quality-check.md",
+    "escalation-tiers.md",
+    "tool-registry.md",
+    "trajectory-logging.md",
+    "prompt-cache-strategy.md",
+    "memory-hierarchy.md"
   ],
   "workflows": [
     "feature.md",
