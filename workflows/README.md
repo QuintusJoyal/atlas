@@ -7,7 +7,7 @@ atlas-lead picks a preset to right-size the pipeline. Each preset defines phases
 | Preset | When to use | Variants |
 | --- | --- | --- |
 | feature | Net-new work, full pipeline with all three gates | small, full |
-| bugfix | Defects and hotfixes, fast lane, single final gate | simplified, full |
+| bugfix | Defects and hotfixes, fast lane, single final gate | small, full |
 | data-project | Data or analytics work, pulls the data roles | small, full |
 | infra-change | Infrastructure, network, or cloud changes | small, full |
 | security-audit | Read-only security and compliance assessment | small, full |
