@@ -154,3 +154,20 @@ When a scope change is detected, the PM/BA returns this assessment (3 sections):
 - **Impact:** [affected phases, roles, artifacts, estimated rework]
 - **Recommendation:** [restart from phase X / resume with adjusted scope / abort]
 ```
+
+## Divergence check (after parallel phases)
+
+Before advancing from a parallel stage to the next sequential stage:
+
+1. Collect all parallel handoff artifacts
+2. Extract from each: API contracts, data models, file paths, technology choices
+3. Compare using the divergence checklist:
+   - [ ] Terminology: any conflicting names for the same concept?
+   - [ ] Assumptions: any incompatible technology choices?
+   - [ ] Ownership: any overlapping output file claims?
+   - [ ] Interfaces: any mismatched schemas or contracts?
+4. If clean: advance to next phase
+5. If conflicts found: pause, present resolution options to user (reconcile, re-run one role, override, accept divergence)
+6. Log result to trajectory.jsonl
+
+See `knowledge/divergence-detection.md` for full detection protocol and resolution options.
