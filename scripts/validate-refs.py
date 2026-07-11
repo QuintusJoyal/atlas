@@ -31,12 +31,13 @@ REF_PATTERN = re.compile(r'(?:\`?\$?ATLAS_DATA_DIR/)?knowledge/([a-zA-Z0-9_/-]+\
 def find_all_md_files():
     """Find all .md files in the repo."""
     md_files = []
+    skip_files = {'MIGRATION-v0.13-to-v0.14.md'}  # Migration guides have intentional old paths
     for dirpath, dirnames, filenames in os.walk(ROOT):
         # Skip .git directory
         if '.git' in dirpath:
             continue
         for f in filenames:
-            if f.endswith('.md'):
+            if f.endswith('.md') and f not in skip_files:
                 md_files.append(Path(dirpath) / f)
     return md_files
 

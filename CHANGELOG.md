@@ -4,22 +4,47 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-07-11
+
+### Added
+
+- **Knowledge reorganization** — 105 knowledge files reorganized from flat directory into 18 subdirectories: reference, process, context, testing, security, architecture, delivery, data, craftsmanship, decision, compliance, cloud, ai, ux, infra, enterprise, benchmark, critic-prompts. Improved discoverability and maintainability.
+- **Validation script** — `scripts/validate-refs.py`: checks all knowledge cross-references are valid, validates manifest.json consistency. Exit code 0 = clean, 1 = issues.
+- **Runtime execution protocol** — `knowledge/process/runtime-execution.md`: 3 execution modes (prompt-only, tool-assisted, programmatic), minimal tool API (6 core tools), error recovery with checkpoint, structured context passing, tool provenance, IDE integration matrix.
+- **Codebase-aware context** — `knowledge/context/codebase-context.md`: 4 discovery strategies (manual, search-assisted, embedding-assisted, AST-aware), 3 loading strategies (on-demand, batch, predictive), priority ranking, context budget.
+- **Dashboard specification** — `knowledge/process/dashboard-spec.md`: 4 panels (Run Overview, Per-Role Performance, Team Coordination, Anomaly Panel) with mock layouts, data schemas, update frequencies, IDE-specific implementation notes.
+- **Performance benchmarks** — `knowledge/benchmark/performance-benchmarks.md`: token usage by workflow variant and role, knowledge loading overhead, prompt cache effectiveness, Atlas vs raw prompting comparison, optimization targets.
+- **Integration examples** — `examples/`: concrete IDE configurations for Cursor (.cursorrules), OpenCode (.opencode.json), Claude Code (CLAUDE.md), VS Code Copilot (.github/copilot-instructions.md).
+- **Migration guide** — `MIGRATION-v0.13-to-v0.14.md`: knowledge reorganization, new files, breaking changes, how to update.
+- **3 new workflows** — `workflows/refactoring.md` (analyze → design → refactor → test → review), `workflows/api-design.md` (design → implement → test → document), `workflows/documentation.md` (draft → review → publish).
+- **Lite mode updates** — `lite/rules/atlas-core.md`: added structured errors and checkpoint rules. `lite/workflows/self-assessment.md`: simplified monthly review workflow.
+
+### Changed
+
+- **Knowledge paths** — all knowledge file references updated from `knowledge/<file>.md` to `knowledge/<subdir>/<file>.md` across rules, agents, workflows, and knowledge files.
+- **Manifest** — updated with new subdirectory paths, added 8 new knowledge files, added 4 new workflows.
+- **Cross-references** — all 139 knowledge cross-references validated and fixed.
+
+### Version
+
+- **Version** — bumped to 0.14.0
+
 ## [0.13.0] - 2026-07-11
 
 ### Added
 
-- **ACI enforcement** — structured error protocol (5 categories), semantic output rules, output compression thresholds, poka-yoke constraints, cross-agent tool provenance. Every tool failure returns `{errorCategory, recoverable, message, suggestedAction}`. See `knowledge/aci-enforcement.md`.
-- **Role-tool scoping** — phase-aware tool scope matrix (6 phases x 9 tools). Roles can only use tools appropriate to their current phase. Prevents scope creep via tool access. See `knowledge/role-tool-scoping.md`.
-- **Divergence detection** — parallel artifact conflict detection for concurrent phases. Compares file lists, requirement keywords, and design terms to catch semantic divergence before integration. See `knowledge/divergence-detection.md`.
-- **OTel observability** — OpenTelemetry GenAI semantic conventions for trajectory logs. 8 multi-agent metrics unique to Atlas (IAHQS, DAS, EJR, GYR, REI, CPS, PER, MTAS). 6 anomaly detection patterns (repeater, wanderer, looper, budget bleed, escalation storm, gate blockade). Dashboard concepts for run overview, per-role drill-down, team coordination. See `knowledge/observability-system.md`.
-- **Decision quality scoring** — 6-dimension scoring (role adherence, gate effectiveness, handoff quality, delegation accuracy, escalation quality, plan fidelity). Composite score with configurable weights. Self-healing doctrine with drift alerts. See `knowledge/decision-quality-scoring.md`.
-- **5 adversarial critics** — spec-integrity (gapped), oracle (gapped), implementation (immediate), socratic-quality (immediate), regression-gate (gapped). 3-pass/3-fail auto-tuning. Gapped critics run on next run. Structured JSON output. See `knowledge/adversarial-critics.md`.
-- **Checkpoint Protocol (ACP)** — 3-level checkpoints (lightweight, standard, deep), 3-level fork (replay, branch, resume), cross-surface portability. Multi-day work support. See `knowledge/checkpoint-protocol.md`.
-- **DAG orchestration** — dynamic DAG construction from workflow phases, critical path analysis, parallel safety checks, node types (task, critic, condition, checkpoint), visual ASCII DAG. See `knowledge/dag-orchestration.md`.
-- **Trust scoring (ARTS)** — adaptive role trust (0-1), 4 tiers (UNTRUSTED, PROBATION, STANDARD, TRUSTED), trust-based tier allocation, score decay, trust resets. See `knowledge/role-trust-profiles.md`.
-- **Knowledge compounding** — retrospective phase after every workflow, post-run extraction (lessons, tool improvements, role corrections), cross-run pattern detection, human approval for all knowledge updates. See `knowledge/knowledge-compounding.md`.
-- **Frontier benchmark** — monthly capability comparison against frontier harnesses. Tracks where Atlas leads, is on par, or lags. See `knowledge/frontier-benchmark.md`.
-- **Self-assessment protocol** — 4-phase monthly self-assessment (benchmark review, performance analysis, gap identification, improvement proposals). 3 risk tiers for self-modification. Human always approves. See `knowledge/self-assessment-protocol.md`.
+- **ACI enforcement** — structured error protocol (5 categories), semantic output rules, output compression thresholds, poka-yoke constraints, cross-agent tool provenance. Every tool failure returns `{errorCategory, recoverable, message, suggestedAction}`. See `knowledge/process/aci-enforcement.md`.
+- **Role-tool scoping** — phase-aware tool scope matrix (6 phases x 9 tools). Roles can only use tools appropriate to their current phase. Prevents scope creep via tool access. See `knowledge/process/role-tool-scoping.md`.
+- **Divergence detection** — parallel artifact conflict detection for concurrent phases. Compares file lists, requirement keywords, and design terms to catch semantic divergence before integration. See `knowledge/process/divergence-detection.md`.
+- **OTel observability** — OpenTelemetry GenAI semantic conventions for trajectory logs. 8 multi-agent metrics unique to Atlas (IAHQS, DAS, EJR, GYR, REI, CPS, PER, MTAS). 6 anomaly detection patterns (repeater, wanderer, looper, budget bleed, escalation storm, gate blockade). Dashboard concepts for run overview, per-role drill-down, team coordination. See `knowledge/process/observability-system.md`.
+- **Decision quality scoring** — 6-dimension scoring (role adherence, gate effectiveness, handoff quality, delegation accuracy, escalation quality, plan fidelity). Composite score with configurable weights. Self-healing doctrine with drift alerts. See `knowledge/process/decision-quality-scoring.md`.
+- **5 adversarial critics** — spec-integrity (gapped), oracle (gapped), implementation (immediate), socratic-quality (immediate), regression-gate (gapped). 3-pass/3-fail auto-tuning. Gapped critics run on next run. Structured JSON output. See `knowledge/process/adversarial-critics.md`.
+- **Checkpoint Protocol (ACP)** — 3-level checkpoints (lightweight, standard, deep), 3-level fork (replay, branch, resume), cross-surface portability. Multi-day work support. See `knowledge/process/checkpoint-protocol.md`.
+- **DAG orchestration** — dynamic DAG construction from workflow phases, critical path analysis, parallel safety checks, node types (task, critic, condition, checkpoint), visual ASCII DAG. See `knowledge/process/dag-orchestration.md`.
+- **Trust scoring (ARTS)** — adaptive role trust (0-1), 4 tiers (UNTRUSTED, PROBATION, STANDARD, TRUSTED), trust-based tier allocation, score decay, trust resets. See `knowledge/process/role-trust-profiles.md`.
+- **Knowledge compounding** — retrospective phase after every workflow, post-run extraction (lessons, tool improvements, role corrections), cross-run pattern detection, human approval for all knowledge updates. See `knowledge/process/knowledge-compounding.md`.
+- **Frontier benchmark** — monthly capability comparison against frontier harnesses. Tracks where Atlas leads, is on par, or lags. See `knowledge/benchmark/frontier-benchmark.md`.
+- **Self-assessment protocol** — 4-phase monthly self-assessment (benchmark review, performance analysis, gap identification, improvement proposals). 3 risk tiers for self-modification. Human always approves. See `knowledge/process/self-assessment-protocol.md`.
 - **Self-assessment workflow** — `workflows/self-assessment.md`: monthly self-assessment with small/full variants.
 - **Critic prompts** — 5 structured critic prompts in `knowledge/critic-prompts/`: spec-integrity, oracle, implementation, socratic-quality, regression-gate.
 
@@ -43,10 +68,10 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 ### Added
 
 - **9 extracted knowledge files** — moved tactical sections from atlas-core.md into load-on-demand knowledge files: context-engineering, structured-reasoning, clarification-strategy, document-sharding, pre-action-gates, problem-domain-classification (Cynefin), observe-before-act (Gemba), pre-handoff-quality-check, escalation-tiers. atlas-core.md slimmed from ~2,600 to ~800 tokens for optimal prefix caching.
-- **Tool registry** — new `knowledge/tool-registry.md`: structured catalog of tool patterns (file ops, search, shell, delegation, web), Atlas-specific batch/read-before-edit/workdir patterns. Agents load on-demand when unsure which tool to use.
-- **Trajectory logging** — new `knowledge/trajectory-logging.md`: JSONL decision trail schema (who, what, why, outcome) for post-hoc analysis, debugging, and feeding lessons.md. IDE-agnostic: each IDE implements appending via tool hooks or post-action callbacks.
-- **Prompt cache strategy** — new `knowledge/prompt-cache-strategy.md`: cache-optimized ordering (static rules first, dynamic context last), `cache_control` breakpoint concept, anti-patterns for progressive loading defeating caching.
-- **Memory hierarchy** — new `knowledge/memory-hierarchy.md`: L1 (personal lessons) > L2 (project knowledge) > L3 (shared patterns). Conflict resolution rules, lesson writing format, cross-project leakage prevention.
+- **Tool registry** — new `knowledge/process/tool-registry.md`: structured catalog of tool patterns (file ops, search, shell, delegation, web), Atlas-specific batch/read-before-edit/workdir patterns. Agents load on-demand when unsure which tool to use.
+- **Trajectory logging** — new `knowledge/process/trajectory-logging.md`: JSONL decision trail schema (who, what, why, outcome) for post-hoc analysis, debugging, and feeding lessons.md. IDE-agnostic: each IDE implements appending via tool hooks or post-action callbacks.
+- **Prompt cache strategy** — new `knowledge/context/prompt-cache-strategy.md`: cache-optimized ordering (static rules first, dynamic context last), `cache_control` breakpoint concept, anti-patterns for progressive loading defeating caching.
+- **Memory hierarchy** — new `knowledge/context/memory-hierarchy.md`: L1 (personal lessons) > L2 (project knowledge) > L3 (shared patterns). Conflict resolution rules, lesson writing format, cross-project leakage prevention.
 
 ### Changed
 
@@ -187,7 +212,7 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 - **Three-tier knowledge loading** — inline (playbook facts) → search (grep for specific term) → load (full file). Reduces token usage by ~73% compared to loading full knowledge files.
 - **Bootstrap section in atlas-core.md** — universal bootstrap steps (grep lessons.md, model-resilience.md) moved from individual playbooks to core rules.
 - **Knowledge loading budget** — routine task = 2-3 searches (~400-600 tokens), complex task = 3-5 searches + 1 full file (~1,500-2,500 tokens), hard cap = 5,000 tokens per task.
-- **Knowledge file index** — comprehensive index in knowledge/README.md with topic, file, and role mappings.
+- **Knowledge file index** — comprehensive index in knowledge/reference/README.md with topic, file, and role mappings.
 
 ### Changed
 
@@ -215,18 +240,18 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 - **Agent restructure:** all 24 agents rewritten with deep expertise definitions, role boundaries (I DO / DO NOT), collaboration tables, and 2 delegation examples each.
 - **Model hints deduplicated:** `modelHints` removed from all 24 agent frontmatter; centralized in `manifest.json` tiers section.
-- **atlas-lead trimmed:** routing tables, keyword mappings, workflow-phase routing, multi-role rules, artifact ownership, and specialist engagement moved to `knowledge/lead-routing.md`. Agent file reduced from ~398 lines to ~141 lines.
+- **atlas-lead trimmed:** routing tables, keyword mappings, workflow-phase routing, multi-role rules, artifact ownership, and specialist engagement moved to `knowledge/context/lead-routing.md`. Agent file reduced from ~398 lines to ~141 lines.
 - **Delegation examples moved:** 3 of 5 delegation examples removed from each of 23 specialist agents; moved to corresponding playbook SKILL.md files.
-- **"I DO NOT" removed:** role boundary "DO NOT" sections removed from 22 specialist agents (ownership matrix in `knowledge/collaboration.md` is the single reference).
-- **Model resilience consolidated:** duplication across atlas-core.md, atlas-lead-orchestration.md, atlas-lead.md, team-charter.md, collaboration.md, and atlas-lead-playbook reduced to pointers to canonical `knowledge/model-resilience.md`.
+- **"I DO NOT" removed:** role boundary "DO NOT" sections removed from 22 specialist agents (ownership matrix in `knowledge/reference/collaboration.md` is the single reference).
+- **Model resilience consolidated:** duplication across atlas-core.md, atlas-lead-orchestration.md, atlas-lead.md, team-charter.md, collaboration.md, and atlas-lead-playbook reduced to pointers to canonical `knowledge/reference/model-resilience.md`.
 - **Delegation rules consolidated:** duplication across atlas-core.md, atlas-lead.md, atlas-lead-playbook, and collaboration.md reduced to single source in `atlas-lead-orchestration.md`.
 - **atlas-lead-orchestration load changed:** from `always` to `on-demand` (saves ~1,178 tokens per invocation).
 
 ### Added
 
-- `knowledge/lead-routing.md`: intent classification, keyword-to-role mapping, workflow-phase routing, multi-role delegation rules, artifact ownership, and specialist engagement triggers.
+- `knowledge/context/lead-routing.md`: intent classification, keyword-to-role mapping, workflow-phase routing, multi-role delegation rules, artifact ownership, and specialist engagement triggers.
 - Frontier behavior patterns: context compaction, tool clearing, structured output, and output length targets added to atlas-core.md, model-resilience.md, atlas-lead.md, atlas-dev.md, and atlas-qa.md.
-- Artifact ownership matrix added to `knowledge/collaboration.md`.
+- Artifact ownership matrix added to `knowledge/reference/collaboration.md`.
 
 ## [0.5.0] - 2026-07-10
 
@@ -275,7 +300,7 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 ## [0.2.5] - 2026-06-12
 
 ### Added
-- Mandatory pipeline **kickoff**: workflow announcement, estimation huddle, `budget.md` from `knowledge/budget-template.md`, per-role estimates before first specialist delegation.
+- Mandatory pipeline **kickoff**: workflow announcement, estimation huddle, `budget.md` from `knowledge/reference/budget-template.md`, per-role estimates before first specialist delegation.
 - `team.json` fields: `workflowRationale`, `kickoffAt`, `budget` (predicted + roleEstimates).
 
 ### Changed
@@ -313,7 +338,7 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ### Added
 - Automatic model downgrade (model resilience): when a model is quota-limited, rate-limited, unavailable, or blocked, roles and atlas-lead retry the affected step one tier down (premium to standard to fast) and continue without interrupting the workflow.
-- `knowledge/model-resilience.md`: the canonical tier cascade, triggers, behavior, logging format, and premium-gate quality flag.
+- `knowledge/reference/model-resilience.md`: the canonical tier cascade, triggers, behavior, logging format, and premium-gate quality flag.
 
 ### Changed
 - `atlas-core.mdc`, `team-charter.mdc`, `handoff-protocol.mdc`, `atlas-lead` (agent and playbook), and `atlas-ai-eng` updated for the no-interruption downgrade policy and downgrade tracking.
