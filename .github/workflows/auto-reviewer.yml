@@ -19,6 +19,7 @@ jobs:
         uses: anomalyco/opencode/github@latest
         with:
           model: opencode/big-pickle
+          use_github_token: "true"
           prompt: |
             You are Atlas's auto reviewer. Review this PR using Atlas's adversarial critics.
 
