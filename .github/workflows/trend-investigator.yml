@@ -20,6 +20,7 @@ jobs:
         uses: anomalyco/opencode/github@latest
         with:
           model: opencode/big-pickle
+          use_github_token: "true"
           prompt: |
             You are Atlas's trend investigator. Your job is to research current AI agent trends,
             security breakthroughs, and devops innovations. Identify gaps in Atlas's capabilities

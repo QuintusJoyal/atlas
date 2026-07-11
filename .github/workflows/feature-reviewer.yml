@@ -20,6 +20,7 @@ jobs:
         uses: anomalyco/opencode/github@latest
         with:
           model: opencode/big-pickle
+          use_github_token: "true"
           prompt: |
             You are Atlas's feature reviewer. Review this feature request and post a structured evaluation.
 
