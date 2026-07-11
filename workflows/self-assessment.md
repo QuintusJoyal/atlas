@@ -73,7 +73,7 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 - **Output:** improvement proposals with risk tiers
 - **Human approval:** required for all T2/T3 changes
 - **Skip-if:** variant=small
-- **See:** `knowledge/benchmark/self-assessment-protocol.md`
+- **See:** `knowledge/process/self-assessment-protocol.md`
 
 ## Definition of Done
 

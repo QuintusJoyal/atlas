@@ -1,0 +1,58 @@
+name: Trend Investigator
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Monday 9am
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  investigate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run OpenCode
+        uses: anomalyco/opencode/github@latest
+        with:
+          model: opencode/big-pickle
+          prompt: |
+            You are Atlas's trend investigator. Your job is to research current AI agent trends,
+            security breakthroughs, and devops innovations. Identify gaps in Atlas's capabilities
+            and create feature request issues for applicable improvements.
+
+            Research areas:
+            - AI agent frameworks and orchestration patterns
+            - Context engineering and prompt optimization
+            - Security vulnerabilities and mitigation strategies
+            - DevOps automation and CI/CD innovations
+            - Knowledge management and retrieval systems
+            - Multi-agent coordination and delegation
+            - Code quality and review automation
+            - Performance optimization techniques
+
+            For each gap found, create a GitHub issue with:
+            - Title: [FEATURE]: <description>
+            - Labels: type:feature, priority:P1
+            - Body:
+              ## Description
+              <what this feature does>
+
+              ## Motivation
+              <why Atlas needs this>
+
+              ## Acceptance Criteria
+              - [ ] < criterion 1 >
+              - [ ] < criterion 2 >
+
+              ## Atlas Impact
+              <how this affects Atlas's architecture>
+
+            Focus on practical improvements that enhance Atlas's unique capabilities:
+            - 24 specialist roles
+            - Three-tier knowledge loading
+            - Adversarial critics
+            - Self-assessment loop
+            - Lite mode for small models

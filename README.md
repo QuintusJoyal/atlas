@@ -25,7 +25,7 @@ See `SETUP.md` for IDE-specific details (Claude Code AGENTS.md, VS Code Copilot 
 - 24 specialist roles plus an orchestrator (`atlas-lead`). See [ROLES.md](ROLES.md).
 - Per-role playbooks grounded in cited industry standards (OWASP, ISTQB, DORA, C4, WCAG, TOGAF, and more).
 - Lazy-loaded context: one tiny always-on rule, everything else loads only when its topic is in motion.
-- Mandatory kickoff: workflow, `budget.md`, per-role estimates before build ([budget-template.md](knowledge/budget-template.md)).
+- Mandatory kickoff: workflow, `budget.md`, per-role estimates before build ([budget-template.md](knowledge/reference/budget-template.md)).
 - Graduated enforcement levels: `warn`, `standard`, or `strict` (chat prompts and gate sidecars under `$ATLAS_DATA_DIR/runs/<run-id>/gates/`).
 - Gate DoD checks, pipeline blockers, waivers (non-waivable: security, compliance, reviewer).
 - Learning loop: inbox promote/reject for `proposed.md`, usage-insights on run complete.
@@ -61,7 +61,7 @@ Atlas uses abstract model tiers. Each IDE maps tiers to its available models. Se
 - **Standard** (balanced): atlas-lead (orchestrator only; saves premium for gate roles), atlas-pm, atlas-ba, atlas-ux, atlas-qa, atlas-devops, atlas-maintenance, atlas-network, atlas-sysinfra, atlas-dba, atlas-data-eng, atlas-data-sci, atlas-ai-eng, atlas-delivery, atlas-consultant.
 - **Fast** (high-volume): atlas-dev, atlas-docs, atlas-data-analyst.
 
-When atlas-lead's session hits quota, lead must still delegate to specialist roles (subagents use separate allocation). Lead must not collapse into inline implementation. See [knowledge/model-resilience.md](knowledge/model-resilience.md).
+When atlas-lead's session hits quota, lead must still delegate to specialist roles (subagents use separate allocation). Lead must not collapse into inline implementation. See [knowledge/reference/model-resilience.md](knowledge/reference/model-resilience.md).
 
 ## Token budget
 
@@ -75,8 +75,8 @@ Roles use MCP servers when present (Jira and Confluence, GitLab, browser) but ne
 
 Installed to `$ATLAS_DATA_DIR/knowledge/`. Key Framework v1 docs (also in repo `knowledge/`):
 
-- [core-values-charter.md](knowledge/core-values-charter.md)
-- [enterprise-org-model.md](knowledge/enterprise-org-model.md)
-- [atlas-framework.md](knowledge/atlas-framework.md) (operator guide and dogfood checklist)
+- [core-values-charter.md](knowledge/reference/core-values-charter.md)
+- [enterprise-org-model.md](knowledge/reference/enterprise-org-model.md)
+- [atlas-framework.md](knowledge/reference/atlas-framework.md) (operator guide and dogfood checklist)
 
-See [knowledge/README.md](knowledge/README.md) for shipped vs installed files. `lessons.md` is canonical. Roles append to `proposed.md` for your batch approval.
+See [knowledge/reference/README.md](knowledge/reference/README.md) for shipped vs installed files. `lessons.md` is canonical. Roles append to `proposed.md` for your batch approval.
