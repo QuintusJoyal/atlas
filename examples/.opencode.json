@@ -1,0 +1,34 @@
+{
+  "name": "atlas-project",
+  "description": "Atlas multi-agent team framework for software delivery",
+  "rules": [
+    "atlas/rules/atlas-core.md",
+    "atlas/rules/atlas-lead-orchestration.md",
+    "atlas/rules/team-charter.md",
+    "atlas/rules/handoff-protocol.md"
+  ],
+  "knowledge": [
+    "atlas/knowledge/reference/lessons.md",
+    "atlas/knowledge/reference/model-resilience.md",
+    "atlas/knowledge/reference/collaboration.md"
+  ],
+  "agents": [
+    "atlas/agents/atlas-lead.md",
+    "atlas/agents/atlas-dev.md",
+    "atlas/agents/atlas-qa.md",
+    "atlas/agents/atlas-architect.md",
+    "atlas/agents/atlas-security.md",
+    "atlas/agents/atlas-devops.md"
+  ],
+  "workflows": [
+    "atlas/workflows/feature.md",
+    "atlas/workflows/bugfix.md",
+    "atlas/workflows/discovery.md"
+  ],
+  "modelHints": {
+    "premium": "anthropic/claude-opus-4",
+    "standard": "anthropic/claude-sonnet-4",
+    "fast": "anthropic/claude-haiku-3.5"
+  },
+  "dataHome": "$ATLAS_DATA_DIR"
+}

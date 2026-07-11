@@ -1,0 +1,46 @@
+# Cursor Rules for Atlas
+# See: https://docs.cursor.com/context/rules
+
+# Atlas is a multi-agent team framework for software delivery.
+# This file configures Cursor to use Atlas rules and knowledge.
+
+# Core rules (always loaded)
+rules:
+  - atlas/rules/atlas-core.md
+
+# On-demand rules (loaded when relevant)
+rulesOnDemand:
+  - atlas/rules/atlas-lead-orchestration.md
+  - atlas/rules/team-charter.md
+  - atlas/rules/engineering-standards.md
+  - atlas/rules/handoff-protocol.md
+  - atlas/rules/writing-style.md
+
+# Knowledge files (search via grep, load on demand)
+knowledge:
+  - atlas/knowledge/reference/lessons.md
+  - atlas/knowledge/reference/model-resilience.md
+  - atlas/knowledge/reference/collaboration.md
+
+# Agents (available for delegation)
+agents:
+  - atlas/agents/atlas-lead.md
+  - atlas/agents/atlas-dev.md
+  - atlas/agents/atlas-qa.md
+  - atlas/agents/atlas-architect.md
+  - atlas/agents/atlas-security.md
+  - atlas/agents/atlas-devops.md
+  - atlas/agents/atlas-pm.md
+  - atlas/agents/atlas-ba.md
+
+# Workflows (available for task execution)
+workflows:
+  - atlas/workflows/feature.md
+  - atlas/workflows/bugfix.md
+  - atlas/workflows/discovery.md
+
+# Model tier mapping for Cursor
+modelHints:
+  premium: claude-opus-4-8-thinking-high
+  standard: composer-2.5
+  fast: composer-2
