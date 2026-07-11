@@ -85,7 +85,7 @@ Each role has a defined input/output contract. A handoff is incomplete if any re
 | atlas-docs | implementation details, architecture context | documentation artifact (README, changelog, runbook) |
 | atlas-compliance | security-assessment.md, scope | compliance-report.md (findings, control gaps, pass/block) |
 | atlas-ux | user stories, edge cases | wireframes + design tokens + user flows |
-| atlas-db | data requirements, access patterns | database-schema.md (DDL, indexing, migration scripts) |
+| atlas-dba | data requirements, access patterns | database-schema.md (DDL, indexing, migration scripts) |
 | atlas-data-eng | source schemas, warehouse target | pipeline architecture (DAG, data contracts, quality specs) |
 | atlas-data-sci | curated datasets, feature store | model-results.md (evaluation, model card, fairness audit) |
 | atlas-data-analyst | data-pipeline-spec.md, business question | kpi-report.md (metrics, trends, SQL, visualizations) |

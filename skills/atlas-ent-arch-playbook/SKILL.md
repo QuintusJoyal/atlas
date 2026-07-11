@@ -16,7 +16,7 @@ tags: [playbook, ent-arch, togaf, ddd]
 - platform redesign → ent-arch
 
 ## Knowledge
-- TOGAF framework → k/pmbok-framework
+- TOGAF framework → k/togaf-framework
 - DDD strategic patterns → k/domain-driven-design
 - Enterprise integration patterns → k/trade-off-analysis
 - Trade-off analysis → k/trade-off-analysis
