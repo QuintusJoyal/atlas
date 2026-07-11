@@ -1,7 +1,7 @@
 ---
 name: swebok
 load-when: Understanding software engineering practices, reviewing process maturity, defining team practices
-skip-when: Specific practices (see craftsmanship, testing, devops), architecture decisions (see architecture-decision-records)
+skip-when: Specific practices (see clean-code-practices, testing-pyramid, gitops-principles), architecture decisions (see architecture-decision-records)
 ---
 
 # SWEBOK (Software Engineering Body of Knowledge)
@@ -44,7 +44,6 @@ Use SWEBOK to assess team maturity:
 - CMMI: process maturity model that complements SWEBOK
 
 ## See Also
-- **swebok** — (this file) — overview of software engineering knowledge areas
 - **architecture-decision-records** — Documenting design decisions
 - **quality-gates** — Quality assurance checkpoints
 - **scrum-guide** — Process implementation

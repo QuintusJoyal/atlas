@@ -29,7 +29,7 @@ tags: [playbook, orchestration]
 - Scrum Guide → k/scrum-guide
 - RAID tracking → k/raid-log-management
 - RACI assignment → k/raci-matrix
-- Conflict resolution → k/decision-frameworks
+- Conflict resolution → k/mece-framework
 
 ## Scope
 orchestration, workflow selection, delegation, gate management, team manifest, token budget, status reporting | NOT implementation (→ dev), testing (→ qa), design (→ architect), security (→ security), requirements (→ pm/ba)

@@ -22,22 +22,18 @@ skip-when: Completion criteria (see definition-of-done), review criteria (see re
 - **Injected phases:** phases added via conditions follow the same gate rules as native phases.
 
 ### Auto-approve criteria (small variant)
-Small variant final gate is auto-approved when:
-1. Role returns handoff with DoD checklist
-2. All DoD items are checked
-3. No `[USER]` items or open questions in handoff
-4. Lead validates completeness
+Small variant final gate is auto-approved when all DoD items pass. For small variant, DoD is implicit: role completed = gate passed. No explicit DoD checklist validation needed. Lead trusts the role's handoff.
 
-If any condition fails → gate = `failed`, re-delegate to same role.
+If handoff has `[USER]` items or open questions → pause for user input instead of auto-approving.
 
 ### Common Gates
 | Gate | Phase Transition | Key Criteria | Variant | Auto-approve |
 |------|-----------------|--------------|---------|--------------|
 | Requirements Gate | Requirements → Design | Requirements approved, acceptance criteria defined, stakeholder sign-off | full only | no |
 | Design Gate | Design → Implementation | Architecture reviewed, trade-offs documented, security assessed | full only | no |
-| Code Gate | Implementation → Testing | Code reviewed, unit tests passing, no critical issues | both | small: yes, full: no |
-| Test Gate | Testing → Deployment | All tests passing, coverage targets met, no open P0/P1 bugs | both | small: yes, full: no |
-| Release Gate | Deployment → Production | Staging validated, rollback plan ready, monitoring configured | both | small: yes, full: no |
+| Code Gate | Implementation → Testing | Code reviewed, unit tests passing, no critical issues | both | small: auto (role completed), full: user |
+| Test Gate | Testing → Deployment | All tests passing, coverage targets met, no open P0/P1 bugs | both | small: auto (role completed), full: user |
+| Release Gate | Deployment → Production | Staging validated, rollback plan ready, monitoring configured | both | small: auto (role completed), full: user |
 
 ### Gate Criteria Template
 ```markdown
@@ -71,5 +67,5 @@ If any condition fails → gate = `failed`, re-delegate to same role.
 ## See Also
 - **definition-of-done** — Work item completion criteria
 - **review-checklists** — Review criteria for gates
-- **quality-bars** — Quality criteria across roles
+- **quality-gates** — (this file) — Quality criteria across phases
 - **pmbok-framework** — Phase gate management

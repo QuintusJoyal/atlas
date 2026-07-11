@@ -20,7 +20,7 @@ tags: [playbook, qa, testing]
 - 70/20/10 unit/integration/e2e → k/testing-pyramid
 - "red-green-refactor" → k/test-driven-development
 - "equivalence"/"boundary" → k/test-design-techniques
-- "definition of done" → k/quality-bars
+- "definition of done" → k/quality-gates
 - "flaky"/"inverted pyramid" → k/anti-patterns
 - BDD/Gherkin → k/bdd-gherkin
 - ISTQB levels → k/istqb-test-levels

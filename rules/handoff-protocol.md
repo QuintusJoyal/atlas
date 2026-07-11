@@ -97,7 +97,6 @@ Each role has a defined input/output contract. A handoff is incomplete if any re
 | atlas-consultant | client context, objectives | engagement-scope.md (problem framing, proposal) |
 | atlas-delivery | project scope, milestones | delivery-status.md (RAID, timeline, status) |
 | atlas-maintenance | incident details, logs | triage summary (root cause, fix recommendation, postmortem) |
-| atlas-ux | user stories, edge cases | wireframes + design tokens + user flows |
 
 ### Input contract format
 
@@ -144,3 +143,14 @@ When a role returns a handoff, atlas-lead updates the phase state in `team.json`
 3. PM/BA returns impact assessment
 4. Lead presents options to user: resume, restart from phase X, abort, switch variant
 5. User decides → lead executes (resume → active, restart → reset phases, abort → aborted)
+
+### Scope change handoff format
+
+When a scope change is detected, the PM/BA returns this assessment (3 sections):
+
+```markdown
+## Scope Change Assessment
+- **What changed:** [description of the scope change]
+- **Impact:** [affected phases, roles, artifacts, estimated rework]
+- **Recommendation:** [restart from phase X / resume with adjusted scope / abort]
+```

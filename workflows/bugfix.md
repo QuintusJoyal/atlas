@@ -7,7 +7,7 @@ triggers:
   - regression
   - user-issue
 variants:
-  simplified:
+  small:
     description: Simple bugfix, no estimation huddle. Single final gate.
     gates: [final]
     token-estimate: light
@@ -38,7 +38,7 @@ Fast lane for defects. One final gate. Keep it cheap.
 ## Variant selection
 
 Pick variant based on scope and risk:
-- **simplified:** clear root cause, <5 files changed, no auth/security/data changes
+- **small:** clear root cause, <5 files changed, no auth/security/data changes
 - **full:** unclear root cause, auth changes, data changes, or high-risk area
 
 Tell the user which variant you picked and why.
@@ -85,9 +85,9 @@ Tell the user which variant you picked and why.
 - **Input:** merge approval, security clearance (if applicable)
 - **Output:** deployment artifact (hotfix: expedited, with rollback ready)
 
-## Definition of Done (auto-approve if simplified)
+## Definition of Done (auto-approve if small)
 
 - [ ] Root cause identified with evidence (no guessing)
 - [ ] Regression test added and passing
 - [ ] Review clear; rollback ready for hotfix
-- [ ] User has signed off (full only; simplified auto-approves if all above pass)
+- [ ] User has signed off (full only; small auto-approves if all above pass)

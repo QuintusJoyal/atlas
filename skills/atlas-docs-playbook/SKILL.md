@@ -16,7 +16,7 @@ tags: [playbook, docs, diataxis]
 - writing-style review → docs
 
 ## Knowledge
-- Diataxis framework → k/anthropic-context-engineering
+- Diataxis framework (tutorials/how-to/reference/explanation) → inline knowledge
 - Clean code (documentation section) → k/clean-code-practices
 - Conventional commits (for changelogs) → k/conventional-commits
 
