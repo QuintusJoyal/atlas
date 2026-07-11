@@ -13,6 +13,7 @@ permissions:
 jobs:
   investigate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -24,40 +25,10 @@ jobs:
           model: opencode/big-pickle
           use_github_token: "true"
           prompt: |
-            You are Atlas's trend investigator. Your job is to research current AI agent trends,
-            security breakthroughs, and devops innovations. Identify gaps in Atlas's capabilities
-            and create feature request issues for applicable improvements.
+            Research AI agent trends and Atlas gaps. Create 2-3 feature request issues.
 
-            Research areas:
-            - AI agent frameworks and orchestration patterns
-            - Context engineering and prompt optimization
-            - Security vulnerabilities and mitigation strategies
-            - DevOps automation and CI/CD innovations
-            - Knowledge management and retrieval systems
-            - Multi-agent coordination and delegation
-            - Code quality and review automation
-            - Performance optimization techniques
+            For each issue use gh CLI:
+            gh issue create --title "[FEATURE]: <title>" --label "type:feature,priority:P1" --body "## Description\n<what>\n\n## Motivation\n<why>\n\n## Acceptance Criteria\n- [ ] <criteria>"
 
-            For each gap found, create a GitHub issue with:
-            - Title: [FEATURE]: <description>
-            - Labels: type:feature, priority:P1
-            - Body:
-              ## Description
-              <what this feature does>
-
-              ## Motivation
-              <why Atlas needs this>
-
-              ## Acceptance Criteria
-              - [ ] < criterion 1 >
-              - [ ] < criterion 2 >
-
-              ## Atlas Impact
-              <how this affects Atlas's architecture>
-
-            Focus on practical improvements that enhance Atlas's unique capabilities:
-            - 24 specialist roles
-            - Three-tier knowledge loading
-            - Adversarial critics
-            - Self-assessment loop
-            - Lite mode for small models
+            Focus on: agent orchestration, context engineering, security, knowledge management.
+            Keep issues concise (under 200 words each).
