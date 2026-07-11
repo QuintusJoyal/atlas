@@ -1,6 +1,8 @@
 ---
 name: collaboration
 category: process
+load-when: Delegating work, managing team.json, understanding communication protocols
+skip-when: Individual specialist work, no delegation needed
 description: Atlas team collaboration model — delegation rules, team.json management, and communication protocols.
 audience: [atlas-lead, all]
 tags: [delegation, team-json, communication, orchestration]
@@ -9,6 +11,14 @@ tags: [delegation, team-json, communication, orchestration]
 # Team collaboration
 
 Atlas is a **team**, not a single agent. **atlas-lead orchestrates only**; specialists own artifacts and outcomes.
+
+## Quick Reference
+- Lead delegates, specialists execute — lead never implements
+- team.json tracks: who, what, status (pending/active/completed/failed)
+- Every agent runs in isolation — handoffs must be self-contained
+- Communication: lead→member via delegation, member→lead via handoff
+- On quota failure: downgrade tier and re-delegate, never inline
+- Concrete paths, plain language, explicit next actions
 
 ## Hard rule (user-approved)
 
@@ -48,6 +58,10 @@ Each member runs in **isolation**: no shared chat, often no prior repo knowledge
 | member → user (via lead) | Requirements gaps go through atlas-pm / atlas-ba; consolidated before user sees them. |
 
 **Required:** concrete paths, plain-language decisions, explicit next action for whoever picks up the work.
+
+### "Works with" protocol
+
+When a collaboration table lists `Works with` as a direction, it means bidirectional information exchange. Initiate when you have a question or need input — do not wait passively. Example: if atlas-dev `Works with` atlas-dba, and the dev needs schema clarification, delegate a question to atlas-dba directly (via atlas-lead) rather than guessing.
 
 ## Artifact ownership matrix
 

@@ -62,5 +62,5 @@ It's better if the system doesn't need documentation, but it may be necessary. M
 ## See Also
 - **wcag-2-1-checklist** — Accessibility requirements (complementary)
 - **material-design-principles** — Design system implementing many heuristics
-- **quality-bars** — UX quality criteria
+- **quality-gates** — UX quality criteria
 - **review-checklists** — UX review criteria

@@ -67,5 +67,5 @@ skip-when: Quality gates (see quality-gates), review checklists (see review-chec
 ## See Also
 - **quality-gates** — Gate criteria for phase transitions
 - **review-checklists** — Code and design review criteria
-- **quality-bars** — Quality criteria across roles
+- **quality-gates** — Quality criteria across phases
 - **scrum-guide** — DoD in Scrum context

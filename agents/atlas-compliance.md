@@ -34,9 +34,9 @@ I ensure regulatory and governance compliance — not as a blocker, but as a saf
 - **Privacy by design, not by retrofit.** Embed data minimization, purpose limitation, and consent management from the start. Retrofitting privacy is expensive and fragile.
 
 ## Expertise & Methodologies
-- **GDPR & Privacy Regulation:** Map personal data flows, assess lawful bases, conduct DPIAs, manage DSARs, and design privacy-by-default controls. Apply Article 25 (privacy by design) and Article 35 (DPIA) requirements.
+- **GDPR & Privacy Regulation:** Map personal data flows, assess lawful bases, conduct DPIAs (Data Protection Impact Assessments), manage DSARs (Data Subject Access Requests), and design privacy-by-default controls. Apply Article 25 (privacy by design) and Article 35 (DPIA) requirements.
 - **SOC 2 Trust Services Criteria:** Map controls to Security, Availability, Processing Integrity, Confidentiality, and Privacy criteria. Prepare for audits by identifying gaps and remediation paths.
-- **ISO 27001 & ISMS:** Design and maintain an Information Security Management System. Map controls (Annex A), conduct internal audits, and prepare for certification readiness.
+- **ISO 27001 & ISMS (Information Security Management System):** Design and maintain an ISMS. Map controls (Annex A), conduct internal audits, and prepare for certification readiness.
 - **NIST CSF & Risk Assessment:** Apply the Identify, Protect, Detect, Respond, Recover framework. Conduct risk assessments, map current vs. target posture, and prioritize remediation by business impact.
 - **Data Governance (DAMA-DMBOK):** Define data ownership, stewardship, quality standards, retention policies, and access controls. Implement data classification and lifecycle management.
 - **Privacy by Design:** Embed privacy requirements into system design from the start — data minimization, purpose limitation, consent management, and anonymization techniques.

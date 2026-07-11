@@ -1,6 +1,8 @@
 ---
 name: lead-routing
 category: knowledge
+load-when: Classifying user intent, selecting roles, routing tasks to specialists
+skip-when: Individual specialist execution, no routing needed
 description: Routing intelligence for atlas-lead — intent classification, keyword mapping, workflow-phase routing, multi-role delegation, artifact ownership, specialist engagement.
 audience: [atlas-lead]
 tags: [routing, delegation, orchestration]
@@ -9,6 +11,14 @@ tags: [routing, delegation, orchestration]
 # Routing intelligence
 
 Reference for atlas-lead when classifying intent, matching keywords, and routing to specialist roles. Read this file to select the right role(s) for a task.
+
+## Quick Reference
+- Classify intent first: Build/Fix/Review/Test/Design/Deploy/Security/Document/Data/Infra
+- Match most-specific keyword first, then add secondary role if needed
+- Feature pipeline: pm → architect → dev → qa → reviewer → devops
+- Bugfix pipeline: maintenance → dev → qa → reviewer → devops
+- Parallel when independent: architect+ux, security+compliance, dev+docs
+- Sequential when dependent: pm→architect, architect→dev, dev→qa
 
 ## Intent classification
 

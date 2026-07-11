@@ -1,6 +1,8 @@
 ---
 name: model-resilience
 category: process
+load-when: Model quota hit, delegation failure, tier downgrade needed, rate limit encountered
+skip-when: Normal delegation flow, no model issues
 description: Canonical reference for automatic model downgrade and tier cascade when quota limits or availability issues occur.
 audience: [atlas-lead, all]
 tags: [model-tiers, resilience, downgrade, quota]
@@ -9,6 +11,14 @@ tags: [model-tiers, resilience, downgrade, quota]
 # Model resilience and automatic downgrade
 
 Canonical reference for keeping the workflow running when a model is quota-limited or unavailable. The user wants no interruptions for this. Roles and atlas-lead downgrade automatically, continue, log, and inform. They do not stop to ask.
+
+## Quick Reference
+- Tier cascade: premium → standard → fast → (exhausted: tell user)
+- On failure: re-delegate same role at next tier down, same turn
+- Never absorb the work — keep delegating even when lead is throttled
+- Log downgrades in budget.md: `downgrade: <role> <from> to <to>, reason <reason>`
+- If all tiers exhausted: stop and tell the user
+- Quality flag: if a premium gate role ran downgraded, flag it in the handoff
 
 ## Tier cascade
 
@@ -146,6 +156,34 @@ When context usage exceeds ~80% of the model window:
 4. If compaction is not enough (still over budget), delegate the remaining work to a fresh session with the compact state as the brief.
 
 **Never lose:** current task goal, owned artifact paths, delegation state in `team.json`, user decisions, and open blockers.
+
+### Compaction state block template (~100 tokens)
+
+When compacting, write this to `$ATLAS_DATA_DIR/runs/<run-id>/state.md`:
+
+```markdown
+## State Block
+- **Phase:** [current phase name]
+- **Completed:** [list of completed phases]
+- **Active delegation:** [role] → [status: pending/active/completed/failed]
+- **Artifacts:** [file paths owned]
+- **Open items:** [unresolved questions, [USER] items]
+- **Decisions:** [key user decisions made]
+- **Next:** [specific next action]
+```
+
+### Fresh session brief template (~150 tokens)
+
+When compaction is insufficient and a fresh session is needed, send this as the brief:
+
+```markdown
+## Fresh Session Brief
+- **Task:** [what was being done when context ran out]
+- **State:** [current phase, which phases are completed]
+- **Files:** [artifact paths the new session needs to read]
+- **Next:** [the specific action to take first]
+- **Constraints:** [any user decisions, budget limits, or blockers]
+```
 
 ### When to compact vs. when not to compact
 

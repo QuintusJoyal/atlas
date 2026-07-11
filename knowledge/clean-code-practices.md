@@ -1,7 +1,7 @@
 ---
 name: clean-code-practices
 load-when: Writing or reviewing code, improving readability, code quality assessments
-skip-when: Specific principles (see solid-practices), refactoring (see refactoring-patterns)
+skip-when: Specific principles (see solid-principles), refactoring (see refactoring-patterns)
 ---
 
 # Clean Code Practices

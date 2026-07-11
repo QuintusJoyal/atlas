@@ -42,6 +42,6 @@ Each test must be independent. No shared state between tests. No order dependenc
 ## See Also
 - **test-driven-development** — Red-green-refactor cycle, writing tests first
 - **test-design-techniques** — Equivalence partitioning, boundary analysis
-- **testing-anti-patterns** — Flaky tests, coverage gaming, inverted pyramid
-- **quality** — Definition of done, review checklists
+- **anti-patterns** — Flaky tests, coverage gaming, inverted pyramid
+- **quality-gates** — Definition of done, review checklists
 - **istqb-test-levels** — Formal test classification, ISTQB syllabus

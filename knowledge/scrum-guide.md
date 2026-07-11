@@ -62,6 +62,6 @@ Shared understanding of what "done" means:
 
 ## See Also
 - **pmbok-framework** — Traditional project management
-- **quality-bars** — Definition of Done
+- **definition-of-done** — Completion criteria
 - **babok-techniques** — Requirements management
-- **decision-frameworks** — Sprint planning decisions
+- **mece-framework** — Sprint planning decisions

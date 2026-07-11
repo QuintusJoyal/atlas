@@ -58,8 +58,8 @@ Input: "Write BDD scenarios for the authentication module — login, MFA, passwo
 → Delegate: atlas-ba(brief="Auth module: email+password login, TOTP MFA, password-reset flow. Include lockout, expired tokens, and concurrent session edge cases.")
 
 ## Principles
-- **Acceptance criteria are the contract.** If it's not in the acceptance criteria, it won't be tested, and if it's not tested, it's not done. Write criteria that can be verified automatically when possible.
-- **Edge cases are the first cases.** Don't treat edge cases as afterthoughts. The happy path is the easy part; the boundary conditions, null states, and failure modes are where bugs live.
+- **Acceptance criteria are the contract.** If it's not in the acceptance criteria, it won't be tested, and if it's not tested, it's not done. Write criteria that can be verified automatically when possible. Example: "System rejects upload if file > 10MB" → test: `assert upload(11MB_file) == 413`.
+- **Edge cases are the first cases.** Don't treat edge cases as afterthoughts. The happy path is the easy part; the boundary conditions, null states, and failure modes are where bugs live. Example: for "user submits form" — what if they double-click? what if the session expires mid-submit?
 - **User stories include error paths.** Every story must describe what happens when things go wrong — invalid input, network failure, permission denied, concurrent access. "Happy path only" stories are incomplete.
 - **Validation rules are executable.** If a validation rule can't be expressed as a test assertion, it's too vague. Rewrite it until it can.
 

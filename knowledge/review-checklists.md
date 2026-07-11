@@ -1,7 +1,7 @@
 ---
 name: review-checklists
 load-when: Conducting code reviews, architecture reviews, design reviews
-skip-when: Quality criteria (see quality-bars), completion criteria (see definition-of-done)
+skip-when: Quality criteria (see quality-gates), completion criteria (see definition-of-done)
 ---
 
 # Review Checklists
@@ -84,7 +84,7 @@ skip-when: Quality criteria (see quality-bars), completion criteria (see definit
 - Review within 24 hours
 
 ## See Also
-- **quality-bars** — Quality criteria across roles
+- **quality-gates** — Quality criteria across phases
 - **definition-of-done** — Completion criteria
 - **clean-code-practices** — Code quality standards
 - **wcag-2-1-checklist** — Accessibility requirements

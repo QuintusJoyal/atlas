@@ -52,5 +52,5 @@ skip-when: UX design principles (see nielsen-heuristics), design system (see mat
 ## See Also
 - **nielsen-heuristics** — UX usability principles
 - **material-design-principles** — Design system with accessibility built in
-- **quality-bars** — Definition of done includes accessibility
+- **definition-of-done** — Completion criteria includes accessibility
 - **review-checklists** — Accessibility review criteria

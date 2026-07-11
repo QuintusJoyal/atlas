@@ -49,5 +49,5 @@ Use documented components for consistency and accessibility.
 ## See Also
 - **wcag-2-1-checklist** — Accessibility requirements
 - **nielsen-heuristics** — UX usability principles
-- **quality-bars** — Design quality criteria
+- **quality-gates** — Design quality criteria
 - **review-checklists** — Design review checklist
