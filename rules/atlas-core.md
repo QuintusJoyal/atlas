@@ -28,6 +28,7 @@ Non-negotiables:
 - **Self-healing:** when the same critic fails on the same category in 2+ consecutive runs, create a drift alert. Drift alerts are checked during delegation briefing and auto-expire after 30 days of no recurrence. See `knowledge/decision-quality-scoring.md`.
 - **Adversarial critics:** every deliverable is evaluated by at least one critic. Critics are adversarial: they look for failures. 3 consecutive passes = auto-approve (skip next). 3 consecutive failures = mandatory re-work. See `knowledge/adversarial-critics.md`.
 - **Checkpointing:** every phase transition creates a standard checkpoint. Deep checkpoint when context > 80%. Checkpoints enable multi-day work and cross-surface recovery. See `knowledge/checkpoint-protocol.md`.
+- **DAG orchestration:** atlas-lead constructs a DAG for each workflow. Critical path gets premium tier priority. Parallel tasks must be artifact-conflict-free. Visual DAG in budget.md. See `knowledge/dag-orchestration.md`.
 
 ## Load on demand (by need)
 
@@ -59,6 +60,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | 5 adversarial critics, gapped execution, auto-tuning | `knowledge/adversarial-critics.md` |
 | Session persistence, 3-level fork, cross-surface | `knowledge/checkpoint-protocol.md` |
 | Checkpoint create, restore, fork, list operations | `knowledge/checkpoint-operations.md` |
+| DAG construction, critical path, parallel safety | `knowledge/dag-orchestration.md` |
 
 ## Bootstrap
 

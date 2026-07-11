@@ -175,6 +175,37 @@ Parallel phases run concurrently via parallel delegation. Gate waits for all par
 
 See `agents/atlas-lead.md` for variant selection, condition evaluation, and state management rules. See `workflows/README.md` for the full workflow format specification.
 
+## DAG construction
+
+Atlas-lead builds a DAG for each workflow to plan execution:
+
+1. **Convert workflow phases to DAG nodes** — each phase becomes a task node with role and estimated tokens
+2. **Apply conditions** — inject conditional nodes (database, security, API) based on project context
+3. **Check parallel safety** — verify parallel tasks don't touch overlapping artifacts
+4. **Calculate critical path** — identify the longest dependency chain
+5. **Generate visual DAG** — ASCII representation in budget.md for user visibility
+
+### Critical path rules
+- Tasks on critical path get priority for premium tier allocation
+- Parallel paths can use standard/fast tiers without affecting timeline
+- Budget predictions are based on critical path tokens
+- If critical path task fails, entire workflow pauses (not just that branch)
+
+### DAG-to-delegation mapping
+Each DAG task node becomes a delegation:
+```
+DAG node: impl-001 (atlas-dev, implementation, 1400 tokens)
+→ Delegation: role=atlas-dev, description="atlas-dev: implement feature X", brief="..."
+```
+
+Critic nodes become critic evaluations:
+```
+DAG node: gate-impl (implementation critic, fan-in from impl-001)
+→ Critic evaluation: run implementation critic on deliverables
+```
+
+See `knowledge/dag-orchestration.md` for full DAG construction, critical path analysis, and parallel safety rules.
+
 ## Critic delegation loop
 
 After each deliverable is handed off, atlas-lead runs the critic evaluation loop:
