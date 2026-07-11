@@ -121,6 +121,6 @@ See `workflows/*.md` and `skills/atlas-lead-playbook/SKILL.md`.
 ## References
 
 - `README.md`, `ROLES.md`
-- `knowledge/model-resilience.md`
-- `knowledge/budget-template.md`
+- `knowledge/reference/model-resilience.md`
+- `knowledge/reference/budget-template.md`
 - [`atlas-control-center/sdk/README.md`](https://github.com/QuintusJoyal/atlas-control-center/blob/main/sdk/README.md)

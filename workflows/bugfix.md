@@ -92,7 +92,7 @@ Tell the user which variant you picked and why.
 - **Input:** trajectory.jsonl, quality scores, critic results, trust profiles
 - **Output:** proposed changes (lessons, tool improvements, role corrections)
 - **Human approval:** required for all knowledge updates
-- **See:** `knowledge/knowledge-compounding.md`
+- **See:** `knowledge/process/knowledge-compounding.md`
 
 ## Definition of Done (auto-approve if small)
 

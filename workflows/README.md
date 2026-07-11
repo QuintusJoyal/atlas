@@ -153,4 +153,4 @@ Gates pause for user sign-off (full variant). Small variant auto-approves if DoD
 | scope | Scoping → Audit (security-audit only) | full only |
 | research | Research → Proposal (discovery only) | full only |
 
-**Every pipeline run starts with Phase 0 kickoff:** workflow selection (lead announces + persists), estimation huddle (roles via Task, atlas-ai-eng aggregates), `budget.md` with Predicted and per-role estimates. See `knowledge/budget-template.md`.
+**Every pipeline run starts with Phase 0 kickoff:** workflow selection (lead announces + persists), estimation huddle (roles via Task, atlas-ai-eng aggregates), `budget.md` with Predicted and per-role estimates. See `knowledge/reference/budget-template.md`.

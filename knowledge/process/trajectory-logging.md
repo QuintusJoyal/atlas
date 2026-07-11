@@ -121,4 +121,4 @@ Bash -> Edit: 2 (test-fail-then-fix pattern)
 Grep -> Read: 5 (search-then-read pattern)
 ```
 
-If any transition fires > 80% of the time after a specific tool, it is a candidate for Tool Transition Fusion (composite tool). See `knowledge/aci-enforcement.md`.
+If any transition fires > 80% of the time after a specific tool, it is a candidate for Tool Transition Fusion (composite tool). See `knowledge/process/aci-enforcement.md`.

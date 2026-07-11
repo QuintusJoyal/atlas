@@ -45,17 +45,17 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 - **Gate:** null
 - **Parallel:** false
 - **Roles:** atlas-ent-arch (premium)
-- **Input:** knowledge/frontier-benchmark.md, current frontier harness features
+- **Input:** knowledge/benchmark/frontier-benchmark.md, current frontier harness features
 - **Output:** updated benchmark with new findings
-- **See:** `knowledge/frontier-benchmark.md`
+- **See:** `knowledge/benchmark/frontier-benchmark.md`
 
 ### performance-analysis
 - **Gate:** null
 - **Parallel:** false
 - **Roles:** atlas-ai-eng (standard)
-- **Input:** knowledge/decision-quality-scoring.md, knowledge/role-trust-profiles.md, knowledge/lessons.md
+- **Input:** knowledge/process/decision-quality-scoring.md, knowledge/process/role-trust-profiles.md, knowledge/reference/lessons.md
 - **Output:** performance summary with trends and patterns
-- **See:** `knowledge/decision-quality-scoring.md`
+- **See:** `knowledge/process/decision-quality-scoring.md`
 
 ### gap-analysis
 - **Gate:** null
@@ -73,7 +73,7 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 - **Output:** improvement proposals with risk tiers
 - **Human approval:** required for all T2/T3 changes
 - **Skip-if:** variant=small
-- **See:** `knowledge/self-assessment-protocol.md`
+- **See:** `knowledge/benchmark/self-assessment-protocol.md`
 
 ## Definition of Done
 

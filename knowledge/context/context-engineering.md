@@ -25,7 +25,7 @@ Treat context as a finite, high-value resource. Every token must earn its place.
 - **Just-in-time loading:** load knowledge and playbook content only when the current step needs it. The three-tier loading strategy in atlas-core.md is the primary mechanism.
 - **Tool-as-context:** after a tool call, extract only the relevant findings. Don't carry raw output (full file contents, detailed logs) forward into the next step. Keep paths, line references, and key findings.
 - **Structured note-taking:** on long tasks, persist notes to `$ATLAS_DATA_DIR/runs/<run-id>/notes.md`. Reference notes instead of re-deriving context from earlier turns.
-- **Compaction triggers:** compact when (a) a sub-task is resolved, (b) context exceeds ~80% of the model window, (c) switching phases. Don't compact mid-derivation or during active reasoning chains. See `knowledge/model-resilience.md` for the full rubric.
+- **Compaction triggers:** compact when (a) a sub-task is resolved, (b) context exceeds ~80% of the model window, (c) switching phases. Don't compact mid-derivation or during active reasoning chains. See `knowledge/reference/model-resilience.md` for the full rubric.
 
 ## Anti-patterns
 - Loading a full knowledge file when a grep would suffice

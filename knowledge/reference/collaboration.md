@@ -90,7 +90,7 @@ Every pipeline run records decisions to `$ATLAS_DATA_DIR/runs/<run-id>/trajector
 
 Record entries when: making non-obvious decisions, escalating, delegating, hitting gates, encountering errors, completing phases. Don't record routine reads or formatting.
 
-See `knowledge/trajectory-logging.md` for the full schema and implementation guidance.
+See `knowledge/process/trajectory-logging.md` for the full schema and implementation guidance.
 
 ## Memory hierarchy
 
@@ -104,7 +104,7 @@ Atlas has three tiers of memory. When sources conflict, higher tiers win:
 
 L1 > L2 > L3. Project context overrides universal rules. Explicit decisions (ADRs) override patterns.
 
-See `knowledge/memory-hierarchy.md` for full spec, writing lessons, and cross-project leakage prevention.
+See `knowledge/context/memory-hierarchy.md` for full spec, writing lessons, and cross-project leakage prevention.
 
 ## When delegation is unavailable
 

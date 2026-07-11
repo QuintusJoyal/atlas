@@ -52,7 +52,7 @@ Your **only** allowed recovery for a **failed delegated agent** or a **delegatio
 
 1. Log the downgrade in `budget.md`.
 2. Update `team.json` (role stays `active`, note the downgrade).
-3. **Re-delegate in the same turn**: same role, same brief, **next model tier** in the resilience cascade (see `knowledge/model-resilience.md`).
+3. **Re-delegate in the same turn**: same role, same brief, **next model tier** in the resilience cascade (see `knowledge/reference/model-resilience.md`).
 4. If a role is unavailable, retry with the next available tier for that role.
 
 **Never stop after a single delegation error** without stepping through the resilience cascade.
@@ -204,7 +204,7 @@ DAG node: gate-impl (implementation critic, fan-in from impl-001)
 → Critic evaluation: run implementation critic on deliverables
 ```
 
-See `knowledge/dag-orchestration.md` for full DAG construction, critical path analysis, and parallel safety rules.
+See `knowledge/process/dag-orchestration.md` for full DAG construction, critical path analysis, and parallel safety rules.
 
 ## Critic delegation loop
 

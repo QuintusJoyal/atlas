@@ -46,11 +46,11 @@ You never write code, tests, requirements, design docs, security audits, or revi
 
 ## Skills
 
-Load `atlas-lead-playbook` for methodology. Load `atlas-core`, `atlas-lead-orchestration`, and `handoff-protocol` rules at run start. Load `$ATLAS_DATA_DIR/knowledge/lead-routing.md` for intent classification and keyword mapping.
+Load `atlas-lead-playbook` for methodology. Load `atlas-core`, `atlas-lead-orchestration`, and `handoff-protocol` rules at run start. Load `$ATLAS_DATA_DIR/knowledge/context/lead-routing.md` for intent classification and keyword mapping.
 
 ## Knowledge
 
-Read `$ATLAS_DATA_DIR/knowledge/lessons.md` before acting. Append new lessons to `proposed.md` after. Reference `$ATLAS_DATA_DIR/knowledge/budget-template.md` for budget scaffolding and `$ATLAS_DATA_DIR/knowledge/collaboration.md` for team conventions.
+Read `$ATLAS_DATA_DIR/knowledge/reference/lessons.md` before acting. Append new lessons to `proposed.md` after. Reference `$ATLAS_DATA_DIR/knowledge/reference/budget-template.md` for budget scaffolding and `$ATLAS_DATA_DIR/knowledge/reference/collaboration.md` for team conventions.
 
 ---
 
@@ -58,7 +58,7 @@ Read `$ATLAS_DATA_DIR/knowledge/lessons.md` before acting. Append new lessons to
 
 Classify user intent, match keywords, and route to the correct specialist(s).
 
-**Full reference:** `$ATLAS_DATA_DIR/knowledge/lead-routing.md` — contains intent classification table, keyword-to-role mapping, workflow-phase routing, multi-role delegation rules, artifact ownership, and specialist engagement triggers.
+**Full reference:** `$ATLAS_DATA_DIR/knowledge/context/lead-routing.md` — contains intent classification table, keyword-to-role mapping, workflow-phase routing, multi-role delegation rules, artifact ownership, and specialist engagement triggers.
 
 **Quick rules:**
 1. Match the **most specific** keyword first.
@@ -80,7 +80,7 @@ If delegation is unavailable, stop and tell the user.
 
 ## Model resilience
 
-See `$ATLAS_DATA_DIR/knowledge/model-resilience.md`. When a step fails on quota/rate/unavailability, re-delegate to the same role one tier down. Cascade: premium → standard → fast → lowest available. Do not stop, do not absorb. Token-budget overrun pauses for user; model quota does not.
+See `$ATLAS_DATA_DIR/knowledge/reference/model-resilience.md`. When a step fails on quota/rate/unavailability, re-delegate to the same role one tier down. Cascade: premium → standard → fast → lowest available. Do not stop, do not absorb. Token-budget overrun pauses for user; model quota does not.
 
 ## Approval gates
 
@@ -216,7 +216,7 @@ Keep artifacts in `$ATLAS_DATA_DIR/runs/<run-id>/` so progress is inspectable. P
 
 ## Team manifest (required)
 
-Read `$ATLAS_DATA_DIR/knowledge/collaboration.md` at kickoff. Every run has `team.json` listing each delegated role, phase, owned artifact, and status.
+Read `$ATLAS_DATA_DIR/knowledge/reference/collaboration.md` at kickoff. Every run has `team.json` listing each delegated role, phase, owned artifact, and status.
 
 ## Coordination
 

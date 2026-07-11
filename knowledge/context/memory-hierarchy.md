@@ -20,7 +20,7 @@ Atlas has three tiers of memory. When sources conflict, higher tiers win.
 ## Tiers
 
 ### L1: Personal (highest priority)
-**Source:** `knowledge/lessons.md` (per-role entries)
+**Source:** `knowledge/reference/lessons.md` (per-role entries)
 **Scope:** This agent, this project
 **Examples:**
 - "atlas-dev: avoid nested Promise.all in Express middleware — causes memory spikes"
@@ -72,4 +72,4 @@ Format in `lessons.md`:
 
 ## Cross-project leakage prevention
 
-Personal lessons (L1) are project-scoped by default. They live in the project's `knowledge/lessons.md`, not a global file. When working on a new project, start with L3 shared knowledge; L1 lessons accumulate as you work.
+Personal lessons (L1) are project-scoped by default. They live in the project's `knowledge/reference/lessons.md`, not a global file. When working on a new project, start with L3 shared knowledge; L1 lessons accumulate as you work.

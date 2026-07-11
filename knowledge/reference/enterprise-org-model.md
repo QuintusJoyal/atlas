@@ -98,4 +98,4 @@ Engage when domain requires; see `ROLES.md` and lead playbook enterprise section
 - `rules/team-charter.md`
 - `workflows/feature.md`, `workflows/bugfix.md`, `workflows/infra-change.md`
 - `skills/atlas-lead-playbook/SKILL.md`
-- `knowledge/collaboration.md`
+- `knowledge/reference/collaboration.md`

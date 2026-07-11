@@ -47,7 +47,7 @@ When the user gives you a task, classify the **intent** first:
 
 ## Trust-based routing
 
-Before delegating, atlas-lead consults role trust profiles (`knowledge/role-trust-profiles.md`):
+Before delegating, atlas-lead consults role trust profiles (`knowledge/process/role-trust-profiles.md`):
 
 ### Tier allocation
 1. Look up role's trust score in `trust-profiles.json`
@@ -62,7 +62,7 @@ Before delegating, atlas-lead consults role trust profiles (`knowledge/role-trus
 - **UNTRUSTED roles:** only simple tasks, premium tier, mandatory review
 
 ### Trust updates
-After each task, trust scores update based on quality scores and critic pass rates. See `knowledge/role-trust-profiles.md` for the full scoring formula.
+After each task, trust scores update based on quality scores and critic pass rates. See `knowledge/process/role-trust-profiles.md` for the full scoring formula.
 | Enterprise | integration, capability, domain, TOGAF, strategy | atlas-ent-arch | atlas-consultant | discovery |
 | Planning | timeline, milestone, RAID, risk, stakeholder | atlas-delivery | atlas-pm | feature |
 | Discovery | research, explore, spike, POC, investigate | atlas-consultant | atlas-architect | discovery |

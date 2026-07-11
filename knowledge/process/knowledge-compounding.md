@@ -96,7 +96,7 @@ Trend: atlas-qa rework rate decreasing (0.20 → 0.15 → 0.10 over 3 runs)
 When roles consistently struggle with the same type of task:
 ```
 Gap: "No knowledge file for handling concurrent database migrations"
-Action: create knowledge/concurrent-migrations.md
+Action: create knowledge/data/concurrent-migrations.md
 Approved: pending
 ```
 
@@ -108,7 +108,7 @@ All knowledge updates require human approval:
 2. **User reviews** — user sees proposed changes with evidence
 3. **User approves** — user approves, rejects, or modifies each proposal
 4. **Atlas applies** — approved changes update knowledge files
-5. **Atlas logs** — changes logged in `knowledge/proposed.md` with approval status
+5. **Atlas logs** — changes logged in `knowledge/reference/proposed.md` with approval status
 
 ## Storage
 

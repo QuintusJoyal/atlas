@@ -22,15 +22,15 @@ Atlas runs a monthly self-assessment to evaluate its own performance and identif
 ## 4 phases
 
 ### 1. Benchmark Review
-- Review `knowledge/frontier-benchmark.md`
+- Review `knowledge/benchmark/frontier-benchmark.md`
 - Compare against current frontier harnesses
 - Identify new gaps or improvements
 - Update benchmark if frontier harnesses have released new features
 
 ### 2. Performance Analysis
-- Review quality scores from `knowledge/decision-quality-scoring.md`
-- Analyze trust profile trends from `knowledge/role-trust-profiles.md`
-- Review drift alerts from `knowledge/lessons.md`
+- Review quality scores from `knowledge/process/decision-quality-scoring.md`
+- Analyze trust profile trends from `knowledge/process/role-trust-profiles.md`
+- Review drift alerts from `knowledge/reference/lessons.md`
 - Identify patterns across recent runs
 
 ### 3. Gap Identification
@@ -52,7 +52,7 @@ Changes that don't affect agent behavior:
 - Adding new examples
 - Formatting changes
 
-Action: Atlas can auto-approve, log in `knowledge/proposed.md`
+Action: Atlas can auto-approve, log in `knowledge/reference/proposed.md`
 
 ### T2: Gate required (medium risk)
 Changes that affect agent behavior but are reversible:
@@ -93,7 +93,7 @@ Monthly trigger
 1. **Human always approves** — no change is applied without user approval
 2. **Risk tier determines gate** — T1 auto, T2 gate, T3 human required
 3. **Changes are reversible** — prefer additive changes over modifications
-4. **Changes are logged** — every change recorded in CHANGELOG.md and `knowledge/proposed.md`
+4. **Changes are logged** — every change recorded in CHANGELOG.md and `knowledge/reference/proposed.md`
 5. **Changes are tested** — new knowledge/critics should be validated on a sample task before full deployment
 
 ## Anti-patterns

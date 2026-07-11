@@ -86,6 +86,6 @@ v2 (planned): SDK or IDE telemetry feeds Actual by tier and role. Until then, tr
 ## References
 
 - `rules/team-charter.md`
-- `knowledge/budget-template.md`
-- `knowledge/model-resilience.md`
-- `knowledge/collaboration.md`
+- `knowledge/reference/budget-template.md`
+- `knowledge/reference/model-resilience.md`
+- `knowledge/reference/collaboration.md`

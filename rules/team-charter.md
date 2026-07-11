@@ -27,7 +27,7 @@ The user sits on top and can work with any role at any level. All roles collabor
 Roles collaborate to resolve unknowns first. Whatever stays unresolved is funneled through `atlas-pm` or `atlas-ba` (requirements owners), who consolidate open items and raise a single question to the user. The requirements owners also surface requirement gaps to the user the moment they appear, at any point in the cycle.
 
 ## Model resilience
-Automatic downgrade on quota/rate/unavailability. Cascade: premium → standard → fast. Full reference: `$ATLAS_DATA_DIR/knowledge/model-resilience.md`. Lead re-delegates; never absorbs. Token-budget overrun pauses for user; model quota does not.
+Automatic downgrade on quota/rate/unavailability. Cascade: premium → standard → fast. Full reference: `$ATLAS_DATA_DIR/knowledge/reference/model-resilience.md`. Lead re-delegates; never absorbs. Token-budget overrun pauses for user; model quota does not.
 
 ## Operating model (Framework v1)
 Enterprise ceremony must not override frugal/token efficiency. Kickoff, gate DoD, and blockers are enforced via chat and repo artifacts (`team.json`, `gates/`, `budget.md`). Framework docs: `core-values-charter.md`, `enterprise-org-model.md`, `atlas-framework.md`. Waivers never bypass security, compliance, or reviewer DoD.
@@ -76,9 +76,9 @@ No phase starts until the previous phase's checklist is satisfied. atlas-lead ve
 - `aborted` phases are skipped; workflow continues with the next phase
 
 ## Collaboration and improvement
-- **Orchestration:** atlas-lead always delegates specialist work. It does not substitute for atlas-pm, atlas-dev, or other roles. On quota interrupt, downgrade and re-delegate to the same role; keep `team.json` current. Hard rule; see `agents/atlas-lead.md` and `knowledge/collaboration.md`. User may waive only with an explicit typed exception per task.
-- **Handoffs:** every role writes self-contained artifacts (paths, decisions, next action). Delegated agents and downstream roles do not see chat. See `knowledge/collaboration.md` (Clear communication) and `rules/handoff-protocol.md`.
+- **Orchestration:** atlas-lead always delegates specialist work. It does not substitute for atlas-pm, atlas-dev, or other roles. On quota interrupt, downgrade and re-delegate to the same role; keep `team.json` current. Hard rule; see `agents/atlas-lead.md` and `knowledge/reference/collaboration.md`. User may waive only with an explicit typed exception per task.
+- **Handoffs:** every role writes self-contained artifacts (paths, decisions, next action). Delegated agents and downstream roles do not see chat. See `knowledge/reference/collaboration.md` (Clear communication) and `rules/handoff-protocol.md`.
 - Resource requests: any role may request a resource (information, access, a decision, another role's output) from the user or a peer, with a short justification. Granted when the reason is acceptable and the ask is achievable.
 - Conflict resolution: when roles disagree, atlas-lead arbitrates by this charter (simplicity, evidence, security first). Unresolved conflicts escalate to the user with options and a recommendation. No silent overrides.
-- Ways-of-working proposals: any role may propose process changes or new ideas. Proposals queue in `$ATLAS_DATA_DIR/knowledge/ways-of-working.md` for user approval, then apply.
-- Continuous learning: read `$ATLAS_DATA_DIR/knowledge/lessons.md` before acting. After work, append new non-obvious lessons to `proposed.md` with a one-line rationale and source.
+- Ways-of-working proposals: any role may propose process changes or new ideas. Proposals queue in `$ATLAS_DATA_DIR/knowledge/reference/ways-of-working.md` for user approval, then apply.
+- Continuous learning: read `$ATLAS_DATA_DIR/knowledge/reference/lessons.md` before acting. After work, append new non-obvious lessons to `knowledge/reference/proposed.md` with a one-line rationale and source.

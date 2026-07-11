@@ -32,13 +32,13 @@ When a task overflows lite mode (cross-role coordination, architecture decisions
 
 | Need | File |
 |------|------|
-| Context management | `knowledge/context-engineering.md` |
-| Reasoning patterns | `knowledge/structured-reasoning.md` |
-| Verification checklists | `knowledge/pre-action-gates.md` |
-| Problem classification | `knowledge/problem-domain-classification.md` |
-| Before making changes | `knowledge/observe-before-act.md` |
-| Before declaring done | `knowledge/pre-handoff-quality-check.md` |
-| Stuck / need help | `knowledge/escalation-tiers.md` |
-| Which tool to use | `knowledge/tool-registry.md` |
-| Recording decisions | `knowledge/trajectory-logging.md` |
-| Which source to trust | `knowledge/memory-hierarchy.md` |
+| Context management | `knowledge/context/context-engineering.md` |
+| Reasoning patterns | `knowledge/context/structured-reasoning.md` |
+| Verification checklists | `knowledge/context/pre-action-gates.md` |
+| Problem classification | `knowledge/context/problem-domain-classification.md` |
+| Before making changes | `knowledge/context/observe-before-act.md` |
+| Before declaring done | `knowledge/context/pre-handoff-quality-check.md` |
+| Stuck / need help | `knowledge/context/escalation-tiers.md` |
+| Which tool to use | `knowledge/process/tool-registry.md` |
+| Recording decisions | `knowledge/process/trajectory-logging.md` |
+| Which source to trust | `knowledge/context/memory-hierarchy.md` |

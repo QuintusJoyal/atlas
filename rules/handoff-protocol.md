@@ -115,7 +115,7 @@ When a role produces a handoff, it must include:
 - **Token budget:** light / medium / heavy with one-line rationale
 
 ### Team manifest
-Update `$ATLAS_DATA_DIR/runs/<run-id>/team.json` for your role: set your entry to `completed` or `failed`, add a short `note`, and set `completedAt`. If you ran on a downgraded tier, set `model` and `downgradedFrom` when atlas-lead re-delegated after a quota interrupt. If no entry exists, atlas-lead should have seeded the file; add your row if missing. See `knowledge/collaboration.md`.
+Update `$ATLAS_DATA_DIR/runs/<run-id>/team.json` for your role: set your entry to `completed` or `failed`, add a short `note`, and set `completedAt`. If you ran on a downgraded tier, set `model` and `downgradedFrom` when atlas-lead re-delegated after a quota interrupt. If no entry exists, atlas-lead should have seeded the file; add your row if missing. See `knowledge/reference/collaboration.md`.
 
 ## State transitions
 
@@ -170,4 +170,4 @@ Before advancing from a parallel stage to the next sequential stage:
 5. If conflicts found: pause, present resolution options to user (reconcile, re-run one role, override, accept divergence)
 6. Log result to trajectory.jsonl
 
-See `knowledge/divergence-detection.md` for full detection protocol and resolution options.
+See `knowledge/process/divergence-detection.md` for full detection protocol and resolution options.
