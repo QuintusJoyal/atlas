@@ -4,6 +4,40 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-07-11
+
+### Added
+
+- **ACI enforcement** — structured error protocol (5 categories), semantic output rules, output compression thresholds, poka-yoke constraints, cross-agent tool provenance. Every tool failure returns `{errorCategory, recoverable, message, suggestedAction}`. See `knowledge/aci-enforcement.md`.
+- **Role-tool scoping** — phase-aware tool scope matrix (6 phases x 9 tools). Roles can only use tools appropriate to their current phase. Prevents scope creep via tool access. See `knowledge/role-tool-scoping.md`.
+- **Divergence detection** — parallel artifact conflict detection for concurrent phases. Compares file lists, requirement keywords, and design terms to catch semantic divergence before integration. See `knowledge/divergence-detection.md`.
+- **OTel observability** — OpenTelemetry GenAI semantic conventions for trajectory logs. 8 multi-agent metrics unique to Atlas (IAHQS, DAS, EJR, GYR, REI, CPS, PER, MTAS). 6 anomaly detection patterns (repeater, wanderer, looper, budget bleed, escalation storm, gate blockade). Dashboard concepts for run overview, per-role drill-down, team coordination. See `knowledge/observability-system.md`.
+- **Decision quality scoring** — 6-dimension scoring (role adherence, gate effectiveness, handoff quality, delegation accuracy, escalation quality, plan fidelity). Composite score with configurable weights. Self-healing doctrine with drift alerts. See `knowledge/decision-quality-scoring.md`.
+- **5 adversarial critics** — spec-integrity (gapped), oracle (gapped), implementation (immediate), socratic-quality (immediate), regression-gate (gapped). 3-pass/3-fail auto-tuning. Gapped critics run on next run. Structured JSON output. See `knowledge/adversarial-critics.md`.
+- **Checkpoint Protocol (ACP)** — 3-level checkpoints (lightweight, standard, deep), 3-level fork (replay, branch, resume), cross-surface portability. Multi-day work support. See `knowledge/checkpoint-protocol.md`.
+- **DAG orchestration** — dynamic DAG construction from workflow phases, critical path analysis, parallel safety checks, node types (task, critic, condition, checkpoint), visual ASCII DAG. See `knowledge/dag-orchestration.md`.
+- **Trust scoring (ARTS)** — adaptive role trust (0-1), 4 tiers (UNTRUSTED, PROBATION, STANDARD, TRUSTED), trust-based tier allocation, score decay, trust resets. See `knowledge/role-trust-profiles.md`.
+- **Knowledge compounding** — retrospective phase after every workflow, post-run extraction (lessons, tool improvements, role corrections), cross-run pattern detection, human approval for all knowledge updates. See `knowledge/knowledge-compounding.md`.
+- **Frontier benchmark** — monthly capability comparison against frontier harnesses. Tracks where Atlas leads, is on par, or lags. See `knowledge/frontier-benchmark.md`.
+- **Self-assessment protocol** — 4-phase monthly self-assessment (benchmark review, performance analysis, gap identification, improvement proposals). 3 risk tiers for self-modification. Human always approves. See `knowledge/self-assessment-protocol.md`.
+- **Self-assessment workflow** — `workflows/self-assessment.md`: monthly self-assessment with small/full variants.
+- **Critic prompts** — 5 structured critic prompts in `knowledge/critic-prompts/`: spec-integrity, oracle, implementation, socratic-quality, regression-gate.
+
+### Changed
+
+- **atlas-core.md** — 10 new non-negotiables (structured errors, semantic output, tool provenance, poka-yoke, observability, self-healing, adversarial critics, checkpointing, DAG orchestration, trust-based routing, knowledge compounding). 11 new load-on-demand entries (total: 27).
+- **atlas-lead-orchestration.md** — added critic delegation loop, DAG construction section with critical path rules and DAG-to-delegation mapping.
+- **handoff-protocol.md** — added divergence check section for parallel phases.
+- **lead-routing.md** — added trust-based routing section (tier allocation, trust-informed delegation).
+- **usage-insights.md** — added OTel spans, anomaly detections, quality scores, drift alerts sections.
+- **lessons.md** — added observability and self-healing lessons.
+- **feature.md** — added retrospective phase after deploy.
+- **bugfix.md** — added retrospective phase after deploy.
+
+### Version
+
+- **Version** — bumped to 0.13.0
+
 ## [0.12.0] - 2026-07-11
 
 ### Added
