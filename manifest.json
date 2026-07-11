@@ -200,7 +200,10 @@
     "performance-optimization.md",
     "observability-setup.md",
     "disaster-recovery.md",
-    "self-assessment.md"
+    "self-assessment.md",
+    "refactoring.md",
+    "api-design.md",
+    "documentation.md"
   ],
   "workflowMeta": {
     "stateMachine": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"],
