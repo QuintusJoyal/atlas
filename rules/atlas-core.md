@@ -20,6 +20,10 @@ Non-negotiables:
 - **Context compaction:** if context exceeds ~80% of the model window, summarize prior turns into a compact state block and continue. Never lose track of the current task, owned artifacts, or delegation state.
 - **Tool clearing:** when switching phases or roles, release unused tool handles. Do not hold stale file locks or MCP connections across unrelated steps.
 - **Output length:** keep responses under 4,000 tokens unless the artifact requires more. For delegation briefs, aim for 500-1,000 tokens. For handoffs, 300-600 tokens.
+- **Structured errors:** every tool that fails returns an error object with `errorCategory`, `recoverable`, `message`, and `suggestedAction`. Never return bare error strings. See `knowledge/aci-enforcement.md`.
+- **Semantic output:** return human-readable identifiers in tool outputs, not raw UUIDs or internal codes. Technical IDs are secondary fields only. See `knowledge/aci-enforcement.md`.
+- **Tool provenance:** when delegating or handing off, include what tools were called, what files were touched, and what errors occurred. The receiving role must not re-derive this from raw context.
+- **Poka-yoke over prompts:** when an agent makes the same tool error twice, fix the tool interface (add a constraint, improve the error message) rather than adding prompt instructions. One constraint beats ten sentences.
 
 ## Load on demand (by need)
 
@@ -43,6 +47,8 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Model failures | `knowledge/model-resilience.md` |
 | Team communication | `knowledge/collaboration.md` |
 | Routing and delegation | `knowledge/lead-routing.md` |
+| ACI rules, error protocol, output standards | `knowledge/aci-enforcement.md` |
+| Phase-aware tool scoping | `knowledge/role-tool-scoping.md` |
 
 ## Bootstrap
 

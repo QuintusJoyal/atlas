@@ -50,6 +50,13 @@ Each entry is a single JSON line:
 | `tokens` | no | Approximate tokens consumed by this decision |
 | `delegatedTo` | no | Role delegated to (when action=delegate) |
 | `error` | no | Error message (when outcome=failure) |
+| `toolInput` | no | Key arguments passed to the tool (for transition analysis) |
+| `toolOutput` | no | Summary of tool output: success/failure + key data |
+| `errorCategory` | conditional | Error category when outcome=failure (transient/validation/business/permission/not_found) |
+| `tokensEstimate` | no | Estimated tokens consumed by tool output |
+| `recoveryAction` | conditional | What the agent did after the error (retry/re-escalate/abandon) |
+| `toolReceiptId` | conditional | Receipt for file-mutating operations (conflict detection) |
+| `checkpointId` | no | Links entry to a checkpoint (when checkpoint system active) |
 
 ## When to record
 
@@ -82,3 +89,36 @@ After a successful run, review trajectory entries where `outcome=failure` follow
 
 ### Metrics
 Aggregate `tokens` field per role to understand token consumption patterns. Use for budget optimization.
+
+## Extended schema example
+
+```jsonl
+{
+  "ts": "2026-07-11T14:32:00Z",
+  "role": "atlas-dev",
+  "action": "edit",
+  "target": "src/api.ts:42",
+  "toolInput": {"file": "src/api.ts", "old": "...", "new": "..."},
+  "toolOutput": {"success": true, "linesChanged": 3},
+  "tokensEstimate": 400,
+  "toolReceiptId": "tr-a7b3c",
+  "why": "Fix N+1 query in user endpoint",
+  "approach": "Batch query with Promise.all",
+  "outcome": "success",
+  "tokens": 1200
+}
+```
+
+## Transition analysis
+
+After a run, compute tool transition frequencies:
+```
+Tool Transition Matrix (run abc123)
+Read -> Read: 4 (re-reading different files)
+Read -> Edit: 6 (read-then-edit pattern)
+Edit -> Bash: 4 (edit-then-test pattern)
+Bash -> Edit: 2 (test-fail-then-fix pattern)
+Grep -> Read: 5 (search-then-read pattern)
+```
+
+If any transition fires > 80% of the time after a specific tool, it is a candidate for Tool Transition Fusion (composite tool). See `knowledge/aci-enforcement.md`.

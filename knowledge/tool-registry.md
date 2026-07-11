@@ -1,59 +1,78 @@
 ---
 name: tool-registry
 category: process
-load-when: Unsure which tool to use, complex tool selection, IDE migration
+load-when: Unsure which tool to use, complex tool selection, designing new tools, debugging tool failures
 skip-when: Clear tool choice, simple operations
-description: Tool usage patterns and decision guide. Maps needs to tool categories.
+description: Tool usage patterns, decision guide, and ACI standards. Maps needs to tool categories with enforced behavior rules.
 audience: [all]
-tags: [tools, ide, file-operations, search, delegation]
+tags: [tools, ide, file-operations, search, delegation, aci]
 ---
 
 # Tool registry
 
-A structured catalog of tool patterns. Use this when you're unsure which tool to use for a task.
+A structured catalog of tool patterns and ACI standards. Use this when you're unsure which tool to use, or when designing or debugging tools.
 
 ## Quick Reference
 
-| Need | Pattern | Atlas tool names |
-|------|---------|-----------------|
-| Read file | read/glob | Read, Glob |
-| Search code | grep | Grep |
-| Write file | write/edit | Write, Edit |
-| Run command | bash/shell | Bash |
-| Delegate | spawn-subagent | Task, @agent |
-| Web research | webfetch/websearch | WebFetch, WebSearch |
+| Need | Pattern | Atlas tool names | ACI notes |
+|------|---------|-----------------|-----------|
+| Read file | read/glob | Read, Glob | Windowed: 200-line default, offset/limit for larger |
+| Search code | grep | Grep | Return file list with counts, not matched lines |
+| Write file | write/edit | Write, Edit | **Must Read first.** Edit requires exact string match. |
+| Run command | bash/shell | Bash | Use `workdir` param. Truncate output > 500 lines. |
+| Delegate | spawn-subagent | Task, @agent | Include tool provenance in handoff brief. |
+| Web research | webfetch/websearch | WebFetch, WebSearch | Cache results. Don't re-fetch same URL. |
 
 ## Tool categories
 
 ### File operations
-- **Read**: `Read` — read file contents. Use for small/medium files. For large files (>500 lines), use offset/limit.
-- **Glob**: `Glob` — find files by pattern. Use `**/*.ts` for recursive matching.
-- **Write**: `Write` — create or overwrite a file. Always read first if the file exists.
-- **Edit**: `Edit` — targeted string replacement. Use `replaceAll` for renames across a file.
+- **Read**: read file contents. Default: 200 lines. For large files (>200 lines), use offset/limit. On error, return structured error with file path and line count.
+- **Glob**: find files by pattern. Use `**/*.ts` for recursive matching. Returns file list only.
+- **Write**: create or overwrite a file. **ALWAYS Read first if file exists.** On permission error, return `errorCategory: "permission"`, `recoverable: false`.
+- **Edit**: targeted string replacement. **ALWAYS Read first.** Returns linter/validator feedback on syntax errors. On mismatch, return the closest matching region.
 
 ### Search
-- **Grep**: `Grep` — content search using regex. Faster than reading entire files. Use `include` to filter by file type.
+- **Grep**: content search using regex. Return file list with match counts. For > 10 matches, paginate. Never return full matched lines in default mode.
 
 ### Execution
-- **Bash**: `Bash` — shell commands. Use `workdir` parameter instead of `cd`. Run independent commands in parallel.
+- **Bash**: shell commands. Use `workdir` parameter. Truncate stdout to last 200 lines + exit code. On non-zero exit, return exit code + stderr excerpt + suggested fix.
 
 ### Delegation
-- **Task**: `Task` — spawn a subagent for complex, multi-step tasks. Specify `subagent_type` (explore, general). Use `task_id` to resume.
+- **Task**: spawn subagent. Brief MUST include tool provenance from prior steps. See handoff protocol.
 
 ### Web
-- **WebFetch**: `WebFetch` — fetch and analyze web content. Use for documentation lookup.
-- **WebSearch**: `WebSearch` — real-time web search. Use for current events, library docs.
+- **WebFetch**: fetch and analyze web content. Returns summarized content, not raw HTML.
+- **WebSearch**: real-time web search. Returns structured results with URLs and snippets.
+
+## ACI behavior rules
+
+### Error protocol
+Every tool MUST return structured errors:
+```json
+{"error": true, "errorCategory": "validation", "recoverable": true, "message": "...", "suggestedAction": "..."}
+```
+
+### Output compression
+- File reads > 200 lines: summary + offer re-read by range
+- Search > 10 matches: paginated file list
+- Bash > 500 lines: last 200 lines + exit code
+- Empty output: explicit success message
+
+### Semantic output
+- Return names, not UUIDs
+- Return file_type, not mime_type
+- Include technical IDs only as secondary fields
 
 ## Atlas-specific patterns
 
 ### Batch parallel calls
 When multiple independent operations are needed, run them in a single message:
 ```
-Read(file1) + Read(file2) + Grep(pattern)  →  all in one call
+Read(file1) + Read(file2) + Grep(pattern)  ->  all in one call
 ```
 
-### Read-before-edit
-Always `Read` a file before `Edit`. The Edit tool requires the exact string to match. Reading first gives you the exact content.
+### Read-before-edit (enforced)
+Always `Read` a file before `Edit`. The Edit tool requires the exact string to match. Reading first gives you the exact content. This is a poka-yoke constraint, not a suggestion.
 
 ### Workdir over cd
 Use the `workdir` parameter instead of `cd <dir> && command`. Cleaner, more reliable.
@@ -63,3 +82,13 @@ When searching for content, use `Grep` first to locate, then `Read` the specific
 
 ### Tool clearing
 When switching phases or roles, release unused tool handles. Don't hold stale file locks or MCP connections across unrelated steps.
+
+### Tool provenance on handoff
+When delegating to another role or handing off work, include:
+1. What tools were called (tool name + key args)
+2. What files were read, written, or edited
+3. What errors occurred and how they were resolved
+4. What tool actions are pending
+
+### Poka-yoke principle
+When you make the same tool error twice, the fix is a constraint, not a reminder. Add an input validation rule, improve the error message, or change the tool's default behavior. One constraint change eliminates the entire error class.
