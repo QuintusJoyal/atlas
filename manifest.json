@@ -1,6 +1,6 @@
 {
   "name": "atlas",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Universal AI agent team framework for software delivery.",
   "schema": "atlas-bundle/1.0",
   "license": "MIT",
@@ -246,5 +246,27 @@
     "envVar": "ATLAS_KNOWLEDGE_DIR",
     "default": "~/.atlas/knowledge",
     "description": "Shared team knowledge base. Roles read lessons before acting and append proposals after."
+  },
+  "lite": {
+    "description": "Stripped-down mode for 3B-8B models with 8K context windows. ~1,100 token system prompt vs ~6,300 in full mode.",
+    "contextWindow": "8K",
+    "rules": "lite/rules/",
+    "agents": "lite/agents/",
+    "workflows": "lite/workflows/",
+    "skills": "lite/skills/",
+    "knowledge": "knowledge/",
+    "knowledgeNote": "Knowledge files shared with full mode. Load only Quick Reference sections when possible.",
+    "tokenBudget": {
+      "systemPrompt": "~1,100 tokens",
+      "remainingForTask": "~6,900 tokens"
+    },
+    "differences": [
+      "atlas-core: 5 imperative rules, no meta-cognitive instructions",
+      "handoff: 4-section format only (Summary, Outputs, Issues, Next)",
+      "workflows: max 4 phases, inline conditions, no state machine",
+      "state tracked in state.md (not team.json)",
+      "no estimation huddle or budget tracking",
+      "lead loads only: atlas-core, handoff-protocol, atlas-lead-orchestration, team-charter"
+    ]
   }
 }

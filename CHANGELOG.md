@@ -4,6 +4,42 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-07-11
+
+### Added
+
+- **Lite mode** — parallel set of stripped-down rule/agent/workflow/skill files for 3B-8B models with 8K context windows. ~1,100 token system prompt vs ~6,300 in full mode.
+  - `lite/rules/atlas-core.md` — 5 imperative rules (~200 tokens)
+  - `lite/rules/handoff-protocol.md` — 4-section format only (~80 tokens)
+  - `lite/rules/atlas-lead-orchestration.md` — step-by-step delegation procedure (~200 tokens)
+  - `lite/rules/team-charter.md` — 3 rules + 1 gate checklist (~100 tokens)
+  - `lite/agents/atlas-lead.md` — routing + delegation only (~400 tokens)
+  - `lite/workflows/feature.md`, `bugfix.md`, `discovery.md` — max 4 phases, inline conditions
+  - `lite/skills/atlas-dev-playbook/SKILL.md`, `atlas-lead-playbook/SKILL.md` — ~120 tokens each
+- **Compaction state block template** — formal ~100 token template for context compaction in model-resilience.md
+- **Fresh session brief template** — formal ~150 token template for escalation when compaction fails
+- **Quick Reference sections** — added to model-resilience.md, collaboration.md, lead-routing.md
+- **Concrete examples** — added one example per principle to top 10 agents (dev, qa, architect, security, pm, ba, devops, lead, ux, reviewer)
+- **"Works with" protocol** — defined in collaboration.md: bidirectional information exchange, initiate when needed
+- **Scope-change handoff format** — 3-section assessment template in handoff-protocol.md
+
+### Fixed
+
+- **Broken knowledge references** — fixed 6 broken file references: quality-bars→quality-gates (9 files), decision-frameworks→mece-framework (2 files), testing-anti-patterns→anti-patterns, solid-practices→solid-principles, craftsmanship→clean-code-practices, anthropic-context-engineering→inline (atlas-docs-playbook)
+- **Variant naming** — unified bugfix.md from "simplified" to "small" to match all other workflows
+- **Gate schema mismatch** — renamed quality-gates.md gates to match workflow files (Code Gate→implementation, Test Gate→testing, Release Gate→deploy)
+- **DoD implicit/explicit contradiction** — clarified that small variant DoD is implicit (role completed = gate passed), no phantom checklist
+- **Duplicate atlas-ux** — removed duplicate row in handoff-protocol.md contract table
+- **Self-reference** — removed swebok.md self-reference in See Also
+- **Frontmatter** — added load-when/skip-when to model-resilience.md, collaboration.md, lead-routing.md
+- **Acronym expansions** — expanded DSAR, DPIA, ISMS, AUC-ROC, RMSE, MAE at first use in agent files
+- **atlas-lead rules** — added model-resilience to atlas-lead.md frontmatter rules list
+- **team.json mandate** — added per-turn state.md read requirement to atlas-lead.md
+
+### Changed
+
+- **Version** — bumped to 0.10.0
+
 ## [0.9.1] - 2026-07-11
 
 ### Added
