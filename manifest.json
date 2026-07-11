@@ -1,6 +1,6 @@
 {
   "name": "atlas",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Universal AI agent team framework for software delivery.",
   "schema": "atlas-bundle/1.0",
   "license": "MIT",
@@ -62,7 +62,16 @@
     "team-charter.md",
     "engineering-standards.md",
     "handoff-protocol.md",
-    "writing-style.md"
+    "writing-style.md",
+    "security.md",
+    "data-governance.md",
+    "responsible-ai.md",
+    "networking.md",
+    "cost-governance.md",
+    "architectural-governance.md",
+    "compliance.md",
+    "delivery-governance.md",
+    "client-engagement.md"
   ],
   "knowledge": [
     "lessons.md",
@@ -135,7 +144,14 @@
     "definition-of-done.md",
     "review-checklists.md",
     "quality-gates.md",
-    "anti-patterns.md"
+    "anti-patterns.md",
+    "togaf-framework.md",
+    "kubernetes-patterns.md",
+    "api-design.md",
+    "event-driven-architecture.md",
+    "developer-experience.md",
+    "incident-response.md",
+    "observability-tooling.md"
   ],
   "workflows": [
     "feature.md",
@@ -143,7 +159,11 @@
     "data-project.md",
     "infra-change.md",
     "security-audit.md",
-    "discovery.md"
+    "discovery.md",
+    "database-migration.md",
+    "performance-optimization.md",
+    "observability-setup.md",
+    "disaster-recovery.md"
   ],
   "workflowMeta": {
     "stateMachine": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"],

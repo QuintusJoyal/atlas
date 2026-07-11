@@ -4,6 +4,45 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-07-11
+
+### Added
+
+- **9 new rule files** — created all missing rules referenced by agents: security, data-governance, responsible-ai, networking, cost-governance, architectural-governance, compliance, delivery-governance, client-engagement. 50% of agents now have valid rule references.
+- **Cynefin domain classification** — added problem domain classification (clear/complicated/complex/chaotic) to atlas-core as Step 0 before choosing strategy. Agents now diagnose the nature of a problem before deciding how to approach it.
+- **Gemba observe-before-act** — added to atlas-core: read files, run tests, check git log before making changes. Prevents acting on assumptions.
+- **Pre-handoff quality check** — added to atlas-core: 5-point verification before declaring completion. Includes 3-strike rule for repeated errors.
+- **Escalation protocol** — added to atlas-core: 4-tier escalation (T1: retry, T2: escalate to lead, T3: lead to user, T4: crisis). Minimum payload: what was tried, what failed, what's needed.
+- **Tool-first enforcement** — added to atlas-core: every response must be a tool call, user question, or formal completion. No plain-text filler.
+- **INVEST criteria for task decomposition** — added to atlas-lead orchestration: tasks must be Independent, Negotiable, Valuable, Estimable, Small, Testable before delegation.
+- **6 new knowledge files** — kubernetes-patterns, api-design, event-driven-architecture, developer-experience, incident-response, observability-tooling.
+- **4 new workflows** — database-migration, performance-optimization, observability-setup, disaster-recovery. Each with small/full variants.
+- **4 new lite specialist agents** — atlas-dev, atlas-qa, atlas-architect, atlas-security. Stripped-down definitions for 3B-8B models.
+- **4 new lite specialist playbooks** — atlas-dev, atlas-qa, atlas-architect, atlas-security playbooks for lite mode.
+- **Lite engineering-standards rule** — condensed coding standards for lite mode.
+- **Lite infra-change workflow** — infrastructure change workflow for lite mode.
+- **State file format** — formalized state file template in model-resilience.md for workflow resume-from-failure.
+- **TOGAF knowledge file** — created togaf-framework.md with ADM phases, Enterprise Continuum, and Architecture Content Framework.
+
+### Fixed
+
+- **atlas-db typo** — fixed handoff-protocol.md contract table: `atlas-db` → `atlas-dba`.
+- **TOGAF knowledge mapping** — fixed atlas-ent-arch playbook: TOGAF now correctly maps to `k/togaf-framework` instead of `k/pmbok-framework`.
+- **atlas-maintenance rules** — added `engineering-standards` to atlas-maintenance frontmatter (was empty).
+
+### Changed
+
+- **atlas-core expanded** — added 6 new sections: problem domain classification, observe before act, pre-handoff quality check, escalation tiers, tool-first enforcement, state file format.
+- **atlas-lead orchestration expanded** — added INVEST criteria to delegation reasoning loop, added domain classification to delegation reasoning.
+- **Lite atlas-core expanded** — added 3 new rules: read-before-edit, classify-first, every-response-is-action. Added escalation tiers.
+- **Agent examples** — added concrete examples to principles in atlas-docs, atlas-maintenance, atlas-ent-arch.
+- **Model resilience** — added state file format template for workflow persistence.
+- **Manifest** — updated with all new rules, knowledge files, and workflows.
+
+### Version
+
+- **Version** — bumped to 0.11.0
+
 ## [0.10.0] - 2026-07-11
 
 ### Added

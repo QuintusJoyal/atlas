@@ -197,6 +197,26 @@ When compaction is insufficient and a fresh session is needed, send this as the 
 
 **Proactive compaction:** don't wait for the context window to fill. After completing a significant unit of work (artifact delivered, gate passed, phase transition), proactively summarize what was done and what remains. Write the summary to the state block before starting the next unit.
 
+### State file format
+
+Persist workflow state to `$ATLAS_DATA_DIR/runs/<run-id>/state.md` after each phase:
+
+```markdown
+## Workflow State
+- **Workflow:** [feature|bugfix|data-project|infra-change|security-audit|discovery|database-migration|performance-optimization|observability-setup|disaster-recovery]
+- **Variant:** [small|full]
+- **Phase:** [current phase] ([N/M])
+- **Completed:** [list of completed phases]
+- **Active delegation:** [role] → [status]
+- **Artifacts:** [file paths]
+- **Open items:** [unresolved questions]
+- **Decisions:** [key user decisions]
+- **Next:** [specific next action]
+- **Context budget:** [~X% remaining]
+```
+
+This state file enables resume-from-failure without re-exploring context. Read it at the start of each session to restore orientation.
+
 ### Tool clearing
 
 When switching between phases or roles:
