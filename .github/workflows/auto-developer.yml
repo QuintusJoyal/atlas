@@ -1,8 +1,8 @@
 name: Auto Developer
 
 on:
-  issue_comment:
-    types: [created]
+  issues:
+    types: [labeled]
 
 permissions:
   id-token: write
@@ -12,9 +12,7 @@ permissions:
 
 jobs:
   develop:
-    if: |
-      startsWith(github.event.comment.body, '/develop') &&
-      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    if: github.event.label.name == 'action:develop'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
