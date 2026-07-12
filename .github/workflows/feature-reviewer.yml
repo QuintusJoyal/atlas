@@ -2,7 +2,7 @@ name: Feature Reviewer
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
 
 permissions:
   id-token: write
@@ -11,7 +11,9 @@ permissions:
 
 jobs:
   review:
-    if: contains(github.event.issue.labels.*.name, 'type:feature')
+    if: |
+      (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'type:feature')) ||
+      (github.event.action == 'labeled' && github.event.label.name == 'action:evaluate')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
