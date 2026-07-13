@@ -9,10 +9,11 @@ This guide helps any AI agent install Atlas for the IDE it is running in.
 ```
 atlas/
   agents/          24 agent definitions (YAML frontmatter + markdown body)
+  lite/            Lite mode for 3B-8B models (5 agents, 5 rules, simplified workflows)
   skills/          24 playbooks (one per role, methodology and workflow)
-  rules/           6 governance rules (always-on core, orchestration, charter, standards, handoff, writing)
-  knowledge/       13 shared knowledge files (lessons, resilience, collaboration, templates)
-  workflows/       6 pipeline presets (feature, bugfix, data-project, infra, security-audit, discovery)
+  rules/           15 governance rules (always-on core, orchestration, charter, standards, handoff, writing, security, etc.)
+  knowledge/       114 shared knowledge files in 18 subdirectories
+  workflows/       14 pipeline presets (feature, bugfix, data-project, infra, security-audit, discovery, etc.)
   manifest.json    Bundle metadata, tier definitions, delegation protocol
   SETUP.md         This file
   README.md        Human-readable overview
@@ -40,7 +41,7 @@ mkdir -p "$ATLAS_KNOWLEDGE_DIR"
 Copy the knowledge base:
 
 ```bash
-cp knowledge/* "$ATLAS_KNOWLEDGE_DIR/"
+cp -r knowledge/* "$ATLAS_KNOWLEDGE_DIR/"
 ```
 
 ### Step 2: Detect your IDE
@@ -94,6 +95,8 @@ cat rules/atlas-core.md >> CLAUDE.md
 | premium | `opus` |
 | standard | `sonnet` |
 | fast | `haiku` |
+
+> Claude Code uses aliases that auto-resolve to the latest models. No manual updates needed.
 
 During setup, add `modelHints` to each agent's frontmatter:
 
@@ -152,7 +155,7 @@ cat rules/atlas-core.md >> AGENTS.md
   "agent": {
     "atlas-lead": {
       "mode": "primary",
-      "model": "anthropic/claude-sonnet-4",
+      "model": "anthropic/claude-sonnet-5",
       "description": "Orchestrator. Delegates to specialist roles."
     }
   }
@@ -163,9 +166,9 @@ cat rules/atlas-core.md >> AGENTS.md
 
 | Tier | OpenCode model |
 |------|---------------|
-| premium | `anthropic/claude-opus-4` |
-| standard | `anthropic/claude-sonnet-4` |
-| fast | `anthropic/claude-haiku-3.5` |
+| premium | `anthropic/claude-opus-4-8` |
+| standard | `anthropic/claude-sonnet-5` |
+| fast | `anthropic/claude-haiku-4-5` |
 
 **Multi-agent configuration:**
 
@@ -212,9 +215,9 @@ cp -r skills/atlas-*-playbook .github/skills/
 
 | Tier | VS Code Copilot model |
 |------|----------------------|
-| premium | `gpt-4o` |
-| standard | `gpt-4o-mini` |
-| fast | `gpt-3.5-turbo` |
+| premium | `gpt-5.5` |
+| standard | `gpt-5.4` |
+| fast | `gpt-5 mini` |
 
 **Multi-agent configuration:**
 
@@ -271,7 +274,7 @@ done
 |------|-------------|
 | premium | `claude-opus-4-8-thinking-high` |
 | standard | `composer-2.5` |
-| fast | `composer-2` |
+| fast | `composer-2.5` (with `fast: true` parameter) |
 
 Update each agent's `model:` field in frontmatter to the Cursor-specific slug.
 
@@ -322,9 +325,9 @@ cp agents/atlas-*.md .agents/roles/
 
 | Tier | Antigravity model |
 |------|------------------|
-| premium | `gemini-3-pro` |
-| standard | `gemini-2.5-flash` |
-| fast | `gemini-2.5-flash` (use prompting for differentiation) |
+| premium | `gemini-3.1-pro` |
+| standard | `gemini-3.5-flash` |
+| fast | `gemini-3.1-flash-lite` |
 
 **Multi-agent configuration:**
 
@@ -382,7 +385,13 @@ cat rules/writing-style.md >> .windsurf/rules/writing-style.md
 cat rules/atlas-core.md >> AGENTS.md
 ```
 
-**Model mapping:** Same as VS Code Copilot (Windsurf uses similar model providers).
+**Model mapping:**
+
+| Tier | Windsurf model |
+|------|---------------|
+| premium | `anthropic/claude-opus-4-7` |
+| standard | `anthropic/claude-sonnet-4-6` |
+| fast | `anthropic/claude-haiku-4-5` |
 
 **Verify:**
 
@@ -397,7 +406,7 @@ cat rules/atlas-core.md >> AGENTS.md
 Regardless of IDE, check:
 
 - [ ] Environment variables set: `ATLAS_DATA_DIR`, `ATLAS_KNOWLEDGE_DIR`
-- [ ] Knowledge base copied: `$ATLAS_KNOWLEDGE_DIR/lessons.md` exists
+- [ ] Knowledge base copied: `$ATLAS_KNOWLEDGE_DIR/reference/lessons.md` exists
 - [ ] Run directory created: `$ATLAS_DATA_DIR/runs/` exists
 - [ ] Agent files present: all 24 `atlas-*.md` files in the IDE's agent directory
 - [ ] Skills present: all 24 `atlas-*-playbook/SKILL.md` files
@@ -409,9 +418,9 @@ Regardless of IDE, check:
 
 | Tier | Capabilities | Claude Code | OpenCode | VS Code | Cursor | Antigravity | Windsurf |
 |------|-------------|-------------|----------|---------|--------|-------------|----------|
-| Premium | deep-reasoning, long-context, complex-planning | `opus` | `anthropic/claude-opus-4` | `gpt-4o` | `claude-opus-4-8-thinking-high` | `gemini-3-pro` | `anthropic/claude-opus-4` |
-| Standard | balanced, general-purpose | `sonnet` | `anthropic/claude-sonnet-4` | `gpt-4o-mini` | `composer-2.5` | `gemini-2.5-flash` | `anthropic/claude-sonnet-4` |
-| Fast | high-volume, low-latency | `haiku` | `anthropic/claude-haiku-3.5` | `gpt-3.5-turbo` | `composer-2` | `gemini-2.5-flash` | `anthropic/claude-haiku-3.5` |
+| Premium | deep-reasoning, long-context, complex-planning | `opus` | `anthropic/claude-opus-4-8` | `gpt-5.5` | `claude-opus-4-8-thinking-high` | `gemini-3.1-pro` | `anthropic/claude-opus-4-7` |
+| Standard | balanced, general-purpose | `sonnet` | `anthropic/claude-sonnet-5` | `gpt-5.4` | `composer-2.5` | `gemini-3.5-flash` | `anthropic/claude-sonnet-4-6` |
+| Fast | high-volume, low-latency | `haiku` | `anthropic/claude-haiku-4-5` | `gpt-5 mini` | `composer-2.5` (fast) | `gemini-3.1-flash-lite` | `anthropic/claude-haiku-4-5` |
 
 Adjust these mappings based on your plan and account. The `modelHints` field in each agent's frontmatter stores IDE-specific suggestions.
 
@@ -435,5 +444,99 @@ To update Atlas after a new release:
 1. Back up your knowledge base: `cp -r $ATLAS_KNOWLEDGE_DIR ~/atlas-knowledge-backup/`
 2. Pull the latest bundle
 3. Re-run the install steps for your IDE
-4. Knowledge files `lessons.md`, `proposed.md`, `ways-of-working.md`, `usage-insights.md` are preserved (do not overwrite)
+4. Knowledge files `reference/lessons.md`, `reference/proposed.md`, `reference/ways-of-working.md`, `reference/usage-insights.md` are preserved (do not overwrite)
 5. Start a new session so updated agents and rules load
+
+## Choosing lite vs full mode
+
+| Factor | Lite | Full |
+|--------|------|------|
+| Context window | 4K-8K tokens | 16K+ tokens |
+| Model size | 3B-8B parameters | 70B+ parameters |
+| Agents | 5 core roles | 24 specialist roles |
+| Workflows | Simplified pipelines | Full pipelines with gates |
+| Knowledge | Curated subset | Complete knowledge base |
+| Best for | Quick tasks, small models | Complex delivery, enterprise |
+
+**Start with lite if:**
+- Your model has < 16K context window
+- You're using a 3B-8B parameter model
+- You want fast, lightweight orchestration
+- You only need dev, qa, architect, security, and lead roles
+
+**Use full if:**
+- Your model has 16K+ context window
+- You're using 70B+ parameter models
+- You need all 24 specialist roles
+- You want full approval gates and tracking
+
+## Uninstalling Atlas
+
+> **Warning:** This removes all Atlas run data and knowledge. Back up first if you have active runs.
+
+### 1. Back up (optional)
+
+```bash
+cp -r "$ATLAS_DATA_DIR" ~/atlas-data-backup/
+cp -r "$ATLAS_KNOWLEDGE_DIR" ~/atlas-knowledge-backup/
+```
+
+### 2. Remove data directories
+
+```bash
+rm -rf "$ATLAS_DATA_DIR"
+rm -rf "$ATLAS_KNOWLEDGE_DIR"
+```
+
+### 3. Remove from IDE
+
+#### Claude Code
+```bash
+rm -f .claude/agents/atlas-*.md
+rm -rf .claude/skills/atlas-*-playbook
+rm -f .claude/rules/atlas-*.md
+```
+
+#### OpenCode
+```bash
+rm -f .opencode/agents/atlas-*.md
+rm -rf .opencode/skills/atlas-*-playbook
+rm -f .opencode/rules/atlas-*.md
+```
+
+#### VS Code / Copilot
+```bash
+rm -f .github/copilot-instructions.md
+rm -f .github/agents/atlas-*.md
+```
+
+#### Cursor
+```bash
+rm -f .cursor/rules/atlas-*.md
+rm -f .cursor/agents/atlas-*.md
+```
+
+#### Windsurf / Antigravity
+```bash
+rm -f .windsurf/rules/atlas-*.md
+rm -f .windsurf/agents/atlas-*.md
+```
+
+### 4. Remove environment variables
+
+Remove from your shell profile (`~/.bashrc`, `~/.zshrc`, `~/.config/fish/config.fish`):
+
+```bash
+unset ATLAS_DATA_DIR
+unset ATLAS_KNOWLEDGE_DIR
+```
+
+### 5. Verify cleanup
+
+```bash
+# Should return "No such file" for both
+ls "$ATLAS_DATA_DIR" 2>&1
+ls "$ATLAS_KNOWLEDGE_DIR" 2>&1
+```
+
+> **For AI agents:** When asked to uninstall Atlas, execute steps 2-4 in order. Skip step 1 unless user requests backup. Step 5 confirms removal. If any `rm` fails with "No such file", that component was not installed — continue.

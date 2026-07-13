@@ -1,6 +1,6 @@
 {
   "name": "atlas",
-  "version": "0.13.0",
+  "version": "0.15.1",
   "description": "Universal AI agent team framework for software delivery.",
   "schema": "atlas-bundle/1.0",
   "license": "MIT",
@@ -258,10 +258,10 @@
       "modelHints": {
         "cursor": "claude-opus-4-8-thinking-high",
         "claude-code": "opus",
-        "opencode": "anthropic/claude-opus-4",
-        "vscode-copilot": "gpt-4o",
-        "antigravity": "gemini-3-pro",
-        "windsurf": "anthropic/claude-opus-4"
+        "opencode": "anthropic/claude-opus-4-8",
+        "vscode-copilot": "gpt-5.5",
+        "antigravity": "gemini-3.1-pro",
+        "windsurf": "anthropic/claude-opus-4-7"
       }
     },
     "standard": {
@@ -271,10 +271,10 @@
       "modelHints": {
         "cursor": "composer-2.5",
         "claude-code": "sonnet",
-        "opencode": "anthropic/claude-sonnet-4",
-        "vscode-copilot": "gpt-4o-mini",
-        "antigravity": "gemini-2.5-flash",
-        "windsurf": "anthropic/claude-sonnet-4"
+        "opencode": "anthropic/claude-sonnet-5",
+        "vscode-copilot": "gpt-5.4",
+        "antigravity": "gemini-3.5-flash",
+        "windsurf": "anthropic/claude-sonnet-4-6"
       }
     },
     "fast": {
@@ -282,12 +282,13 @@
       "capabilities": ["high-volume", "low-latency"],
       "description": "For implementation-heavy and documentation roles: dev, docs, data analyst.",
       "modelHints": {
-        "cursor": "composer-2",
+        "cursor": "composer-2.5",
+        "cursor-fast": true,
         "claude-code": "haiku",
-        "opencode": "anthropic/claude-haiku-3.5",
-        "vscode-copilot": "gpt-3.5-turbo",
-        "antigravity": "gemini-2.5-flash",
-        "windsurf": "anthropic/claude-haiku-3.5"
+        "opencode": "anthropic/claude-haiku-4-5",
+        "vscode-copilot": "gpt-5 mini",
+        "antigravity": "gemini-3.1-flash-lite",
+        "windsurf": "anthropic/claude-haiku-4-5"
       }
     }
   },

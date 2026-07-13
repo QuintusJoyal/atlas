@@ -40,7 +40,7 @@ API-first design with OpenAPI specification. Design, implement, test, document.
 ### design
 - **Gate:** design
 - **Parallel:** true
-- **Roles:** atlas-architect (premium), atlas-be (standard)
+- **Roles:** atlas-architect (premium), atlas-dev (standard)
 - **Input:** API requirements, existing API patterns
 - **Output:** OpenAPI spec, API design document (endpoints, schemas, error codes)
 

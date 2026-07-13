@@ -4,6 +4,31 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.15.1] - 2026-07-13
+
+### Fixed
+
+- **Model slugs updated** — OpenCode, VS Code, Antigravity, Windsurf models updated to latest versions (claude-opus-4-8, claude-sonnet-5, gpt-5.5, gemini-3.1-pro, etc.)
+- **Knowledge copy** — `SETUP.md` install command now uses `cp -r` for recursive directory copy
+- **Manifest version** — `manifest.json` version corrected from 0.13.0 to 0.15.1
+- **API design workflow** — fixed `atlas-be` typo to `atlas-dev`
+- **Sysinfra self-reference** — fixed "called by atlas-sysinfra" to "called by atlas-lead"
+- **Verification path** — fixed `lessons.md` path in SETUP.md verification checklist
+- **Anti self-delegation** — added explicit guard preventing atlas-lead from delegating to itself
+- **CHANGELOG** — removed reference to deleted migration file
+
+### Added
+
+- **Uninstall guide** — complete removal instructions for all IDEs with wildcards
+- **Lite vs full mode guide** — selection criteria for small vs large models
+- **Small model section** — README.md now documents lite/ directory for 3B-8B models
+- **Lite agent frontmatter** — added YAML frontmatter to atlas-dev, atlas-qa, atlas-architect, atlas-security
+
+### Changed
+
+- **Cursor fast model** — updated from `composer-2` to `composer-2.5` with `fast: true` parameter
+- **Bundle structure** — SETUP.md updated to reflect current file counts and lite directory
+
 ## [0.15.0] - 2026-07-12
 
 ### Added
@@ -34,7 +59,6 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 - **Dashboard specification** — `knowledge/process/dashboard-spec.md`: 4 panels (Run Overview, Per-Role Performance, Team Coordination, Anomaly Panel) with mock layouts, data schemas, update frequencies, IDE-specific implementation notes.
 - **Performance benchmarks** — `knowledge/benchmark/performance-benchmarks.md`: token usage by workflow variant and role, knowledge loading overhead, prompt cache effectiveness, Atlas vs raw prompting comparison, optimization targets.
 - **Integration examples** — `examples/`: concrete IDE configurations for Cursor (.cursorrules), OpenCode (.opencode.json), Claude Code (CLAUDE.md), VS Code Copilot (.github/copilot-instructions.md).
-- **Migration guide** — `MIGRATION-v0.13-to-v0.14.md`: knowledge reorganization, new files, breaking changes, how to update.
 - **3 new workflows** — `workflows/refactoring.md` (analyze → design → refactor → test → review), `workflows/api-design.md` (design → implement → test → document), `workflows/documentation.md` (draft → review → publish).
 - **Lite mode updates** — `lite/rules/atlas-core.md`: added structured errors and checkpoint rules. `lite/workflows/self-assessment.md`: simplified monthly review workflow.
 
