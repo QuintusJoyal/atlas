@@ -26,9 +26,9 @@
     "atlas/workflows/discovery.md"
   ],
   "modelHints": {
-    "premium": "anthropic/claude-opus-4",
-    "standard": "anthropic/claude-sonnet-4",
-    "fast": "anthropic/claude-haiku-3.5"
+    "premium": "anthropic/claude-opus-4-8",
+    "standard": "anthropic/claude-sonnet-5",
+    "fast": "anthropic/claude-haiku-4-5"
   },
   "dataHome": "$ATLAS_DATA_DIR"
 }

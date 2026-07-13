@@ -43,4 +43,4 @@ workflows:
 modelHints:
   premium: claude-opus-4-8-thinking-high
   standard: composer-2.5
-  fast: composer-2
+  fast: composer-2.5

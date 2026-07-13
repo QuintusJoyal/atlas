@@ -4,6 +4,8 @@
 
 Atlas is a self-contained bundle that gives you 24 specialist roles (PM, architect, dev, QA, security, and more) plus an orchestrator (`atlas-lead`) that can run a feature from requirements through review and deploy-ready handoff. Works on Cursor, Claude Code, OpenCode, VS Code Copilot, Windsurf, Antigravity, and any AI IDE that reads agents, rules, and skills from a project.
 
+Includes a `lite/` directory with 5 core agents optimized for 3B-8B models with 4K-8K context windows.
+
 Run artifacts (requirements, gates, team state) live under `$ATLAS_DATA_DIR`, not in your project repos. Your codebase stays clean.
 
 **License:** [MIT](LICENSE)
@@ -62,6 +64,18 @@ Atlas uses abstract model tiers. Each IDE maps tiers to its available models. Se
 - **Fast** (high-volume): atlas-dev, atlas-docs, atlas-data-analyst.
 
 When atlas-lead's session hits quota, lead must still delegate to specialist roles (subagents use separate allocation). Lead must not collapse into inline implementation. See [knowledge/reference/model-resilience.md](knowledge/reference/model-resilience.md).
+
+## Small model support (3B-8B)
+
+Atlas includes a `lite/` directory with 5 core agents optimized for 4K-8K context windows:
+
+- `atlas-lead` — orchestrator
+- `atlas-dev` — implementation
+- `atlas-qa` — testing
+- `atlas-architect` — design
+- `atlas-security` — protection
+
+Lite agents use shorter prompts, skip approval gates, and track state in memory only. See `SETUP.md` for installation and mode selection guidance.
 
 ## Token budget
 
