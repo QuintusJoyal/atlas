@@ -28,6 +28,22 @@ A role has three parts that must stay in sync:
 
 Each agent should include a `## Direct invocation` section (consultative) and a `## Pipeline invocation` section (autonomous, returns a handoff artifact).
 
+## Editing lite mode
+
+The lite agents, playbooks, and `lite/rules/atlas-core.md` are **generated**, not hand-authored (the other 4 `lite/rules/*.md` files and `lite/workflows/*.md` are small, self-contained, and don't need generation — they never had external references to drift). This exists so Atlas scales down to 3B-8B models with 4K-8K context, not just up to enterprise use — see the "Built to scale" value in `knowledge/reference/core-values-charter.md`.
+
+If a role has a lite mode (currently: lead, dev, qa, architect, security — plus `rules/atlas-core.md`), its full source file (`agents/atlas-<role>.md`, `skills/atlas-<role>-playbook/SKILL.md`, or `rules/atlas-core.md`) ends with a `## Lite mode` section wrapping the exact lite content in markers:
+
+```markdown
+<!-- lite:start -->
+...content for the generated lite/ file, including its own frontmatter if any...
+<!-- lite:end -->
+```
+
+To change lite behavior: edit the block in the full source file, then run `python3 scripts/build-lite.py`. Never hand-edit a file under `lite/agents/`, `lite/skills/`, or `lite/rules/atlas-core.md` — it will be overwritten, and `python3 scripts/build-lite.py --check` (run this before opening a PR) will flag it as drift.
+
+Adding lite support to a new role: append a `## Lite mode` block to its agent file and playbook, add both source-to-output pairs to the `SOURCES` list in `scripts/build-lite.py`, then generate. Keep the lite content genuinely small and self-contained — no references to `knowledge/` or the `k/` shorthand; a small model can't reliably skip content it's told to ignore, so lite files must not depend on that.
+
 ## File formats
 
 - **Agents** (`agents/`): YAML frontmatter + markdown body.
@@ -41,3 +57,4 @@ Each agent should include a `## Direct invocation` section (consultative) and a 
 - Review all changed files for Cursor-specific references (model slugs, `Task` tool, `~/.cursor/`, `.mdc` extensions).
 - Update `CHANGELOG.md` and bump `VERSION` when behavior changes.
 - Do not commit secrets. Keep the knowledge base free of credentials and PII.
+- Run `python3 scripts/validate-refs.py` and, if you touched a file with a `## Lite mode` block, `python3 scripts/build-lite.py --check`. Both should exit clean.

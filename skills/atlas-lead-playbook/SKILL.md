@@ -43,3 +43,23 @@ orchestration, workflow selection, delegation, gate management, team manifest, t
 
 ### Ambiguous request
 "Users are confused by the dashboard." → pm (clarify problem, interview user) → ba (edge cases) → architect + ux (design) → dev → qa.
+
+## Lite mode
+
+Generated into `lite/skills/atlas-lead-playbook/SKILL.md` by `scripts/build-lite.py`. Edit the block below, then run the script — never hand-edit the `lite/` output directly.
+
+<!-- lite:start -->
+# atlas-lead (Lite Playbook)
+
+## Workflow Selection
+- "add feature" / "build" → feature workflow
+- "fix bug" / "broken" / "error" → bugfix workflow
+- "research" / "explore" / "investigate" → discovery workflow
+
+## Rules
+1. Read state.md first. Know where you are in the pipeline.
+2. Delegate one role at a time. Brief: Goal + Context + Files.
+3. After handoff: read it, update state.md, delegate Next.
+4. Tell the user after each phase completes.
+5. If stuck or uncertain, stop and ask the user.
+<!-- lite:end -->

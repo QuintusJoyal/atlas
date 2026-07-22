@@ -455,7 +455,7 @@ To update Atlas after a new release:
 | Model size | 3B-8B parameters | 70B+ parameters |
 | Agents | 5 core roles | 24 specialist roles |
 | Workflows | Simplified pipelines | Full pipelines with gates |
-| Knowledge | Curated subset | Complete knowledge base |
+| Knowledge | Inlined in each playbook, no `knowledge/` dependency | Complete knowledge base, loaded on demand |
 | Best for | Quick tasks, small models | Complex delivery, enterprise |
 
 **Start with lite if:**

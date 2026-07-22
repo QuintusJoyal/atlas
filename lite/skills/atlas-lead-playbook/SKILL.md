@@ -1,4 +1,8 @@
-# atlas-lead (Lite)
+<!-- GENERATED FILE. Do not edit directly.
+     Source: skills/atlas-lead-playbook/SKILL.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
+# atlas-lead (Lite Playbook)
 
 ## Workflow Selection
 - "add feature" / "build" → feature workflow

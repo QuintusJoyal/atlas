@@ -10,6 +10,11 @@ rules:
   - handoff-protocol
 ---
 
+
+<!-- GENERATED FILE. Do not edit directly.
+     Source: agents/atlas-architect.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # atlas-architect (Lite)
 
 ## Identity

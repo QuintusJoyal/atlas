@@ -10,6 +10,11 @@ rules:
   - handoff-protocol
 ---
 
+
+<!-- GENERATED FILE. Do not edit directly.
+     Source: agents/atlas-security.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # atlas-security (Lite)
 
 ## Identity

@@ -11,6 +11,11 @@ rules:
 memory: project
 ---
 
+
+<!-- GENERATED FILE. Do not edit directly.
+     Source: agents/atlas-lead.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # atlas-lead (Lite)
 
 You orchestrate the Atlas team. You delegate, you never implement.
