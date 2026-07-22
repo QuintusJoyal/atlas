@@ -4,6 +4,21 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.17.1] - 2026-07-22
+
+### Security
+
+- **Fixed a script-injection vulnerability in the promote flow.** `promote-dispatch.yml` and `promote.yml` interpolated untrusted, user-controlled strings (`github.event.comment.body`, branch names derived from it) directly into `run:` and `github-script` blocks via `${{ }}` template expansion — the classic GitHub Actions injection anti-pattern. A crafted PR/issue comment could have executed arbitrary shell in a job that uses `secrets.PROMOTE_PAT`. Fixed by passing all untrusted values through `env:` and referencing them as `$VAR`/`process.env.VAR`, never spliced into script text. Also found and fixed a latent bug in the same file: the "Report result" step had no `if:` condition, so a merge conflict (which exits 1) silently skipped user notification entirely.
+
+### Changed
+
+- Added a branch allowlist to the promote flow (only `dev` → `main` is a valid promotion; anything else is rejected with a clear error instead of passed through).
+- Pinned `anomalyco/opencode/github@latest` to `@v1.18.4` (verified valid tag) across all 4 workflows that use it — `@latest` on a third-party action is an unpinned supply-chain exposure.
+- Removed `id-token: write` from all 4 OpenCode-invoking workflows — none of them consume an OIDC token anywhere; unused permission grant.
+- `auto-reviewer.yml` now submits a real PR review (`gh pr review --approve/--request-changes/--comment`) instead of a plain comment — the previous version's verdict was cosmetic and couldn't be wired into branch protection.
+- New `validate.yml` workflow runs `scripts/validate-refs.py` and `scripts/build-lite.py --check` on every PR and push to main/dev — a fast, deterministic check independent of any LLM, catching broken cross-references or lite-mode drift before an LLM-authored PR needs a human to notice.
+- `trend-investigator.yml` now checks existing open `type:feature` issues before filing new ones, to avoid accumulating near-duplicates over successive weekly runs.
+
 ## [0.17.0] - 2026-07-22
 
 ### Added

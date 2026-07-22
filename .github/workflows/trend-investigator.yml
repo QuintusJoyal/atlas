@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write
   contents: read
   issues: write
 
@@ -18,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.18.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -27,7 +26,13 @@ jobs:
           prompt: |
             Research AI agent trends and Atlas gaps. Create 2-3 feature request issues.
 
-            For each issue use gh CLI:
+            Before creating any issue, check for near-duplicates first:
+            gh issue list --label "type:feature" --state open --limit 100
+
+            Skip any topic that substantially overlaps an existing open
+            "type:feature" issue rather than filing a near-duplicate.
+
+            For each genuinely new issue use gh CLI:
             gh issue create --title "[FEATURE]: <title>" --label "type:feature,priority:P1" --body "## Description\n<what>\n\n## Motivation\n<why>\n\n## Acceptance Criteria\n- [ ] <criteria>"
 
             Focus on: agent orchestration, context engineering, security, knowledge management.

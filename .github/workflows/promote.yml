@@ -12,6 +12,19 @@ jobs:
   promote:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate branch names
+        env:
+          SOURCE: ${{ github.event.client_payload.source }}
+          TARGET: ${{ github.event.client_payload.target }}
+        run: |
+          # Defense in depth: promote-dispatch.yml already validates this, but
+          # this workflow can push to any branch with PROMOTE_PAT, so it
+          # re-checks rather than trusting the dispatch payload blindly.
+          if [ "$SOURCE" != "dev" ] || [ "$TARGET" != "main" ]; then
+            echo "Refusing unexpected promotion: source='${SOURCE}' target='${TARGET}'"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -20,10 +33,10 @@ jobs:
 
       - name: Merge branch
         id: merge
+        env:
+          SOURCE: ${{ github.event.client_payload.source }}
+          TARGET: ${{ github.event.client_payload.target }}
         run: |
-          SOURCE="${{ github.event.client_payload.source }}"
-          TARGET="${{ github.event.client_payload.target }}"
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -42,17 +55,23 @@ jobs:
           fi
 
       - name: Report result
+        if: always()
         uses: actions/github-script@v7
+        env:
+          STATUS: ${{ steps.merge.outputs.status }}
+          MESSAGE: ${{ steps.merge.outputs.message }}
+          ACTOR: ${{ github.event.client_payload.actor }}
+          ISSUE_NUMBER: ${{ github.event.client_payload.issue_number }}
         with:
           github-token: ${{ secrets.PROMOTE_PAT }}
           script: |
-            const status = '${{ steps.merge.outputs.status }}';
+            const status = process.env.STATUS || 'failed';
             const emoji = status === 'success' ? ':white_check_mark:' : ':x:';
-            const issue_number = ${{ github.event.client_payload.issue_number }};
+            const message = process.env.MESSAGE || 'Promotion failed before merge could be attempted.';
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: issue_number,
-              body: `## Promote ${emoji}\n\n${{ steps.merge.outputs.message }}\n\n**Actor:** @${{ github.event.client_payload.actor }}`
+              issue_number: parseInt(process.env.ISSUE_NUMBER, 10),
+              body: `## Promote ${emoji}\n\n${message}\n\n**Actor:** @${process.env.ACTOR}`
             });

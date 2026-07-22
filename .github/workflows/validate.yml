@@ -1,0 +1,27 @@
+name: Validate Bundle
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check knowledge cross-references and manifest consistency
+        run: python3 scripts/validate-refs.py
+
+      - name: Check lite/ has not drifted from its tiered source
+        run: python3 scripts/build-lite.py --check

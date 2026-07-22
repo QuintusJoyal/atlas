@@ -5,7 +5,6 @@ on:
     types: [opened]
 
 permissions:
-  id-token: write
   contents: read
   issues: write
   pull-requests: write
@@ -18,9 +17,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.18.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         with:
           model: opencode/big-pickle
           use_github_token: "true"
@@ -31,9 +31,17 @@ jobs:
             3. Knowledge cross-refs
             4. Token budgets
 
-            Post comment with:
-            ## Review
-            **Verdict**: APPROVE / REQUEST_CHANGES / COMMENT
-            **Notes**: <2-3 bullets>
+            Decide a verdict: approve, request-changes, or comment.
 
-            Keep under 100 words.
+            Submit it as a real PR review, not a plain comment, using the gh CLI
+            (PR_NUMBER is set in the environment):
+
+              gh pr review "$PR_NUMBER" --approve --body "<2-3 bullet summary>"
+              gh pr review "$PR_NUMBER" --request-changes --body "<2-3 bullet summary, name what must change>"
+              gh pr review "$PR_NUMBER" --comment --body "<2-3 bullet summary>"
+
+            Pick exactly one command matching your verdict and run it. A plain
+            issue/PR comment is not a substitute — it must be an actual review,
+            since only a real review can be wired into branch protection.
+
+            Keep the body under 100 words.

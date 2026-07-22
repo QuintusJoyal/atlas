@@ -27,19 +27,50 @@ jobs:
               content: 'rocket'
             });
 
-      - name: Parse arguments
+      - name: Parse and validate arguments
         id: parse
+        env:
+          BODY: ${{ github.event.comment.body }}
         run: |
-          BODY="${{ github.event.comment.body }}"
           SOURCE=$(echo "$BODY" | awk '{print $2}')
           TARGET=$(echo "$BODY" | awk '{print $3}')
           SOURCE="${SOURCE:-dev}"
           TARGET="${TARGET:-main}"
-          echo "source=${SOURCE}" >> "$GITHUB_OUTPUT"
-          echo "target=${TARGET}" >> "$GITHUB_OUTPUT"
+
+          # Only one promotion path exists in this repo's branching model.
+          # Reject anything else instead of passing it through to the merge job.
+          if [ "$SOURCE" != "dev" ] || [ "$TARGET" != "main" ]; then
+            echo "invalid=true" >> "$GITHUB_OUTPUT"
+            echo "reason=Only '/promote dev main' is supported (got source='${SOURCE}' target='${TARGET}')" >> "$GITHUB_OUTPUT"
+          else
+            echo "invalid=false" >> "$GITHUB_OUTPUT"
+            echo "source=${SOURCE}" >> "$GITHUB_OUTPUT"
+            echo "target=${TARGET}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Reject invalid promotion request
+        if: steps.parse.outputs.invalid == 'true'
+        uses: actions/github-script@v7
+        env:
+          REASON: ${{ steps.parse.outputs.reason }}
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `## Promote :x:\n\n${process.env.REASON}`
+            });
+            core.setFailed(process.env.REASON);
 
       - name: Dispatch promote
+        if: steps.parse.outputs.invalid == 'false'
         uses: actions/github-script@v7
+        env:
+          GH_SOURCE: ${{ steps.parse.outputs.source }}
+          GH_TARGET: ${{ steps.parse.outputs.target }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ACTOR: ${{ github.actor }}
         with:
           github-token: ${{ secrets.PROMOTE_PAT }}
           script: |
@@ -48,9 +79,9 @@ jobs:
               repo: context.repo.repo,
               event_type: 'promote-branch',
               client_payload: {
-                source: '${{ steps.parse.outputs.source }}',
-                target: '${{ steps.parse.outputs.target }}',
-                issue_number: '${{ github.event.issue.number }}',
-                actor: '${{ github.actor }}'
+                source: process.env.GH_SOURCE,
+                target: process.env.GH_TARGET,
+                issue_number: process.env.ISSUE_NUMBER,
+                actor: process.env.ACTOR
               }
             });

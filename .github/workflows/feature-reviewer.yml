@@ -5,7 +5,6 @@ on:
     types: [opened, labeled]
 
 permissions:
-  id-token: write
   contents: read
   issues: write
 
@@ -20,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.18.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
