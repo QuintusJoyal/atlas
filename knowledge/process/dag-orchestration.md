@@ -77,62 +77,6 @@ Critical path determines minimum workflow duration.
 - If critical path task fails, entire workflow pauses
 - Budget predictions are based on critical path, not all tasks
 
-## DAG node types
-
-### Task nodes
-Regular work performed by a role:
-```
-{
-  "id": "impl-001",
-  "type": "task",
-  "role": "atlas-dev",
-  "phase": "implementation",
-  "estimatedTokens": 1400,
-  "dependencies": ["design-001", "db-design-001"],
-  "artifacts": ["src/app.py", "src/utils.py"],
-  "critical": true
-}
-```
-
-### Critic nodes
-Gate checks that fan-in from multiple tasks:
-```
-{
-  "id": "gate-impl",
-  "type": "critic",
-  "critic": "implementation",
-  "phase": "implementation",
-  "estimatedTokens": 200,
-  "dependencies": ["impl-001", "impl-002"],
-  "fan-in": true,
-  "critical": true
-}
-```
-
-### Condition nodes
-Branch points based on conditions:
-```
-{
-  "id": "cond-db",
-  "type": "condition",
-  "condition": "has-database",
-  "true-branch": "db-design-001",
-  "false-branch": null
-}
-```
-
-### Checkpoint nodes
-Automatic save points:
-```
-{
-  "id": "cp-phase",
-  "type": "checkpoint",
-  "level": "standard",
-  "trigger": "phase-transition",
-  "dependencies": ["gate-impl"]
-}
-```
-
 ## Parallel execution safety
 
 ### Artifact conflict detection
@@ -211,13 +155,10 @@ Parallel benefit: ux-spec runs parallel with architect (saves 300 tokens)
 DAG nodes map to workflow phases. Phase state transitions are triggered when all DAG dependencies for that phase complete.
 
 ### With checkpoint protocol
-DAG checkpoint nodes trigger automatic checkpoints at phase transitions.
+Phase transitions trigger a standard checkpoint (see `knowledge/process/checkpoint-protocol.md`), independent of DAG bookkeeping.
 
 ### With critic system
-Critic nodes in the DAG are fan-in points that wait for all contributing tasks before evaluating.
+Gate checks wait for all contributing tasks in a phase to complete before evaluating.
 
 ### With budget prediction
-Budget predictions are based on critical path tokens, not sum of all tasks (parallel tasks don't add to timeline).
-
-### With OTel observability
-Each DAG node generates a span. The DAG structure is reflected in span parent-child relationships.
+Budget predictions should track the critical path, not the sum of all tasks (parallel tasks don't add to timeline) — but keep estimates as rough ranges, not fabricated precision.

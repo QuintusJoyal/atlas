@@ -111,10 +111,10 @@ Inspect `$ATLAS_DATA_DIR/runs/<run-id>/` directly or ask atlas-lead for a roster
 | --- | --- | --- |
 | feature | Requirements, design, final (+ token-budget if heavy) | Net-new work |
 | bugfix / hotfix | Final | Defects; hotfix expedited deploy |
-| data-project | All three | Pipelines, analytics, ML |
-| infra-change | Design + final (+ security) | Cloud, network, CI/CD |
-| security-audit | Final (findings) | Audit only |
-| discovery | Requirements | Scope and proposal |
+| data-project | Requirements, design, final | Pipelines, analytics, ML |
+| infra-change | Requirements, design, final (+ security) | Cloud, network, CI/CD |
+| security-audit | Scope, final (findings) | Audit only |
+| discovery | Research, final (small: final only) | Scope and proposal |
 
 See `workflows/*.md` and `skills/atlas-lead-playbook/SKILL.md`.
 

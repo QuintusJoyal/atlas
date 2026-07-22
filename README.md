@@ -28,7 +28,7 @@ See `SETUP.md` for IDE-specific details (Claude Code AGENTS.md, VS Code Copilot 
 - Per-role playbooks grounded in cited industry standards (OWASP, ISTQB, DORA, C4, WCAG, TOGAF, and more).
 - Lazy-loaded context: one tiny always-on rule, everything else loads only when its topic is in motion.
 - Mandatory kickoff: workflow, `budget.md`, per-role estimates before build ([budget-template.md](knowledge/reference/budget-template.md)).
-- Graduated enforcement levels: `warn`, `standard`, or `strict` (chat prompts and gate sidecars under `$ATLAS_DATA_DIR/runs/<run-id>/gates/`).
+- Gates scale to the work, not a fixed ceremony: every workflow has a `small` variant (final gate only, auto-approved when DoD passes) and a `full` variant (all gates, explicit user sign-off) — see `rules/team-charter.md` Variant-aware gates. Non-waivable regardless of variant: security, compliance, reviewer.
 - Gate DoD checks, pipeline blockers, waivers (non-waivable: security, compliance, reviewer).
 - Learning loop: inbox promote/reject for `proposed.md`, usage-insights on run complete.
 - Human-authored voice: output does not read as AI-generated (no em dashes, no AI tells).

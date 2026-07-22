@@ -1,16 +1,19 @@
 ---
 name: role-trust-profiles
 category: process
-load-when: Routing decisions, model tier selection, role performance review
-skip-when: Normal delegation, simple tasks
-description: Adaptive role trust scoring (ARTS). Trust profiles track role performance and guide tier allocation.
+status: experimental — opt-in, not part of always-on core
+load-when: User explicitly asks for trust-based tier routing, or during the monthly self-assessment workflow
+skip-when: Normal delegation, simple tasks, everyday routing
+description: Adaptive role trust scoring (ARTS) — an illustrative model. Trust profiles track role performance and guide tier allocation. Requires the user to opt in; the formula's inputs are not measured by anything in this bundle by default.
 audience: [atlas-lead, atlas-ent-arch]
-tags: [trust, scoring, adaptive, tier, performance, ARTS]
+tags: [trust, scoring, adaptive, tier, performance, ARTS, experimental]
 ---
 
-# Role trust profiles (ARTS)
+# Role trust profiles (ARTS) (experimental)
 
 Adaptive Role Trust Scoring tracks how well each role performs and uses that data to guide model tier allocation. Roles that consistently perform well get faster/cheaper tiers. Roles that struggle get premium tiers.
+
+This is opt-in, not part of the always-on core: the score formula below needs inputs (quality averages, critic pass rates) that only exist if the user has also opted into `decision-quality-scoring.md` and is running enough repeat work for the numbers to mean anything. Without that, treat any score here as the agent's honest self-estimate, stated with its reasoning, not a measured quantity.
 
 ## Quick Reference
 - Trust score per role: 0.0 (untrusted) to 1.0 (fully trusted)

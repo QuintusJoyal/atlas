@@ -46,22 +46,7 @@ A structured catalog of tool patterns and ACI standards. Use this when you're un
 
 ## ACI behavior rules
 
-### Error protocol
-Every tool MUST return structured errors:
-```json
-{"error": true, "errorCategory": "validation", "recoverable": true, "message": "...", "suggestedAction": "..."}
-```
-
-### Output compression
-- File reads > 200 lines: summary + offer re-read by range
-- Search > 10 matches: paginated file list
-- Bash > 500 lines: last 200 lines + exit code
-- Empty output: explicit success message
-
-### Semantic output
-- Return names, not UUIDs
-- Return file_type, not mime_type
-- Include technical IDs only as secondary fields
+Error format, output compression thresholds, and semantic-output rules are defined once in `knowledge/process/aci-enforcement.md` — this file only maps needs to tool names; it doesn't restate those rules.
 
 ## Atlas-specific patterns
 

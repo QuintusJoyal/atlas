@@ -1,16 +1,17 @@
 ---
 name: observability-system
 category: process
-load-when: Analyzing run performance, debugging agent behavior, reviewing metrics, self-assessment
-skip-when: Normal operation, simple tasks
-description: OTel-native observability for Atlas multi-agent workflows. Spans, metrics, anomaly detection, dashboard concepts.
+status: experimental — opt-in, not part of always-on core
+load-when: User explicitly asks for OTel-style tracing or dashboard mockups during the monthly self-assessment workflow
+skip-when: Normal operation, simple tasks, everyday delegation
+description: Illustrative OTel-shaped presentation of Atlas trajectory data. Spans, metrics, anomaly detection, dashboard concepts. No real tracing backend is included in this bundle.
 audience: [atlas-lead, atlas-ent-arch, atlas-ai-eng]
-tags: [observability, tracing, metrics, otel, anomaly-detection, dashboard]
+tags: [observability, tracing, metrics, otel, anomaly-detection, dashboard, experimental]
 ---
 
-# Observability system
+# Observability system (experimental)
 
-Atlas trajectory logs are upgraded to OpenTelemetry GenAI semantic conventions. Every agent decision, tool call, and handoff becomes a structured span with parent-child relationships.
+This bundle has no OTel collector, span exporter, or metrics store. What follows is a way to *format* trajectory-log data (see `knowledge/process/trajectory-logging.md`) as OTel-shaped spans and dashboard mockups for a human reader — useful for the monthly `workflows/self-assessment.md` narrative, not a real telemetry pipeline. The "metrics" below require inputs (expected tokens, serial-time-if-sequential) nobody measures; treat any number produced here as an illustrative estimate the agent states its assumptions for, never as a precise measurement.
 
 ## Quick Reference
 - Trace = run-id, Span = individual decision/tool call

@@ -22,18 +22,14 @@ ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE_DIR = ROOT / "knowledge"
 MANIFEST_PATH = ROOT / "manifest.json"
 
-# Patterns to match knowledge references
-# Matches: knowledge/<file>.md, knowledge/<subdir>/<file>.md
-# Also matches: $ATLAS_DATA_DIR/knowledge/<path>
+# Matches knowledge/<path>.md, with or without a leading $ATLAS_DATA_DIR/ prefix.
 REF_PATTERN = re.compile(r'(?:\`?\$?ATLAS_DATA_DIR/)?knowledge/([a-zA-Z0-9_/-]+\.md)')
 
 
 def find_all_md_files():
-    """Find all .md files in the repo."""
     md_files = []
     skip_files = {'MIGRATION-v0.13-to-v0.14.md'}  # Migration guides have intentional old paths
     for dirpath, dirnames, filenames in os.walk(ROOT):
-        # Skip .git directory
         if '.git' in dirpath:
             continue
         for f in filenames:
@@ -43,7 +39,6 @@ def find_all_md_files():
 
 
 def find_knowledge_refs(md_files):
-    """Find all knowledge/ references in .md files."""
     refs = {}  # {file_path: [(line_num, ref_path)]}
     for md_file in md_files:
         try:
@@ -64,7 +59,6 @@ def find_knowledge_refs(md_files):
 
 
 def check_refs_exist(refs):
-    """Check that all referenced knowledge files exist."""
     broken = []
     for md_file, file_refs in refs.items():
         for line_num, ref_path in file_refs:
@@ -75,23 +69,19 @@ def check_refs_exist(refs):
 
 
 def check_manifest():
-    """Check manifest.json lists all knowledge files that exist on disk."""
     with open(MANIFEST_PATH, 'r') as f:
         manifest = json.load(f)
 
     manifest_files = set(manifest.get('knowledge', []))
 
-    # Find all .md files in knowledge/
     disk_files = set()
     for dirpath, dirnames, filenames in os.walk(KNOWLEDGE_DIR):
         for f in filenames:
             if f.endswith('.md'):
                 rel_path = os.path.relpath(os.path.join(dirpath, f), KNOWLEDGE_DIR)
-                disk_files.add(rel_path)
+                disk_files.add(rel_path.replace(os.sep, '/'))
 
-    # Files on disk but not in manifest
     missing_from_manifest = disk_files - manifest_files
-    # Files in manifest but not on disk
     missing_from_disk = manifest_files - disk_files
 
     return missing_from_manifest, missing_from_disk
@@ -103,7 +93,6 @@ def main():
 
     issues = 0
 
-    # 1. Check knowledge references in .md files
     print("\n1. Checking knowledge references in .md files...")
     md_files = find_all_md_files()
     refs = find_knowledge_refs(md_files)
@@ -118,7 +107,6 @@ def main():
     else:
         print(f"   OK: All {sum(len(r) for r in refs.values())} references valid")
 
-    # 2. Check manifest consistency
     print("\n2. Checking manifest.json consistency...")
     missing_manifest, missing_disk = check_manifest()
 
@@ -138,7 +126,6 @@ def main():
     else:
         print("   OK: All manifest files exist on disk")
 
-    # 3. Summary
     print("\n" + "=" * 50)
     if issues == 0:
         print("RESULT: CLEAN - No issues found")

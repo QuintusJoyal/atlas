@@ -44,11 +44,9 @@ Every tool that can fail MUST return errors in this format:
 | `not_found` | varies | File not found, resource missing | Try alternative path or escalate |
 | `permission` | false | Access denied, auth expired | Escalate with context |
 
-### Recovery rates (from production data)
-- Transient errors: 92% auto-recovered with structured retry guidance
-- Validation errors: 78% auto-corrected with field-level hints
-- Business errors: 95% correctly escalated with category + customer message
-- Generic errors ("Operation failed"): 15% recovery
+### Why categorization matters
+
+A structured category lets the agent pick the right response (retry, fix and resubmit, or escalate) instead of guessing from prose. A bare `"Operation failed"` message gives the agent nothing to act on and usually forces an escalation the category system would have avoided.
 
 ### Anti-patterns (forbidden)
 - **Silent swallow:** returning success when the tool failed

@@ -1,16 +1,17 @@
 ---
 name: dashboard-spec
 category: process
-load-when: Building dashboards, reviewing run metrics, debugging performance
-skip-when: Normal operation
-description: Observability dashboard specification. 4 panels for monitoring Atlas multi-agent workflows.
+status: experimental — opt-in, not part of always-on core
+load-when: User explicitly asks for a dashboard-style summary during the monthly self-assessment workflow
+skip-when: Normal operation, everyday delegation
+description: Illustrative dashboard layout for presenting Atlas's experimental telemetry (trust profiles, decision-quality scores). No IDE actually renders this natively — it's a format for the agent to fill in by hand when asked.
 audience: [atlas-lead, atlas-ent-arch, atlas-ai-eng]
-tags: [dashboard, observability, metrics, visualization, monitoring]
+tags: [dashboard, observability, metrics, visualization, monitoring, experimental]
 ---
 
-# Dashboard specification
+# Dashboard specification (experimental)
 
-Atlas OTel spans and metrics feed into a dashboard with 4 panels. Each IDE implements its own dashboard UI; this file defines the data and layout.
+This is a layout spec, not a working dashboard. Every number in the panels below (trust scores, quality scores, gate yield, divergence counts) comes from the experimental, opt-in files this depends on (`observability-system.md`, `role-trust-profiles.md`, `decision-quality-scoring.md`) — treat them as the agent's illustrative self-assessment, not measured data, per those files' own caveats. No IDE (Cursor, Claude Code, OpenCode, or otherwise) renders this automatically; "Implementation notes" below describes how a human could format the same data by hand in each IDE's UI, not a feature that exists today.
 
 ## Quick Reference
 - 4 panels: Run Overview, Per-Role, Team Coordination, Anomaly Panel
@@ -149,10 +150,10 @@ lessons.md ──→ Panel 4 (Drift alerts)
 
 ## Implementation notes
 
-Each IDE implements the dashboard differently:
-- **Cursor:** webview panel with charts
-- **OpenCode:** terminal UI with tables
-- **Claude Code:** markdown summary in CLAUDE.md
-- **VS Code Copilot:** status bar + output panel
+None of this is built. If a user asks for this view, the agent formats the same data by hand as plain markdown (tables, not charts) — there's no webview, terminal UI, or status-bar integration behind any IDE name below; these are just reasonable places a human might paste the output, not existing renderers:
+- Cursor: as a markdown reply, or pasted into a scratch file
+- OpenCode: as a markdown reply
+- Claude Code: as a markdown reply, or appended to `CLAUDE.md` if the user wants it persisted
+- VS Code Copilot: as a markdown reply
 
-The data schema is the same across all implementations. IDEs render it however fits their UI.
+The data schema stays the same regardless of where the user pastes it.

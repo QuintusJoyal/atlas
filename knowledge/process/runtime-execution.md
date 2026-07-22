@@ -14,7 +14,7 @@ Atlas agents make tool calls through their host IDE. This protocol defines the s
 
 ## Quick Reference
 - 3 execution modes: prompt-only, tool-assisted, programmatic
-- Minimal tool API: 6 core tools that all IDEs must support
+- Tools: whatever the host IDE provides natively (Read, Write, Edit, Bash, Glob, Grep or equivalents) — see `knowledge/process/tool-registry.md` for the need-to-tool mapping
 - Error recovery: retry, escalate, checkpoint
 - Context passing: structured artifacts between roles
 - IDE implements the mechanism, Atlas defines the protocol
@@ -47,74 +47,6 @@ Agent defines execution plan, IDE runs it.
 - Agent can inspect and adjust
 
 **When to use:** When IDE supports batch execution.
-
-## Minimal tool API
-
-All IDEs must support these 6 core tools:
-
-### 1. read_file
-```json
-{
-  "tool": "read_file",
-  "path": "src/app.py",
-  "offset": 0,
-  "limit": 100
-}
-→ { "content": "...", "total_lines": 250 }
-```
-
-### 2. write_file
-```json
-{
-  "tool": "write_file",
-  "path": "src/app.py",
-  "content": "..."
-}
-→ { "success": true, "bytes_written": 1024 }
-```
-
-### 3. edit_file
-```json
-{
-  "tool": "edit_file",
-  "path": "src/app.py",
-  "old_string": "def old_name():",
-  "new_string": "def new_name():"
-}
-→ { "success": true, "replacements": 1 }
-```
-
-### 4. run_command
-```json
-{
-  "tool": "run_command",
-  "command": "pytest tests/ -v",
-  "workdir": "/path/to/project",
-  "timeout": 30000
-}
-→ { "stdout": "...", "stderr": "", "exit_code": 0 }
-```
-
-### 5. search_files
-```json
-{
-  "tool": "search_files",
-  "pattern": "**/*.py",
-  "path": "src/"
-}
-→ { "matches": ["src/app.py", "src/utils.py"] }
-```
-
-### 6. search_content
-```json
-{
-  "tool": "search_content",
-  "pattern": "def calculate",
-  "path": "src/",
-  "include": "*.py"
-}
-→ { "matches": [{"file": "src/app.py", "line": 42, "content": "def calculate(x):"}] }
-```
 
 ## Error recovery
 
@@ -153,30 +85,14 @@ Roles communicate through structured artifacts, not raw context:
 ```
 
 ### Tool provenance
-Every handoff includes what tools were called:
-```json
-{
-  "tools_called": [
-    {"tool": "read_file", "path": "src/app.py"},
-    {"tool": "edit_file", "path": "src/app.py", "change": "refactor calculate()"},
-    {"tool": "run_command", "command": "pytest tests/test_app.py"}
-  ],
-  "files_touched": ["src/app.py", "tests/test_app.py"],
-  "errors": []
-}
+Every handoff includes what tools were called, in plain prose or a short list (see `rules/handoff-protocol.md`):
+
+```markdown
+- Read: src/app.py
+- Edit: src/app.py (refactor calculate())
+- Bash: pytest tests/test_app.py (12 passed)
+Files touched: src/app.py, tests/test_app.py. Errors: none.
 ```
-
-## IDE integration matrix
-
-| IDE | read_file | write_file | edit_file | run_command | search_files | search_content |
-|-----|-----------|------------|-----------|-------------|--------------|----------------|
-| Cursor | native | native | native | native | native | native |
-| OpenCode | native | native | native | native | native | native |
-| Claude Code | native | native | native | native | native | native |
-| VS Code Copilot | native | native | native | native | native | native |
-| Windsurf | native | native | native | native | native | native |
-
-All major IDEs support the minimal tool API natively. Atlas agents use these tools through the IDE's standard interface.
 
 ## Anti-patterns
 

@@ -57,6 +57,7 @@ Each entry is a single JSON line:
 | `recoveryAction` | conditional | What the agent did after the error (retry/re-escalate/abandon) |
 | `toolReceiptId` | conditional | Receipt for file-mutating operations (conflict detection) |
 | `checkpointId` | no | Links entry to a checkpoint (when checkpoint system active) |
+| `parentId` | no | ID of the entry that caused this one (e.g. a delegation entry that spawned a sub-role's entries) — lets you reconstruct a call tree by grepping for a shared `parentId` without a real tracing backend |
 
 ## When to record
 
