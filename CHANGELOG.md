@@ -4,6 +4,44 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-07-22
+
+### Added
+
+- **Role-boundary enforcement, agent-only (no code execution).** Audited all 24 agent files and found only `atlas-dev.md` had an "I DO NOT" list — 22 other specialist roles stated only what they do, never what they must refuse. Added a concrete I DO NOT list (4-5 items, each naming the owning role) to every specialist agent file, derived from `ROLES.md`'s domain-ownership table.
+- **Centralized refusal script** in `rules/team-charter.md` (new "Role boundaries" section): when asked to do something on its I DO NOT list, a role responds with a specific line — "That's outside my role — delegating to atlas-\<owner\>." — instead of quietly attempting or absorbing the work. One shared instruction, not repeated boilerplate in all 24 files.
+- **Pre-action scope check**, same section: check a request against the I DO list before spending tokens on it, not only after, via a critic.
+- **New 6th critic: `role-adherence`** (`knowledge/critic-prompts/role-adherence.md`), promoted to the default lightweight critic referenced in `rules/atlas-core.md` — a direct comparison of a deliverable against the producing role's own boundaries, no trust scores or composite metrics needed. `knowledge/process/adversarial-critics.md` updated to document it alongside the existing 5 opt-in critics; `knowledge/process/decision-quality-scoring.md`'s "Role Adherence" dimension now reuses this critic's verdict instead of re-deriving it.
+- **INVEST enforcement tightened** in `rules/atlas-lead-orchestration.md`: every delegation brief must now explicitly state what's out of scope, pulled from the receiving role's own I DO NOT list — a vague brief invites scope creep regardless of how well the role's own boundaries are written, so this is treated as the higher-leverage fix. A role-adherence critic failure is now treated as signal to tighten the next brief, not only evidence the specialist over-reached.
+- Fixed a leftover OTel-span reference in `adversarial-critics.md`'s "Integration with trajectory logging" section (a piece of the theater cleaned up in 0.15.2 that this file still had) — replaced with the plain JSONL schema from `trajectory-logging.md`.
+
+## [0.16.0] - 2026-07-22
+
+### Changed
+
+- **Two core values revised.** "Collective intelligence" assumed multi-role teamwork and didn't hold for a solo user on a small model; renamed to **Role clarity** (one clear owner per decision, delegated or solo). "Built to scale" only described scaling up; it now explicitly means scaling both up (enterprise governance) and down (a solo dev on a small model), from one source of truth. Updated in `knowledge/reference/branding-values.md`, `rules/team-charter.md`, `knowledge/reference/core-values-charter.md` with a revision note. Also tightened "Simplicity over complexity" (applies to Atlas's own design), "Frugal by design" (context-window aware, not just token/cost), and "Always learning" (a human closes the loop; it isn't automatic).
+- **`lite/` is now generated, not hand-maintained.** The 5 lite-covered roles (lead, dev, qa, architect, security) and `rules/atlas-core.md` each embed their lite content verbatim in a `## Lite mode` section wrapped in `<!-- lite:start -->`/`<!-- lite:end -->` markers, in the same file as the full version. New `scripts/build-lite.py` extracts those blocks and writes `lite/agents/`, `lite/skills/`, and `lite/rules/atlas-core.md` from them (`--check` mode detects drift without writing). This closes the structural gap found in 0.15.2 (lite pointed at knowledge/ it couldn't use) at the root: the two bundles can no longer diverge because there's only one authored copy.
+- **`README.md`'s "Graduated enforcement levels: warn/standard/strict" claim removed** — this was never implemented anywhere in the bundle. Replaced with an accurate description of the mechanism that already exists: every workflow's `small`/`full` variant, with non-waivable security/compliance/reviewer gates regardless of variant.
+- **`CONTRIBUTING.md`** documents the new lite-authoring workflow (edit the source block, run the generator, never hand-edit `lite/` output) and adds `build-lite.py --check` to the pre-PR checklist alongside `validate-refs.py`.
+- **Follow-up review caught two things this entry's own changes missed:** `SETUP.md`'s lite-vs-full comparison table still claimed lite uses a "curated subset" of `knowledge/` — fixed to say lite has no `knowledge/` dependency at all, matching the change above. `knowledge/process/dashboard-spec.md` described a dashboard fed by the same fabricated telemetry marked experimental elsewhere (trust profiles, decision-quality scores) without the same caveat, and claimed IDE dashboard integrations that don't exist (webview panels, terminal UIs) — marked experimental and corrected to describe hand-formatting the data on request, not an automatic feature.
+
+## [0.15.2] - 2026-07-22
+
+### Changed
+
+- **`rules/atlas-core.md` slimmed** — the always-loaded core rules no longer mandate OTel-style observability, trust-score tier routing, or decision-quality formulas on every task. Those three (`observability-system.md`, `role-trust-profiles.md`, `decision-quality-scoring.md`) are marked experimental/opt-in in their own frontmatter, scoped to the monthly `workflows/self-assessment.md` run — this bundle has no tracing backend or persisted score database to back them for everyday delegation. Adversarial critics, DAG orchestration, and knowledge compounding are kept in core but reduced to their concrete, implementable core (full 5-critic/gapped-critic and critical-path/DAG-node-schema mechanics remain available on demand for complex workflows).
+- **`checkpoint-operations.md` merged into `checkpoint-protocol.md`** — the two knowledge/process files described the same mechanism (schema vs. worked examples); consolidated into one file and updated `manifest.json`.
+- **Trimmed duplication** between `knowledge/process/tool-registry.md` and `aci-enforcement.md` (ACI error/output rules now live only in the latter), and between `runtime-execution.md` and the real tool set (removed the fictional `read_file`/`write_file`/... 6-tool JSON API in favor of the IDE's actual tools).
+- **`dag-orchestration.md` trimmed** — removed the unused `estimatedTokens`/node-JSON schema and the "generates an OTel span" integration claim; kept the concrete dependency-ordering and parallel-write-conflict-detection guidance.
+- **Softened unverifiable stats** in `aci-enforcement.md` (removed invented "92%/78%/95%/15% recovery rate" figures presented as production data).
+- **`agents/atlas-lead.md` de-duplicated** — scope-change/abort/resume procedure now points to `rules/atlas-lead-orchestration.md` (its declared single source of truth) instead of restating it.
+- **`lite/` made self-contained** — removed `lite/rules/atlas-core.md`'s "Deep guidance" table that pointed at the full-size `knowledge/` tree, and inlined the 2-3 sharpest facts from each referenced file directly into the 4 lite playbooks that used the unresolvable `k/<file>.md` shorthand (`atlas-dev`, `atlas-architect`, `atlas-qa`, `atlas-security`).
+- **`knowledge/reference/atlas-framework.md`'s "Workflow presets" table corrected** — `discovery` (research + final, not requirements), `security-audit` (scope + final, not final alone), `infra-change` (requirements + design + final, table previously omitted requirements) now match the actual `workflows/*.md` gate lists.
+
+### Fixed
+
+- **`scripts/validate-refs.py` Windows path bug** — `check_manifest()` compared backslash-separated disk paths against forward-slash manifest paths on Windows, producing 228 false-positive mismatches. Normalized to forward slashes; validator now reports the true state (0 issues).
+
 ## [0.15.1] - 2026-07-13
 
 ### Fixed

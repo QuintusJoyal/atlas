@@ -93,6 +93,12 @@ Before delegating, verify the task description is:
 
 If a task fails INVEST, decompose it before delegating. Bad task descriptions produce bad results.
 
+**A vague brief is the single biggest cause of role drift** — a specialist with an under-scoped brief has to guess where its job ends, and guessing tends toward "be helpful" scope creep. This matters more than the receiving role's own discipline, because the brief constrains the work before the specialist ever gets a chance to wander.
+
+Every brief must therefore also state, explicitly, **what's out of scope** for this delegation — not just what's asked. Pull the boundary directly from the receiving role's own I DO NOT list (`agents/atlas-<role>.md`) rather than restating it from memory. Example: a brief to atlas-dev for "implement the CSV export endpoint" should add "out of scope: security review of the export path (atlas-security), test strategy (atlas-qa) — implement only." This gives the specialist the same boundary from two directions (its own agent file, and this specific brief) instead of relying on one.
+
+If the role-adherence critic (see `knowledge/critic-prompts/role-adherence.md`) flags scope creep on a completed deliverable, treat it as signal that the brief was under-scoped, not only that the specialist over-reached. Tighten the next brief in that area rather than repeating the same vague scope and hoping the role catches it.
+
 ### Delegation invocation (always apply)
 
 1. Pick the **owning role**.

@@ -1,16 +1,17 @@
 ---
 name: decision-quality-scoring
 category: process
-load-when: Post-run analysis, self-assessment, debugging quality issues
-skip-when: Normal operation, in-progress work
-description: 6-dimension decision quality scoring for Atlas multi-agent workflows. Self-healing doctrine for drift correction.
+status: experimental — opt-in, not part of always-on core
+load-when: User explicitly asks for run scoring or drift tracking, or during the monthly self-assessment workflow
+skip-when: Normal operation, in-progress work, everyday delegation
+description: 6-dimension decision quality scoring for Atlas multi-agent workflows. Self-healing doctrine for drift correction. Scores are the agent's own qualitative judgment with worked anchors, not a measured metric.
 audience: [atlas-lead, atlas-ent-arch]
-tags: [quality, scoring, self-healing, drift, decision-making]
+tags: [quality, scoring, self-healing, drift, decision-making, experimental]
 ---
 
-# Decision quality scoring
+# Decision quality scoring (experimental)
 
-Every Atlas run is scored across 6 dimensions. Scores trend over time, feed into trust profiles, and trigger self-healing when patterns degrade.
+Every Atlas run can be scored across 6 dimensions. Scores trend over time, feed into trust profiles, and can trigger self-healing when patterns degrade — but the scores are the agent's own honest self-assessment against the anchors below, not a computed metric from measured data. Use this only when the user has asked for it (typically via the monthly `workflows/self-assessment.md` run); don't run it as a mandatory step on ordinary tasks.
 
 ## Quick Reference
 - 6 dimensions: Role Adherence, Gate Effectiveness, Handoff Quality, Delegation Accuracy, Escalation Quality, Plan Fidelity
@@ -21,12 +22,10 @@ Every Atlas run is scored across 6 dimensions. Scores trend over time, feed into
 ## The 6 dimensions
 
 ### 1. Role Adherence
-Did the role stay within its I DO/DO NOT boundaries?
-- Score 1.0: role produced only deliverables it owns
-- Score 0.5: role touched files outside its boundary
-- Score 0.0: role took over another role's work entirely
-
-Evidence: compare handoff outputs against role definition in agent file.
+Did the role stay within its I DO/DO NOT boundaries? This dimension reuses the always-on `role-adherence` critic's verdict (`knowledge/critic-prompts/role-adherence.md`) rather than re-deriving it — that critic already runs on every deliverable regardless of whether this composite scoring is turned on.
+- Score 1.0: role-adherence critic passed clean
+- Score 0.5: role-adherence critic found medium-severity findings
+- Score 0.0: role-adherence critic found a high-severity finding (took over another role's work entirely)
 
 ### 2. Gate Effectiveness
 Did gates catch real issues?

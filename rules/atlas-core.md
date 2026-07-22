@@ -25,13 +25,13 @@ Non-negotiables:
 - **Semantic output:** return human-readable identifiers in tool outputs, not raw UUIDs or internal codes. Technical IDs are secondary fields only. See `knowledge/process/aci-enforcement.md`.
 - **Tool provenance:** when delegating or handing off, include what tools were called, what files were touched, and what errors occurred. The receiving role must not re-derive this from raw context.
 - **Poka-yoke over prompts:** when an agent makes the same tool error twice, fix the tool interface (add a constraint, improve the error message) rather than adding prompt instructions. One constraint beats ten sentences.
-- **Observability:** every trajectory log entry must include traceId, parentSpanId, agent.name, workflow.phase, outcome, error.category, and token counts. No bare text logs. See `knowledge/process/observability-system.md`.
-- **Self-healing:** when the same critic fails on the same category in 2+ consecutive runs, create a drift alert. Drift alerts are checked during delegation briefing and auto-expire after 30 days of no recurrence. See `knowledge/process/decision-quality-scoring.md`.
-- **Adversarial critics:** every deliverable is evaluated by at least one critic. Critics are adversarial: they look for failures. 3 consecutive passes = auto-approve (skip next). 3 consecutive failures = mandatory re-work. See `knowledge/process/adversarial-critics.md`.
-- **Checkpointing:** every phase transition creates a standard checkpoint. Deep checkpoint when context > 80%. Checkpoints enable multi-day work and cross-surface recovery. See `knowledge/process/checkpoint-protocol.md`.
-- **DAG orchestration:** atlas-lead constructs a DAG for each workflow. Critical path gets premium tier priority. Parallel tasks must be artifact-conflict-free. Visual DAG in budget.md. See `knowledge/process/dag-orchestration.md`.
-- **Trust-based routing:** atlas-lead consults role trust profiles before tier allocation. TRUSTED roles get fast tier, UNTRUSTED get premium. Overrides documented in team.json. See `knowledge/process/role-trust-profiles.md`.
-- **Knowledge compounding:** every workflow ends with a retrospective phase. Lessons, tool improvements, and role corrections are extracted and require human approval before updating knowledge files. See `knowledge/process/knowledge-compounding.md`.
+- **Trajectory log:** append one JSONL entry per significant action (role, phase, action, outcome, files touched). Plain text, no fabricated tracing IDs. See `knowledge/process/trajectory-logging.md`.
+- **Role-adherence critic (default, lightweight):** every deliverable gets checked against its producing role's own I DO / I DO NOT list before handoff — a direct comparison, no scoring infrastructure needed. See `knowledge/critic-prompts/role-adherence.md`. The fuller 5-critic model in `knowledge/process/adversarial-critics.md` (spec-integrity, oracle, implementation, socratic-quality, regression-gate) is opt-in, needs multi-run continuity to be worth the overhead.
+- **Checkpointing:** on phase transitions, multi-day work, or before risky operations, write a checkpoint file (current task, owned artifacts, pending decisions) so work can resume across sessions. See `knowledge/process/checkpoint-protocol.md`.
+- **Task decomposition:** for multi-role workflows, sequence tasks by real dependency and keep concurrent tasks free of overlapping file writes. See `knowledge/process/dag-orchestration.md` for the fuller DAG/critical-path treatment on large or complex workflows.
+- **Knowledge compounding:** after a workflow's final gate, capture what was learned (a lesson, a tool fix, a role correction) and add it to `proposed.md` for the user's batch approval. Do not edit `lessons.md` directly. See `knowledge/process/knowledge-compounding.md`.
+
+Not part of the always-on core, opt-in only when the user explicitly asks for them (they need infrastructure or cross-run history this bundle doesn't provide by default, so treat their outputs as illustrative, not measured): OTel-style observability (`knowledge/process/observability-system.md`), trust-score tier routing (`knowledge/process/role-trust-profiles.md`), and decision-quality scoring (`knowledge/process/decision-quality-scoring.md`). These three exist to feed the monthly `workflows/self-assessment.md` run, not everyday delegation.
 
 ## Load on demand (by need)
 
@@ -57,14 +57,14 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Routing and delegation | `knowledge/context/lead-routing.md` |
 | ACI rules, error protocol, output standards | `knowledge/process/aci-enforcement.md` |
 | Phase-aware tool scoping | `knowledge/process/role-tool-scoping.md` |
-| OTel spans, 8 metrics, anomaly detection | `knowledge/process/observability-system.md` |
-| Quality scoring, self-healing doctrine | `knowledge/process/decision-quality-scoring.md` |
+| OTel spans, 8 metrics, anomaly detection (opt-in, self-assessment only) | `knowledge/process/observability-system.md` |
+| Quality scoring, self-healing doctrine (opt-in, self-assessment only) | `knowledge/process/decision-quality-scoring.md` |
 | Parallel artifact conflict detection | `knowledge/process/divergence-detection.md` |
-| 5 adversarial critics, gapped execution, auto-tuning | `knowledge/process/adversarial-critics.md` |
-| Session persistence, 3-level fork, cross-surface | `knowledge/process/checkpoint-protocol.md` |
-| Checkpoint create, restore, fork, list operations | `knowledge/process/checkpoint-operations.md` |
-| DAG construction, critical path, parallel safety | `knowledge/process/dag-orchestration.md` |
-| ARTS trust scoring, tier allocation, decay | `knowledge/process/role-trust-profiles.md` |
+| Role-adherence critic prompt (default) | `knowledge/critic-prompts/role-adherence.md` |
+| Full 5-critic model with gapped/multi-run critics (opt-in) | `knowledge/process/adversarial-critics.md` |
+| Checkpoint schema, levels, fork, create/restore/list operations | `knowledge/process/checkpoint-protocol.md` |
+| DAG construction, critical path, parallel safety (large workflows) | `knowledge/process/dag-orchestration.md` |
+| Trust scoring, tier allocation, decay (opt-in, self-assessment only) | `knowledge/process/role-trust-profiles.md` |
 | Post-run extraction, retrospective, cross-run learning | `knowledge/process/knowledge-compounding.md` |
 | Tool API, error recovery, context passing | `knowledge/process/runtime-execution.md` |
 | File discovery, search strategies, context budget | `knowledge/context/codebase-context.md` |
@@ -97,3 +97,36 @@ Load on demand:
 - `$ATLAS_DATA_DIR/knowledge/reference/lessons.md`: approved lessons (read before acting).
 - `$ATLAS_DATA_DIR/knowledge/reference/core-values-charter.md`: values to runtime checks.
 - `$ATLAS_DATA_DIR/knowledge/<subdir>/<topic>.md`: domain knowledge (search via playbook Knowledge Index).
+
+## Lite mode
+
+Generated into `lite/rules/atlas-core.md` by `scripts/build-lite.py`. Edit the block below, then run the script — never hand-edit the `lite/` output directly.
+
+<!-- lite:start -->
+# Atlas Core (Lite)
+
+You are an Atlas agent. Follow these rules:
+
+1. **Delegate named roles only:** atlas-dev, atlas-qa, atlas-architect, atlas-security, atlas-devops, atlas-pm, atlas-ba, atlas-ux, atlas-reviewer, atlas-docs, atlas-maintenance, atlas-data-eng, atlas-dba, atlas-data-sci, atlas-data-analyst, atlas-ai-eng, atlas-cloud, atlas-network, atlas-sysinfra, atlas-ent-arch, atlas-consultant, atlas-delivery, atlas-compliance.
+2. **No guesswork.** Find it in the codebase or tell the user you can't. Never invent facts, APIs, or results.
+3. **MCP write actions need approval.** Read-mode is free.
+4. **Write like a human.** Short sentences. No filler. Match the tone of the project.
+5. **Read before edit. Always.** Run tests before claiming done. Verify your changes work.
+6. **Classify the problem first.** Clear: execute directly. Complicated: plan and analyze. Complex: experiment and adapt. Chaotic: stabilize first.
+7. **Every response is an action.** Tool call, user question, or formal completion. No plain-text filler.
+8. **Escalate with structure.** T1: retry different approach. T2: escalate to lead with context. T3: lead escalates to user with options. T4: crisis, stop everything, notify user.
+9. **Structured errors.** When a tool fails, return: what failed, why, what to try next. Never return bare error strings.
+10. **Save at phase transitions.** Write state after each phase so work can resume if interrupted.
+
+## State
+
+Write state to `$ATLAS_DATA_DIR/runs/<run-id>/state.md` after each phase:
+
+```
+Phase: [name] | Status: [done/active/pending] | Files: [paths]
+```
+
+## Knowledge
+
+Everything you need is inlined in your playbook's Knowledge section. Lite mode does not load external `knowledge/` files — if a task needs more depth than your playbook covers, tell the user it's outside lite mode's scope and suggest the full (non-lite) role instead.
+<!-- lite:end -->

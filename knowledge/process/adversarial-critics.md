@@ -3,24 +3,32 @@ name: adversarial-critics
 category: process
 load-when: Running gate checks, designing critic loops, evaluating deliverables
 skip-when: Normal delegation, simple tasks
-description: 5 built-in adversarial critics for Atlas. Spec-integrity (gapped), oracle (gapped), implementation, Socratic-quality, regression-gate.
+description: 6 built-in adversarial critics for Atlas. Role-adherence (default, lightweight), spec-integrity (gapped), oracle (gapped), implementation, Socratic-quality, regression-gate.
 audience: [atlas-lead, atlas-ent-arch]
 tags: [critics, adversarial, evaluation, quality, multi-perspective]
 ---
 
 # Adversarial critics
 
-Atlas uses 5 built-in critics that evaluate deliverables from different perspectives. Critics are adversarial: they actively look for failures, not confirm what works.
+Atlas uses 6 built-in critics that evaluate deliverables from different perspectives. Critics are adversarial: they actively look for failures, not confirm what works.
 
 ## Quick Reference
-- 5 critics: spec-integrity (gapped), oracle (gapped), implementation, socratic-quality, regression-gate
+- 6 critics: role-adherence (default, immediate), spec-integrity (gapped), oracle (gapped), implementation, socratic-quality, regression-gate
+- **role-adherence is the default lightweight critic** referenced in `rules/atlas-core.md` — runs on every deliverable, needs no history or infrastructure. See `knowledge/critic-prompts/role-adherence.md`.
 - 3 "gapped" critics: spec-integrity, oracle, regression-gate
 - Gapped critics = 2 runs delayed (they review the NEXT run, not the current one)
-- 2 normal critics: implementation, socratic-quality (run immediately after delivery)
-- 3-pass/3-fail: 3 consecutive passes = auto-approve (no critic for next run), 3 consecutive failures = mandatory re-work
+- 3 normal critics: role-adherence, implementation, socratic-quality (run immediately after delivery)
+- 3-pass/3-fail: 3 consecutive passes = auto-approve (no critic for next run), 3 consecutive failures = mandatory re-work — this auto-tuning applies to the 5 fuller critics (opt-in); role-adherence always runs since it's cheap
 - All critics return structured JSON: {critic, target, verdict, findings, evidence, confidence}
 
-## The 5 critics
+## The 6 critics
+
+### 0. role-adherence (immediate, default)
+**Purpose:** Verify the producing role stayed inside its own I DO / I DO NOT boundaries.
+**Runs:** Immediately after every deliverable, from any role. This is the one critic that isn't opt-in — see `rules/atlas-core.md`.
+**How:** Compares the deliverable's files/actions against the role's own agent file boundaries. No trust scores, no composite metrics, no history needed.
+**Return:** {critic, target, verdict: pass/fail, findings: [{category, severity, detail}], evidence: "file or action reference", confidence: 0-1}
+**Full prompt:** `knowledge/critic-prompts/role-adherence.md`
 
 ### 1. spec-integrity (gapped)
 **Purpose:** Verify what was built matches what was specified.
@@ -68,7 +76,7 @@ Run N:  spec-integrity reviews Run N-2's diff
 
 This means:
 - First 2 runs have no gapped critic feedback (bootstrap period)
-- After 2 runs, all 5 critics are active
+- After 2 runs, all 5 of the original critics (spec-integrity, oracle, implementation, socratic-quality, regression-gate) are active — role-adherence isn't gapped, so it runs from the first deliverable regardless of bootstrap
 - Findings from gapped critics are added to the NEXT run's brief
 
 ## 3-pass / 3-fail auto-tuning
@@ -108,17 +116,14 @@ All critics return JSON:
 
 ## Integration with trajectory logging
 
-Critic verdicts are logged as spans:
-```
-Trace: run-id
-  Span: gate_check (parent: create_agent)
-    Attributes: atlas.critic.id = "spec-integrity", atlas.critic.verdict = "fail"
-    Attributes: atlas.findings.count = 2, atlas.findings.severity = "high"
+Critic verdicts get one plain JSONL entry each, per `knowledge/process/trajectory-logging.md` — no fabricated tracing spans, just the fields that schema already defines:
+```json
+{"ts": "2026-07-22T14:30:00Z", "role": "atlas-lead", "action": "gate-check", "target": "spec-integrity", "outcome": "failure", "why": "2 findings, high severity"}
 ```
 
 ## Anti-patterns
 
-- Running all 5 critics on every small task (use subset appropriate to variant)
+- Running all 5 opt-in critics on every small task (use the subset appropriate to variant; role-adherence is cheap enough to always run)
 - Ignoring critic findings because "it's probably fine"
 - Having the same role that produced the deliverable also run the critic (critics must be isolated)
 - Skipping critics during "fast iteration" (that's when you need them most)
