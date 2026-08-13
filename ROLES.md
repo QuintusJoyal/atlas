@@ -75,6 +75,8 @@ Invoke any role directly with `atlas-<role>` for a consultative session, or let 
 | Client engagement | atlas-consultant | atlas-delivery |
 | Regulatory compliance | atlas-compliance | atlas-security |
 
+**Secondary means consulted, not an alternate deliverable owner.** The secondary role reviews, advises, or fills a gap when the primary is unavailable — it does not independently produce the primary's deliverable. Each role's own I DO NOT list (in its `agents/atlas-<role>.md`) is the authority on what it will actually do; where this table's Secondary column and a role's I DO NOT list seem to disagree, the I DO NOT list wins; route the deliverable to the primary and use the secondary only for review/input.
+
 ---
 
 ## Workflow presets

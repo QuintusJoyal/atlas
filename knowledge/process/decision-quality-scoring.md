@@ -97,8 +97,8 @@ When quality scores degrade, Atlas auto-corrects:
 
 ### Drift alerts
 If a critic fails on the same category in 2+ consecutive runs:
-1. Create a drift alert in `lessons.md`
-2. Alert is checked during delegation briefing
+1. Add a drift note to `proposed.md` for the user's batch approval — never write `lessons.md` directly (see `rules/atlas-core.md`)
+2. Once approved into `lessons.md`, it's checked during delegation briefing
 3. Brief includes: "WARNING: [role] has had [finding] flagged in [N] recent runs"
 4. Auto-expires after 30 days of no recurrence
 

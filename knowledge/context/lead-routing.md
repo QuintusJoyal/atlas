@@ -19,7 +19,6 @@ Reference for atlas-lead when classifying intent, matching keywords, and routing
 - Bugfix pipeline: maintenance → dev → qa → reviewer → devops
 - Parallel when independent: architect+ux, security+compliance, dev+docs
 - Sequential when dependent: pm→architect, architect→dev, dev→qa
-- Consult trust profiles before tier allocation (ARTS)
 
 ## Intent classification
 
@@ -44,10 +43,20 @@ When the user gives you a task, classify the **intent** first:
 | Network | firewall, VPN, DNS, zero-trust, VPC, subnet | atlas-network | atlas-cloud | infra-change |
 | Database | schema, index, query, backup, HA, DR, SQL | atlas-dba | atlas-data-eng | data-project |
 | Compliance | GDPR, SOC2, ISO27001, privacy, governance, HIPAA | atlas-compliance | atlas-security | security-audit |
+| Enterprise | integration, capability, domain, TOGAF, strategy | atlas-ent-arch | atlas-consultant | discovery |
+| Planning | timeline, milestone, RAID, risk, stakeholder | atlas-delivery | atlas-pm | feature |
+| Discovery | research, explore, spike, POC, investigate | atlas-consultant | atlas-architect | discovery |
+| UX | wireframe, user flow, accessibility, UI, design token | atlas-ux | atlas-pm | feature |
+| Requirements | stories, acceptance criteria, backlog, PRD, INVEST | atlas-pm | atlas-ba | feature |
+| Analysis | edge case, BDD, data flow, process flow, UML | atlas-ba | atlas-pm | feature |
+| Incident | incident, outage, P0, oncall, production down | atlas-maintenance | atlas-devops | bugfix |
+| Tech debt | refactor, cleanup, modernize, legacy, deprecate | atlas-dev | atlas-architect | feature |
 
-## Trust-based routing
+## Trust-based routing (opt-in, experimental)
 
-Before delegating, atlas-lead consults role trust profiles (`knowledge/process/role-trust-profiles.md`):
+Not part of default routing — this bundle has no persisted trust-score store, so `trust-profiles.json` doesn't exist unless the user has explicitly opted into `knowledge/process/role-trust-profiles.md` for a self-assessment run. Everyday delegation uses the fixed tier in each role's own agent frontmatter instead.
+
+If the user has opted in:
 
 ### Tier allocation
 1. Look up role's trust score in `trust-profiles.json`
@@ -63,14 +72,6 @@ Before delegating, atlas-lead consults role trust profiles (`knowledge/process/r
 
 ### Trust updates
 After each task, trust scores update based on quality scores and critic pass rates. See `knowledge/process/role-trust-profiles.md` for the full scoring formula.
-| Enterprise | integration, capability, domain, TOGAF, strategy | atlas-ent-arch | atlas-consultant | discovery |
-| Planning | timeline, milestone, RAID, risk, stakeholder | atlas-delivery | atlas-pm | feature |
-| Discovery | research, explore, spike, POC, investigate | atlas-consultant | atlas-architect | discovery |
-| UX | wireframe, user flow, accessibility, UI, design token | atlas-ux | atlas-pm | feature |
-| Requirements | stories, acceptance criteria, backlog, PRD, INVEST | atlas-pm | atlas-ba | feature |
-| Analysis | edge case, BDD, data flow, process flow, UML | atlas-ba | atlas-pm | feature |
-| Incident | incident, outage, P0, oncall, production down | atlas-maintenance | atlas-devops | hotfix |
-| Tech debt | refactor, cleanup, modernize, legacy, deprecate | atlas-dev | atlas-architect | feature |
 
 ## Keyword-to-role mapping
 

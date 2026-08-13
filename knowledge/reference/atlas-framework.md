@@ -12,7 +12,7 @@ Explanation of where Atlas sits among agentic SDLC frameworks, how the runtime w
 
 ## What Atlas is
 
-Atlas is a **self-contained IDE subagent bundle**: 24 specialist roles, workflow presets, approval gates, and shared knowledge base. Execution stays in your IDE; governance and visibility live in chat plus run artifacts under `$ATLAS_DATA_DIR/runs/<run-id>/`. Project repos do not hold Atlas state. An optional SDK orchestrator ships with Control Center, not this bundle.
+Atlas is a **self-contained IDE subagent bundle**: 23 specialist roles plus an orchestrator, workflow presets, approval gates, and shared knowledge base. Execution stays in your IDE; governance and visibility live in chat plus run artifacts under `$ATLAS_DATA_DIR/runs/<run-id>/`. Project repos do not hold Atlas state. An optional SDK orchestrator ships with Control Center, not this bundle.
 
 Tagline: *One team. Every discipline. Under your command.*
 
@@ -115,6 +115,16 @@ Inspect `$ATLAS_DATA_DIR/runs/<run-id>/` directly or ask atlas-lead for a roster
 | infra-change | Requirements, design, final (+ security) | Cloud, network, CI/CD |
 | security-audit | Scope, final (findings) | Audit only |
 | discovery | Research, final (small: final only) | Scope and proposal |
+| api-design | Design, final | API-first design with OpenAPI |
+| database-migration | Design, final | Schema migration, staged rollout |
+| disaster-recovery | Design, final | DR plan, failover testing, drills |
+| documentation | Final | Docs-only changes |
+| observability-setup | Design, final | SLOs, dashboards, alerts |
+| performance-optimization | Design, final | Profile, optimize, benchmark |
+| refactoring | Design, final | Systematic code improvement |
+| self-assessment | Final | Monthly Atlas capability review |
+
+See `skills/atlas-lead-playbook/SKILL.md` for the same table with per-preset "When" detail — if this table and that one ever disagree, the workflow file's own frontmatter (`workflows/<preset>.md`) is the actual source of truth for both.
 
 See `workflows/*.md` and `skills/atlas-lead-playbook/SKILL.md`.
 

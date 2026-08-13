@@ -58,10 +58,27 @@ Workflows support conditional phase injection. When a condition is true, additio
 | regulated | Adds compliance phase and atlas-compliance role |
 | data-changes | Adds atlas-data-eng and atlas-dba roles |
 | security-sensitive | Adds security-review phase and atlas-security role |
-| security-impacting | Adds security-review phase and atlas-security role |
 | technical-deep-dive | Adds atlas-architect role |
 
 Conditions are evaluated at kickoff. Matched conditions inject phases into the workflow. Injected phases follow the same state machine as native phases.
+
+### Injected phase definitions
+
+Any preset's `conditions:` block can inject these two phases. Defined once here so individual workflow files don't need to repeat the body — a preset that lists `add: [security-review]` or `add: [compliance]` in its frontmatter uses this definition:
+
+#### security-review
+- **Gate:** null
+- **Parallel:** false
+- **Roles:** atlas-security (premium, mandatory)
+- **Input:** design.md (or the relevant artifact for this preset), implementation diff if one exists yet
+- **Output:** security-assessment.md (findings, gate verdict)
+
+#### compliance
+- **Gate:** null
+- **Parallel:** false
+- **Roles:** atlas-compliance (standard)
+- **Input:** design.md or requirements.md (whichever exists), regulatory scope
+- **Output:** compliance-assessment.md (findings, control gaps)
 
 ## State machine
 

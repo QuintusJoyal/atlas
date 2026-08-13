@@ -13,16 +13,16 @@ tags: [knowledge, compounding, learning, retrospective, extraction, continuous-i
 Atlas learns from every run. After each workflow completes, a retrospective phase extracts lessons, updates knowledge, and feeds improvements back into the system.
 
 ## Quick Reference
-- Retrospective phase runs after deploy in every workflow
-- Extracts: new lessons, tool improvements, role corrections, trust updates
-- Updates: lessons.md, role playbooks, tool registry, trust profiles
-- Cross-run: patterns detected across multiple runs feed into drift alerts
-- Human approves all knowledge changes
+- A retrospective phase is native only to `workflows/feature.md` and `workflows/bugfix.md`; other presets don't have one — don't assume it always runs.
+- Extracts: new lessons, tool improvements, role corrections. Trust updates are opt-in (see below) — most runs won't have them.
+- Updates: `lessons.md` and role playbooks, via the approval flow below — never written directly.
+- Cross-run: patterns detected across multiple runs can queue a drift note for `proposed.md`.
+- Human approves all knowledge changes.
 
 ## Retrospective phase
 
 ### When it runs
-After deploy phase completes in every workflow (feature, bugfix, etc.)
+After the deploy phase, for the workflows that define a retrospective phase (`feature.md`, `bugfix.md`). For other presets, treat this as an optional close-out step, not a mandatory gate — nothing else in this bundle requires it.
 
 ### What it extracts
 
@@ -50,8 +50,8 @@ Source: run-20260711-central-data-home (oracle critic failed)
 Approved: pending
 ```
 
-#### 4. Trust updates
-Updated trust scores based on run performance:
+#### 4. Trust updates (opt-in, experimental)
+Only relevant if the user has explicitly opted into `knowledge/process/role-trust-profiles.md` — not part of a default retrospective:
 ```
 Trust update: atlas-dev: 0.85 → 0.87 (quality: 0.92, critic pass: 0.88)
 Trust update: atlas-qa: 0.58 → 0.62 (quality: 0.78, critic pass: 0.70)
@@ -66,13 +66,13 @@ Trust update: atlas-qa: 0.58 → 0.62 (quality: 0.78, critic pass: 0.70)
 
 ```
 Deploy complete
-  → Run retrospective phase
+  → Run retrospective phase (if this workflow has one)
   → atlas-lead reviews trajectory.jsonl
   → Extract lessons, tool improvements, role corrections
-  → Update trust profiles
+  → Update trust profiles (only if opted in)
   → Present findings to user
   → User approves/rejects each item
-  → Approved items update knowledge files
+  → Approved items move to lessons.md; rejected items are dropped
 ```
 
 ## Cross-run learning
@@ -82,11 +82,11 @@ Across multiple runs, Atlas detects patterns:
 ```
 Pattern: "atlas-qa consistently fails oracle critic on mock patterns"
 Runs affected: 3 of last 5
-Action: drift alert in lessons.md, role correction in atlas-qa brief
+Action: add a drift note to proposed.md for approval, role correction in atlas-qa brief
 ```
 
-### Trend analysis
-Trust scores and quality scores trend over time:
+### Trend analysis (opt-in, experimental)
+Only meaningful if the user has opted into `decision-quality-scoring.md`/`role-trust-profiles.md` — this bundle doesn't measure either by default:
 ```
 Trend: atlas-dev quality improving (0.85 → 0.87 → 0.91 over 3 runs)
 Trend: atlas-qa rework rate decreasing (0.20 → 0.15 → 0.10 over 3 runs)
@@ -104,33 +104,29 @@ Approved: pending
 
 All knowledge updates require human approval:
 
-1. **Atlas proposes** — during retrospective, atlas-lead writes proposed changes
+1. **Atlas proposes** — during retrospective, atlas-lead appends candidate lessons to `knowledge/reference/proposed.md`
 2. **User reviews** — user sees proposed changes with evidence
-3. **User approves** — user approves, rejects, or modifies each proposal
-4. **Atlas applies** — approved changes update knowledge files
-5. **Atlas logs** — changes logged in `knowledge/reference/proposed.md` with approval status
+3. **User approves** — user approves, rejects, or modifies each proposal, in a batch
+4. **Atlas applies** — approved items move to `lessons.md`; rejected items are deleted from `proposed.md`. Nothing stays in `proposed.md` marked "approved" — that file is a queue, not an archive.
 
 ## Storage
 
-### Proposed changes
+### Proposed changes (queue, in `knowledge/reference/proposed.md`)
+
+Matches that file's actual format:
 ```
-## Proposed (pending approval)
-- lesson: "Use dos2unix for CRLF" (source: run-20260711, approved: pending)
-- tool-improvement: "Bash validate file exists" (source: run-20260711, approved: pending)
-- role-correction: "atlas-qa no mock.verify sole assertion" (source: run-20260711, approved: pending)
+- [ ] Use dos2unix instead of sed for CRLF normalization on Linux. (role: atlas-dev, rationale: sed behaves inconsistently across CRLF edge cases, source: run-20260711-central-data-home, date: 2026-07-11)
 ```
 
-### Approved changes
-```
-## Approved
-- lesson: "Use dos2unix for CRLF" (source: run-20260711, approved: 2026-07-11)
-- tool-improvement: "Bash validate file exists" (source: run-20260711, approved: 2026-07-11)
-```
+### Approved changes (moved to `lessons.md`)
+
+Once approved, the item is removed from `proposed.md` and added to `lessons.md` in that file's own format — see `lessons.md` for its structure. `proposed.md` never holds an "approved" section.
 
 ## Anti-patterns
 
 - Extracting lessons without evidence (must cite run + trajectory)
-- Skipping retrospective to "save time" (retrospective is mandatory)
+- Treating the retrospective as mandatory on presets that don't define one — check the workflow file first
 - Auto-approving knowledge changes (human must approve)
+- Writing directly to `lessons.md` instead of queuing in `proposed.md`
 - Over-extracting (only extract durable, reusable lessons)
 - Under-extracting (if something went wrong, it should be captured)

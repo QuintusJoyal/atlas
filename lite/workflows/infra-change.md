@@ -1,77 +1,32 @@
----
-name: infra-change
-description: Infrastructure, network, or cloud changes with IaC, testing, and staged rollout.
-type: standard
-triggers:
-  - infrastructure-change
-  - cloud-migration
-  - network-change
-  - ia
-  - deployment
-variants:
-  small:
-    description: Simple infrastructure change, backward-compatible, low risk.
-    gates: [final]
-    token-estimate: light
-    kickoff: lightweight
-    auto-approve: true
-    tracking: none
-  full:
-    description: Complex infrastructure change with multi-system impact, compliance, or cost implications.
-    gates: [design, final]
-    token-estimate: medium
-    kickoff: standard
-    auto-approve: false
-    tracking: full
-conditions:
-  - if: security-sensitive
-    add: [security-review]
-    add-roles: [atlas-security]
-  - if: regulated
-    add: [compliance]
-    add-roles: [atlas-compliance]
-  - if: data-changes
-    add: [data-validation]
-    add-roles: [atlas-data-eng]
-state-machine: [pending, active, gated, completed, failed, paused, aborted]
----
+# Infra Change (Lite)
 
-# Workflow: infra-change (Lite)
+Infrastructure changes are high-risk. Design for reversibility. Test in staging. Rollback first, analyze later. This lite version has no lite agent for atlas-devops, atlas-architect, or atlas-data-eng — if the change needs one of them, tell the user this task needs a role outside lite's 5 and suggest the full bundle.
 
-Infrastructure changes are high-risk. Design for reversibility. Test in staging. Rollback first, analyze later.
-
-## Variant selection
-
-- **small:** single resource change, backward-compatible, IaC update
-- **full:** multi-system change, network topology, compliance review needed
-
-## Phases
-
-### planning
-- **Roles:** atlas-devops, atlas-architect
+## Phase 1: Planning
+- **Roles:** atlas-architect
 - **Input:** change requirements, current infrastructure
-- **Output:** change plan (IaC diff, impact assessment, rollback plan)
+- **Output:** change plan (impact assessment, rollback plan)
+- **Gate:** user approves
 
-### implementation
-- **Roles:** atlas-devops
+## Phase 2: Implementation
+- **Roles:** atlas-dev (for anything lite's roster can actually implement; most infra changes need atlas-devops, which lite doesn't ship — flag this to the user)
 - **Input:** change plan
-- **Output:** implementation summary (IaC applied, configuration changes)
+- **Output:** implementation summary
 
-### validation
-- **Roles:** atlas-qa, atlas-devops
+## Phase 3: Validation
+- **Roles:** atlas-qa
 - **Input:** implementation summary
-- **Output:** validation report (functionality verified, monitoring confirmed)
+- **Output:** validation report (functionality verified)
+- **Gate:** tests pass
 
-### delivery
-- **Gate:** final
-- **Roles:** atlas-devops
+## Phase 4: Delivery
+- **Roles:** atlas-security (if security-sensitive)
 - **Input:** validated change
-- **Output:** deployment artifact (staged rollout complete)
+- **Output:** deployment record
+- **Gate:** user approves
 
 ## Definition of Done
-
 - [ ] Change applied in staging first
 - [ ] Rollback plan tested
 - [ ] Monitoring confirms no regression
-- [ ] Cost impact assessed (if applicable)
 - [ ] User has signed off

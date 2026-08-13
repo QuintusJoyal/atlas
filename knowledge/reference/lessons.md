@@ -37,9 +37,8 @@ Format:
 - Atlas global state (runs, tickets, config, jobs, activity) lives under `ATLAS_DATA_DIR` (default `$ATLAS_DATA_DIR`), not repo `.atlas/`; `meta.workspace` ties each run to a code checkout. (source: run 2026-06-14-central-data-home design.md, approved: 2026-06-17)
 
 ## Observability
-- Trajectory logs use OTel GenAI semantic conventions. Every span includes traceId (run-id), parentSpanId, agent.name, workflow.phase, outcome, error.category, and token counts. (source: observability-system.md, approved: 2026-07-11)
-- Eight multi-agent metrics (IAHQS, DAS, EJR, GYR, REI, CPS, PER, MTAS) are tracked per run. Composite quality score weighted toward handoff quality (0.25). (source: decision-quality-scoring.md, approved: 2026-07-11)
+- Trajectory logs are plain JSONL (role, phase, action, outcome, files touched) — no fabricated tracing IDs. OTel-shaped spans and the 8 multi-agent metrics exist only in `observability-system.md`, which is opt-in/experimental: this bundle has no tracing backend to back them for everyday delegation. (source: rules/atlas-core.md, approved: 2026-07-22, supersedes the 2026-07-11 entry below)
 
 ## Self-healing
-- When a critic fails on the same category in 2+ consecutive runs, a drift alert is created in lessons.md. The alert is checked during delegation briefing and auto-expires after 30 days of no recurrence. (source: observability-system.md, approved: 2026-07-11)
-- Quality score thresholds: composite < 0.70 triggers mandatory review, < 0.80 triggers role retraining, < 0.90 triggers process audit. (source: decision-quality-scoring.md, approved: 2026-07-11)
+- Drift notes (a critic failing the same category in 2+ consecutive runs) go to `proposed.md` for the user's batch approval, never written to `lessons.md` directly. Once approved, the alert is checked during delegation briefing and auto-expires after 30 days of no recurrence. (source: rules/atlas-core.md, approved: 2026-07-22, supersedes the 2026-07-11 entry below)
+- Composite quality-score thresholds (decision-quality-scoring.md) are opt-in/experimental, not measured by default — treat any score as the agent's own qualitative judgment against the file's anchors, not a computed metric. (source: knowledge/process/decision-quality-scoring.md, approved: 2026-07-22, supersedes the 2026-07-11 entry below)

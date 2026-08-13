@@ -1,6 +1,6 @@
 # Atlas Setup Guide
 
-Atlas is a universal AI agent team framework. It gives you 24 specialist roles (PM, architect, dev, QA, security, and more) plus an orchestrator (`atlas-lead`) that can run a feature from requirements through review and deploy-ready handoff.
+Atlas is a universal AI agent team framework. It gives you 23 specialist roles (PM, architect, dev, QA, security, and more) plus an orchestrator (`atlas-lead`) — 24 agent files total — that can run a feature from requirements through review and deploy-ready handoff.
 
 This guide helps any AI agent install Atlas for the IDE it is running in.
 
@@ -453,7 +453,7 @@ To update Atlas after a new release:
 |--------|------|------|
 | Context window | 4K-8K tokens | 16K+ tokens |
 | Model size | 3B-8B parameters | 70B+ parameters |
-| Agents | 5 core roles | 24 specialist roles |
+| Agents | 5 roles (lead + 4 specialists) | 24 roles (lead + 23 specialists) |
 | Workflows | Simplified pipelines | Full pipelines with gates |
 | Knowledge | Inlined in each playbook, no `knowledge/` dependency | Complete knowledge base, loaded on demand |
 | Best for | Quick tasks, small models | Complex delivery, enterprise |
@@ -467,8 +467,24 @@ To update Atlas after a new release:
 **Use full if:**
 - Your model has 16K+ context window
 - You're using 70B+ parameter models
-- You need all 24 specialist roles
+- You need the full 23-specialist roster
 - You want full approval gates and tracking
+
+### Installing lite mode
+
+Lite ships 5 agents (lead, dev, qa, architect, security), their 5 playbooks, and `lite/rules/atlas-core.md` — copy from `lite/` instead of the top-level `agents/`, `skills/`, `rules/` directories used in Step 3 above. The target directory per IDE is the same as the full-mode instructions (`.claude/agents/`, `.opencode/agents/`, `~/.cursor/agents/`, etc.) — only the source path changes:
+
+```bash
+# Example for Claude Code; substitute the target directory for your IDE from Step 3
+mkdir -p .claude/agents .claude/skills
+cp lite/agents/atlas-*.md .claude/agents/
+cp -r lite/skills/atlas-*-playbook .claude/skills/
+cat lite/rules/atlas-core.md >> CLAUDE.md
+```
+
+Skip the full-mode `knowledge/` copy step entirely — lite has no dependency on it. Do not also copy the full-mode agent/skill files for lead, dev, qa, architect, or security; that would defeat the point of the smaller footprint. `lite/workflows/*.md` are optional references for a lite lead to consult; they aren't required to be installed anywhere.
+
+**Verify:** ask the lite lead "what is Atlas?" and confirm it identifies its 5-role roster and says it isn't the full bundle.
 
 ## Uninstalling Atlas
 

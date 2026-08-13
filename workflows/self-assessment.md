@@ -8,8 +8,8 @@ triggers:
   - capability-review
 variants:
   small:
-    description: Quick self-assessment. Benchmark review + performance analysis only.
-    gates: [final]
+    description: Quick self-assessment. Benchmark review + performance analysis only. No gate — this variant never reaches the improvement-proposals phase where the final gate lives.
+    gates: []
     skip: [gap-analysis, improvement-proposals]
     token-estimate: light
     kickoff: lightweight
@@ -53,7 +53,7 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 - **Gate:** null
 - **Parallel:** false
 - **Roles:** atlas-ai-eng (standard)
-- **Input:** knowledge/process/decision-quality-scoring.md, knowledge/process/role-trust-profiles.md, knowledge/reference/lessons.md
+- **Input:** knowledge/reference/lessons.md always; knowledge/process/decision-quality-scoring.md and role-trust-profiles.md only if the user has opted into those experimental mechanisms — otherwise this phase works from lessons.md and trajectory logs alone
 - **Output:** performance summary with trends and patterns
 - **See:** `knowledge/process/decision-quality-scoring.md`
 
@@ -78,8 +78,8 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 ## Definition of Done
 
 - [ ] Benchmark updated with current frontier harness features
-- [ ] Performance trends analyzed (quality scores, trust profiles, drift alerts)
-- [ ] Gaps prioritized by impact and effort
-- [ ] Improvement proposals created with risk tiers
-- [ ] User has approved/rejected all proposals
-- [ ] Approved changes applied and logged in CHANGELOG.md
+- [ ] Performance trends analyzed (lessons.md and trajectory patterns always; quality scores/trust profiles/drift alerts only if those experimental mechanisms are opted in)
+- [ ] Gaps prioritized by impact and effort (full only)
+- [ ] Improvement proposals created with risk tiers (full only)
+- [ ] User has approved/rejected all proposals (full only)
+- [ ] Approved changes applied and logged in CHANGELOG.md (full only)

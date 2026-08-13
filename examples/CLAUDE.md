@@ -23,7 +23,7 @@ Always load `atlas/rules/atlas-core.md` at session start. It contains:
 
 ### Agents
 
-Atlas has 24 specialist roles. Key ones:
+Atlas has 23 specialist roles plus an orchestrator. Key ones:
 - `atlas-lead` - Orchestrator (routes, never implements)
 - `atlas-dev` - Implementation
 - `atlas-qa` - Testing

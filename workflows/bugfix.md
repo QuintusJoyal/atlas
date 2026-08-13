@@ -22,7 +22,7 @@ variants:
     auto-approve: false
     tracking: full
 conditions:
-  - if: security-impacting
+  - if: security-sensitive
     add: [security-review]
     add-roles: [atlas-security]
   - if: regulated

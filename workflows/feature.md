@@ -117,7 +117,7 @@ Tell the user which variant you picked and why.
 
 ### Design gate (full only)
 - [ ] Architecture approved (ADR recorded)
-- [ ] Security review complete (atlas-security sign-off)
+- [ ] Security review complete (atlas-security sign-off) — only if the security-sensitive condition injected atlas-security into this run
 - [ ] API contracts defined (request/response schemas)
 - [ ] NFRs measurable (specific targets, not vague aspirations)
 - [ ] Trade-offs noted

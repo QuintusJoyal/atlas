@@ -24,7 +24,7 @@ Atlas is benchmarked against frontier harnesses monthly. This file tracks where 
 
 | Category | Atlas | Frontier | Delta |
 |----------|-------|----------|-------|
-| Multi-agent team | 24 specialist roles with full persona, scope, delegation | 0-3 generic agents | Atlas has 8-12x more roles |
+| Multi-agent team | 23 specialist roles + orchestrator, full persona, scope, delegation | 0-3 generic agents | Atlas has 8-12x more roles |
 | Model-resilient tier cascade | Automatic retry across 3 tiers, never stops | None (quota = failure) | Unique to Atlas |
 | Prompt cache optimization | ~800 token stable prefix, 69% reduction | None | Unique to Atlas |
 | Workflow state machine | 7-state, conditional injection, small/full variants | Basic state tracking | Atlas has richer state machine |

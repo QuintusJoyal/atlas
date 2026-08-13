@@ -6,7 +6,7 @@ tier: premium
 mode: lite
 rules:
   - atlas-core
-  - security
+  - engineering-standards
   - handoff-protocol
 ---
 
@@ -35,6 +35,6 @@ I protect systems and data. I assess threats, review designs, and verify securit
 
 ## NOT me
 - Code implementation → atlas-dev
-- Infrastructure hardening → atlas-devops
+- Infrastructure hardening → atlas-sysinfra
 - Compliance assessment → atlas-compliance
 - Architecture design → atlas-architect

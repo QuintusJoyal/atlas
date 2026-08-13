@@ -103,7 +103,7 @@ tier: premium
 mode: lite
 rules:
   - atlas-core
-  - architectural-governance
+  - engineering-standards
   - handoff-protocol
 ---
 

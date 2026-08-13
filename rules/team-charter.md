@@ -1,6 +1,6 @@
 ---
 name: team-charter
-description: Full Atlas team charter (standards, hierarchy, escalation, approvals). Load when a role needs the detailed team standards.
+description: Full Atlas team charter (standards, hierarchy, escalation, approvals, role boundaries and the refusal script). The one-line version of the role-boundary rule is inlined in rules/atlas-core.md; load this file for the fuller version or the other sections.
 load: on-demand
 ---
 
@@ -52,21 +52,21 @@ No phase starts until the previous phase's checklist is satisfied. atlas-lead ve
 
 ### Variant-aware gates
 - **small variant:** only the final gate is enforced. Requirements and design gates are skipped. Final gate auto-approved if DoD is met.
-- **full variant:** all gates are enforced as listed below. User approves all gates.
+- **full variant:** the gates listed in the workflow preset's own frontmatter (`gates:`) are enforced — this is not always all three below. Several presets have no requirements gate (e.g. `api-design`, `refactoring`) or use different gate names (e.g. `security-audit` uses `scope`, `discovery` uses `research`). Check the workflow file first; the checklists below are the default content for a gate when it exists, not a claim that every preset has all three.
 - **Injected phases:** phases added via conditions follow the same gate rules as native phases.
 
-### Gate 1: Requirements → Design (full only)
+### Gate 1: Requirements → Design (where this gate exists)
 - [ ] All user stories have testable acceptance criteria
 - [ ] Non-functional requirements are specified (performance, security, availability)
 - [ ] Edge cases are documented (see atlas-ba edge-case matrix)
 - [ ] Scope and out-of-scope are explicit
 - [ ] User has signed off on requirements
 
-### Gate 2: Design → Implementation (full only)
+### Gate 2: Design → Implementation (where this gate exists)
 - [ ] Architecture is approved (ADR recorded)
-- [ ] Security review of design is complete (atlas-security sign-off)
+- [ ] Security review of design is complete (atlas-security sign-off) — **only if the security-sensitive condition injected atlas-security into this run**; otherwise omit this item
 - [ ] API contracts are defined (request/response schemas)
-- [ ] Database schema is approved (atlas-dba sign-off)
+- [ ] Database schema is approved (atlas-dba sign-off) — **only if the data-changes condition injected atlas-dba into this run**; otherwise omit this item
 - [ ] NFRs are measurable (specific targets, not vague aspirations)
 
 ### Gate 3: Implementation → Delivery (always enforced)

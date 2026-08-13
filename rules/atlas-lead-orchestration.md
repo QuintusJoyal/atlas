@@ -214,30 +214,24 @@ See `knowledge/process/dag-orchestration.md` for full DAG construction, critical
 
 ## Critic delegation loop
 
-After each deliverable is handed off, atlas-lead runs the critic evaluation loop:
+### Default (always runs)
+After every deliverable is handed off, atlas-lead runs the **role-adherence critic** (`knowledge/critic-prompts/role-adherence.md`) — the one critic that isn't opt-in. It's cheap (no history needed) and checks the deliverable against the producing role's own I DO / I DO NOT list. If it fails, re-delegate with the findings before proceeding to the next phase.
 
-### Immediate critics (run now)
-1. **implementation** — if deliverable is code
-2. **socratic-quality** — if deliverable is design or requirements
+### Opt-in (only if the user asked for the fuller model)
+The 5-critic model in `knowledge/process/adversarial-critics.md` — implementation, socratic-quality (immediate), spec-integrity, oracle, regression-gate (gapped, 2-run delayed) — needs multi-run continuity to be worth the overhead and is not run by default. Use it only when the user explicitly asks for deeper critic coverage on a run.
 
-### Gapped critics (run on next run)
-3. **spec-integrity** — reviews Run N-2's diff against requirements
-4. **oracle** — reviews Run N-2's tests for leakage
-5. **regression-gate** — compares Run N-2's test results vs baseline
-
-### Critic execution flow
 ```
 Deliverable received
-  → Run immediate critics (implementation, socratic-quality)
-  → If any fail: re-delegate to implementing role with critic findings
-  → If pass: proceed to next phase
-  → Log gapped critic targets for next run
+  → Run role-adherence (always)
+  → If fail: re-delegate to implementing role with findings
+  → If pass and user opted into the fuller model: run implementation/socratic-quality now,
+    queue spec-integrity/oracle/regression-gate for 2 runs out
+  → Proceed to next phase
 ```
 
-### Auto-tuning
-- 3 consecutive passes by same critic on same deliverable type → skip next time
-- 3 consecutive failures → mandatory re-work + drift alert in lessons.md
-- Drift alerts are included in future delegation briefs
+### Auto-tuning (opt-in critics only)
+- 3 consecutive passes by the same opt-in critic on the same deliverable type → skip next time
+- 3 consecutive failures → mandatory re-work; add a note to `proposed.md` for the user's batch approval (never write `lessons.md` directly — see `rules/atlas-core.md`)
 - User can waive re-work requirement
 
 ### Critic isolation

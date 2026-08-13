@@ -203,7 +203,7 @@ Persist workflow state to `$ATLAS_DATA_DIR/runs/<run-id>/state.md` after each ph
 
 ```markdown
 ## Workflow State
-- **Workflow:** [feature|bugfix|data-project|infra-change|security-audit|discovery|database-migration|performance-optimization|observability-setup|disaster-recovery]
+- **Workflow:** [feature|bugfix|data-project|infra-change|security-audit|discovery|api-design|database-migration|performance-optimization|observability-setup|disaster-recovery|documentation|refactoring|self-assessment]
 - **Variant:** [small|full]
 - **Phase:** [current phase] ([N/M])
 - **Completed:** [list of completed phases]

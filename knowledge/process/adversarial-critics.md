@@ -90,8 +90,8 @@ If a critic passes 3 consecutive times on the same type of deliverable:
 ### 3 consecutive failures (mandatory re-work)
 If a critic fails 3 consecutive times on the same type of deliverable:
 1. Mandatory re-work before proceeding
-2. Atlas-lead creates a drift alert in lessons.md
-3. Drift alert is included in future delegation briefs
+2. Atlas-lead adds a drift note to `proposed.md` for the user's batch approval — never write `lessons.md` directly (see `rules/atlas-core.md`)
+3. Once approved, the resulting lesson is included in future delegation briefs
 4. Only the user can waive the re-work requirement
 
 ## Structured critic output

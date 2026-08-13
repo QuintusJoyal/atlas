@@ -2,7 +2,7 @@
 
 **A shareable team of AI IDE agents for software delivery.**
 
-Atlas is a self-contained bundle that gives you 24 specialist roles (PM, architect, dev, QA, security, and more) plus an orchestrator (`atlas-lead`) that can run a feature from requirements through review and deploy-ready handoff. Works on Cursor, Claude Code, OpenCode, VS Code Copilot, Windsurf, Antigravity, and any AI IDE that reads agents, rules, and skills from a project.
+Atlas is a self-contained bundle that gives you 23 specialist roles (PM, architect, dev, QA, security, and more) plus an orchestrator (`atlas-lead`) — 24 agent files total — that can run a feature from requirements through review and deploy-ready handoff. Works on Cursor, Claude Code, OpenCode, VS Code Copilot, Windsurf, Antigravity, and any AI IDE that reads agents, rules, and skills from a project.
 
 Includes a `lite/` directory with 5 core agents optimized for 3B-8B models with 4K-8K context windows.
 
@@ -24,7 +24,7 @@ See `SETUP.md` for IDE-specific details (Claude Code AGENTS.md, VS Code Copilot 
 
 ## What you get
 
-- 24 specialist roles plus an orchestrator (`atlas-lead`). See [ROLES.md](ROLES.md).
+- 23 specialist roles plus an orchestrator (`atlas-lead`) — 24 agent files total. See [ROLES.md](ROLES.md).
 - Per-role playbooks grounded in cited industry standards (OWASP, ISTQB, DORA, C4, WCAG, TOGAF, and more).
 - Lazy-loaded context: one tiny always-on rule, everything else loads only when its topic is in motion.
 - Mandatory kickoff: workflow, `budget.md`, per-role estimates before build ([budget-template.md](knowledge/reference/budget-template.md)).

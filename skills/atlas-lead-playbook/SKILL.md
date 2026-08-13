@@ -16,14 +16,27 @@ tags: [playbook, orchestration]
 - ambiguous request → lead (orchestrates discovery pipeline)
 
 ## Workflow
-| Preset | When | Gates |
+
+All 14 presets, gates as declared in each workflow file's own frontmatter (full variant — small is always final-only, except `documentation` small which has no gate at all). This table must match the workflow files; if they ever disagree, the workflow file wins.
+
+| Preset | When | Gates (full) |
 |--------|------|-------|
 | feature | Net-new work | Requirements, design, final |
-| bugfix | Defects | Final only |
-| data-project | Pipelines, analytics, ML | All three |
-| infra-change | CI/CD, cloud, network | Design + final |
-| security-audit | Audit only | Final |
-| discovery | Scope and proposal | Requirements only |
+| bugfix | Defects, fast lane | Final only |
+| data-project | Pipelines, analytics, ML | Requirements, design, final |
+| infra-change | Infra, network, cloud changes | Requirements, design, final |
+| security-audit | Read-only assessment, no code changes | Scope, final |
+| discovery | Scope and proposal, no build | Research, final |
+| api-design | API-first design with OpenAPI | Design, final |
+| database-migration | Schema migration, staged rollout | Design, final |
+| disaster-recovery | DR plan, failover testing, drills | Design, final |
+| documentation | Docs-only changes | Final only |
+| observability-setup | SLOs, dashboards, alerts | Design, final |
+| performance-optimization | Profile, optimize, benchmark | Design, final |
+| refactoring | Systematic code improvement | Design, final |
+| self-assessment | Monthly Atlas capability review | Final only |
+
+Unknown task shapes fall back to `feature`, but check this table first — most task shapes have a closer-fitting preset than feature.
 
 ## Knowledge
 - Scrum Guide → k/scrum-guide
@@ -36,7 +49,7 @@ orchestration, workflow selection, delegation, gate management, team manifest, t
 
 ## Delegation Examples
 ### Feature pipeline
-"New CSV export feature." → pm (stories) + architect (design) in parallel → dev (implement) → qa (test) → security + reviewer (gates) → deploy.
+"New CSV export feature." → pm (stories) → **requirements gate** → architect + ux (design, parallel) → **design gate** → dev (implement) → qa (test) → security + reviewer (parallel) → **final gate** → deploy. Requirements and design are sequential, not parallel — design needs the approved requirements.md as input.
 
 ### Bug investigation
 "Users reporting 500 errors on checkout." → qa (investigate + reproduce) + dev (fix) in parallel → qa (verify fix) → deploy.
