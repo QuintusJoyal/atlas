@@ -131,7 +131,7 @@ When a role returns a handoff, atlas-lead updates the phase state in `team.json`
 
 ### Gate approval flow
 1. Role returns handoff → state becomes `gated`
-2. Lead validates handoff completeness (all required fields present)
+2. Lead validates handoff completeness (all required fields present) and runs deterministic schema validation (see "Structured Typed Handoffs")
 3. Lead checks DoD checklist items
 4. Lead presents to user for approval
 5. User approves → state becomes `completed`
@@ -171,3 +171,32 @@ Before advancing from a parallel stage to the next sequential stage:
 6. Log result to trajectory.jsonl
 
 See `knowledge/process/divergence-detection.md` for full detection protocol and resolution options.
+
+## Structured Typed Handoffs (JSON Schema)
+
+Atlas supports structured, typed handoffs using JSON schemas. The canonical schemas live under `schemas/handoffs/` with role-specific schemas and a shared base schema.
+
+### Schema references
+- Base schema: `schemas/handoffs/base.json`
+- Small variant schema: `schemas/handoffs/small.json`
+- Per-role schemas: `schemas/handoffs/<role>.json` (e.g., `atlas-pm.json`, `atlas-dev.json`)
+- Schema index: `schemas/index.json`
+
+All handoffs MUST be valid against their corresponding JSON schema when returned as JSON. The schema version field (`schemaVersion`, default "1.0.0") enables forward compatibility.
+
+### Validation rules
+- For `variant: full`, handoffs must conform to the base/per-role schema structure (all required fields present). Atlas-lead performs deterministic schema validation (no LLM required) as part of gate checks.
+- For `variant: small`, handoffs must conform to the compressed 4-section structure defined by `schemas/handoffs/small.json` (Summary, Outputs, Issues, Next). Small variant handoffs skip: Inputs, Resource requests, Token budget, Definition of Done (DoD is implicit: role completed = gate passed).
+- **Backward compatibility:** During transition, existing markdown handoffs remain accepted. Schema validation is applied when the handoff is presented as JSON; markdown-formatted handoffs continue to be validated via existing completeness checks.
+- Schema validation runs before LLM-based quality evaluation in gate checks.
+- A handoff that fails schema validation is incomplete and must be corrected/re-delegated before proceeding.
+
+### Lite mode
+Lite mode uses the small variant (4-section) handoff format. See `schemas/handoffs/small.json` for the canonical contract.
+
+### Schema versioning
+
+Handoff schemas include a `schemaVersion` field (default "1.0.0") to support forward compatibility. When schemas evolve:
+1. Increment the version in a backwards-compatible manner where possible.
+2. Older handoffs remain accepted during transition (backward compatibility).
+3. New required fields are introduced only with major version bumps and accompanied by migration guidance.

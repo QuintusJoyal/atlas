@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["role", "variant", "phaseState", "workDone", "outputs", "tokenBudget", "definitionOfDone", "nextRole"],
+  "additionalProperties": false,
+  "properties": {
+    "role": {
+      "type": "string",
+      "pattern": "^atlas-[a-z-]+$"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"]
+    },
+    "phaseState": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "workDone": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resourceRequests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["request", "justification"],
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "type": "string"
+          },
+          "justification": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "required": ["estimate", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "tierChange": {
+          "type": "string"
+        }
+      }
+    },
+    "definitionOfDone": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["complete", "incomplete", "blocked"]
+          }
+        }
+      }
+    },
+    "nextRole": {
+      "type": "object",
+      "required": ["role", "why", "firstAction"],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        },
+        "firstAction": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0.0"
+    }
+  }
+}

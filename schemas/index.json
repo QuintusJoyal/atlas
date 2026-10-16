@@ -1,0 +1,30 @@
+{
+  "base": "schemas/handoffs/base.json",
+  "small": "schemas/handoffs/small.json",
+  "roles": [
+    "atlas-pm",
+    "atlas-ba",
+    "atlas-architect",
+    "atlas-dev",
+    "atlas-qa",
+    "atlas-security",
+    "atlas-reviewer",
+    "atlas-devops",
+    "atlas-docs",
+    "atlas-compliance",
+    "atlas-ux",
+    "atlas-dba",
+    "atlas-data-eng",
+    "atlas-data-sci",
+    "atlas-data-analyst",
+    "atlas-ai-eng",
+    "atlas-cloud",
+    "atlas-network",
+    "atlas-sysinfra",
+    "atlas-ent-arch",
+    "atlas-consultant",
+    "atlas-delivery",
+    "atlas-maintenance"
+  ],
+  "version": "1.0.0"
+}
