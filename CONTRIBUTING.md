@@ -60,3 +60,7 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 - Do not commit secrets. Keep the knowledge base free of credentials and PII.
 - Run `python3 scripts/validate-refs.py` and, if you touched a file with a `## Lite mode` block, `python3 scripts/build-lite.py --check`. Both should exit clean.
 - If you touched a file under `workflows/` or `manifest.json`'s `workflowMeta`, run `python3 scripts/validate-workflows.py`. It must exit clean.
+
+## Repository automation
+
+An issue labeled `action:develop` is implemented, reviewed, and merged without a human in the loop: `auto-developer` opens a PR into `dev`, `auto-reviewer` submits a review, and `auto-merge` squash-merges once that review approves and checks pass. `main` is then updated from `dev` by `promote.yml` on a weekly schedule. See `.github/workflows/README.md` for the full chain, the secrets and repository settings it needs, and the checks to run locally before pushing.
