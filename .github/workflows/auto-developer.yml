@@ -68,15 +68,22 @@ jobs:
 
             Keep changes small and targeted. Follow existing patterns.
 
-      - name: Retarget PR to ${{ env.TARGET_BRANCH }}
+      - name: Finalize PR (retarget and title)
         # The opencode action hardcodes the PR base to the repository's
         # default branch (main); it exposes no input for it. Atlas never takes
         # direct PRs to main, so repoint the PR it just opened at TARGET_BRANCH.
         # `always()` so a failure after the PR is opened still retargets it.
+        #
+        # The title is set from the issue as well. The action derives the PR
+        # title from the model's own words, which is usually fine and
+        # occasionally rambling (PR #59's title was the model's reflection on
+        # summarising), and the title becomes the permanent squash-commit
+        # subject on `dev` and `main`. The issue title is deterministic.
         if: always()
         env:
           GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
           ISSUE_NUM: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           set -euo pipefail
           # The runner names issue branches `opencode/issue<N>-<timestamp>`;
@@ -91,9 +98,10 @@ jobs:
           fi
           while IFS=$'\t' read -r number base; do
             if [ "${base}" = "${TARGET_BRANCH}" ]; then
-              echo "PR #${number} already targets ${TARGET_BRANCH}."
-              continue
+              echo "PR #${number} already targets ${TARGET_BRANCH}; normalizing title."
+            else
+              echo "Retargeting PR #${number}: ${base} -> ${TARGET_BRANCH}"
             fi
-            gh pr edit "${number}" --repo "${GITHUB_REPOSITORY}" --base "${TARGET_BRANCH}"
-            echo "Retargeted PR #${number}: ${base} -> ${TARGET_BRANCH}"
+            gh pr edit "${number}" --repo "${GITHUB_REPOSITORY}" \
+              --base "${TARGET_BRANCH}" --title "${ISSUE_TITLE}"
           done <<< "${prs}"
