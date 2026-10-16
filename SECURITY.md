@@ -6,8 +6,8 @@ Atlas is an AI IDE agent bundle (agents, skills, rules, knowledge). Security fix
 
 | Version | Supported |
 | ------- | --------- |
-| 0.5.x   | Yes       |
-| < 0.5   | No        |
+| 0.17.x  | Yes       |
+| < 0.17  | No        |
 
 ## Reporting a vulnerability
 
