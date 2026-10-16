@@ -98,3 +98,8 @@ would not wake it. `auto-merge.yml` reacts to the *Auto Reviewer run
 completing* (`workflow_run`) instead, which is a system event and survives the
 guard. The same rule stops a `GITHUB_TOKEN`-opened PR from firing
 `pull_request` at all, which is why PR creation uses `PROMOTE_PAT` too.
+
+It also means the squash merge `auto-merge` performs raises no `push` run on
+`dev`, so you will not see a `Validate Bundle` run for the merge commit itself —
+only for the PR that produced it. That is fine because `promote.yml` re-runs
+the validators on the merged tree before it touches `main`.
