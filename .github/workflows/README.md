@@ -59,10 +59,29 @@ gh secret list
   opened would never wake `auto-reviewer` or `Validate Bundle`. It is also the
   admin identity that `promote.yml` pushes `main` with, which is what gets
   past `main`'s lock-branch protection.
+  It deliberately does **not** carry the `workflows` permission, so its push
+  is refused for any file under `.github/workflows/`. That is a feature: the
+  agent cannot rewrite the CI that grades it, and an issue that asks for a
+  change there has to be done by hand.
 - **`main` branch protection** — one approving review, lock branch. Promotions
   arrive as a direct admin push, so `enforce_admins` must stay **off**.
 - **`dev`** is intentionally unprotected: PRs into it merge on a green
   review + checks, with no per-PR approval queue.
+
+## Local checks
+
+`validate.yml` runs these on every PR and on push to `dev`/`main`; run the
+same three before pushing, since a red check leaves a PR open rather than
+merging it:
+
+```sh
+python3 scripts/validate-refs.py
+python3 scripts/build-lite.py --check
+python3 scripts/validate-workflows.py
+```
+
+`actionlint` against `.github/workflows/*.yml` is worth running too if you
+touched the workflows in this directory.
 
 ## Two-identity rule
 

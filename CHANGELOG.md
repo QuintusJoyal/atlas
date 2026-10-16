@@ -10,7 +10,7 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 - **`auto-merge.yml`** — approved PRs into `dev` now merge themselves. It listens for both a submitted review and PR events (`opened`/`synchronize`/`edited`/…), then reads the PR's live approval state instead of trusting the trigger, because auto-developer retargets its PR onto `dev` *after* opening it and the approval can land on either side of that edit. It waits for a check to appear, `gh pr checks --watch`es it to completion, then `gh pr merge --squash --delete-branch`. A red check leaves the PR open for a human instead of merging it.
 - **Unattended promotion.** `promote.yml` gained a weekly `schedule` (Mondays 10:00 UTC, after `trend-investigator`) and `workflow_dispatch`, so `dev` reaches `main` without a `/promote` comment. Because that push is unattended it now re-runs the three bundle validators on the merged tree and refuses to push if they fail. `client_payload` is now optional (`dev`/`main` fallbacks), an already-up-to-date `dev` exits `noop` instead of pushing an empty merge, and the report comment renders `:fast_forward:` for that case.
-- **`.github/workflows/README.md`** — a map of the automation chain, the repository settings and secrets it depends on, and the two-identity rule for create-vs-approve.
+- **`.github/workflows/README.md`** — a map of the automation chain, the repository settings and secrets it depends on, a "Local checks" section, and the two-identity rule for create-vs-approve. It also records that `PROMOTE_PAT` intentionally lacks the `workflows` permission, so the agent cannot push to `.github/workflows/` and CI changes stay human-only.
 
 ### Fixed
 
