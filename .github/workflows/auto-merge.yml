@@ -109,7 +109,21 @@ jobs:
           # failed, so a red PR is left open for a human instead of merged.
           gh pr checks "$PR" --watch --interval 15
 
-          gh pr merge "$PR" --squash --delete-branch
+          # The repository's squash setting is COMMIT_OR_PR_TITLE, which for a
+          # one-commit PR takes the subject from the branch commit — i.e. from
+          # whatever the model happened to write. PR #59 became "The user wants
+          # a summary in less than 40 characters…" on `dev`. Pass the subject
+          # explicitly, from the PR title auto-developer normalizes off the
+          # issue, so the subject is deterministic; keep the branch commits'
+          # bodies so the Co-authored-by trailers survive.
+          subject=$(gh pr view "$PR" --json title --jq .title)
+          trailers=$(gh pr view "$PR" --json commits \
+            --jq '[.commits[].messageBody] | map(select(. != "")) | join("\n\n")')
+          merge_args=(--squash --delete-branch --subject "${subject} (#${PR})")
+          if [ -n "${trailers}" ]; then
+            merge_args+=(--body "${trailers}")
+          fi
+          gh pr merge "$PR" "${merge_args[@]}"
 
           # Merging into `dev` does not close linked issues. GitHub only
           # auto-closes when the merge lands on the default branch, and this
