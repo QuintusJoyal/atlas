@@ -12,16 +12,21 @@ a different thing that merely shares the word "workflow".
 ## The chain
 
 ```
-issue + `action:develop` label
+issue (`type:feature`)
         │
         ▼
-auto-developer.yml ──opens PR──▶ auto-reviewer.yml ──approves──▶ auto-merge.yml
-   (implements, retargets PR to dev)   (review)                      (squash-merges into dev)
-        │                                                                    │
-        └──────────────── Validate Bundle must pass ─────────────────────────┘
-                                                                             │
-                                                                             ▼
-                                                              promote.yml (weekly, dev → main)
+feature-reviewer.yml ──evaluates + labels `action:develop`──▶ auto-developer.yml
+   (posts evaluation)                                            (implements, retargets PR to dev)
+                                                                        │
+                                                                        ▼
+                                              auto-reviewer.yml ──approves──▶ auto-merge.yml
+                                                 (review)                       (squash-merges into dev
+                                                                                 + closes the issue)
+                                                                                        │
+                                    Validate Bundle must pass ──────────────────────────┘
+                                                                                        │
+                                                                                        ▼
+                                                                     promote.yml (weekly, dev → main)
 ```
 
 | Workflow | Trigger | Does |
@@ -32,11 +37,13 @@ auto-developer.yml ──opens PR──▶ auto-reviewer.yml ──approves─�
 | `auto-merge.yml` | `Auto Reviewer` run completes (plus manual `workflow_dispatch`) | When a same-repo PR into `dev` has a current approval: waits for checks, then `gh pr merge --squash --delete-branch`, passing `--subject` from the PR title so the squash commit is deterministic (the repo's `COMMIT_OR_PR_TITLE` setting would otherwise take the subject from the model's branch commit), and closes the issue the PR names (`Closes #N`, or `issue<N>` in the branch). Triggered by `workflow_run`, not `pull_request_review`, because the bot's own approval is made with `GITHUB_TOKEN` and so raises no workflow run — and `workflow_run` also guarantees main's copy of the file runs. |
 | `promote.yml` | weekly schedule, `/promote` comment, manual dispatch | Re-runs the bundle validators on the merged tree, then merges `dev` into `main` and pushes. The only path into `main`. |
 | `promote-dispatch.yml` | `/promote` comment | Validates the command and dispatches `promote.yml`. |
-| `feature-reviewer.yml` | issue `opened`/labeled | Posts a feasibility evaluation comment. |
-| `trend-investigator.yml` | weekly schedule | Opens `type:feature` issues from research. |
+| `feature-reviewer.yml` | issue `opened` with `type:feature`, or labeled `type:feature`/`action:evaluate` | Posts an evaluation (the action comments the agent's reply itself) and then labels the issue `action:develop` with `PROMOTE_PAT`, which starts development. `action:evaluate` is the manual retry/sweep label. |
+| `trend-investigator.yml` | weekly schedule | Opens `type:feature` issues from research. Files them with `PROMOTE_PAT` so the issues raise a real `opened` event and `feature-reviewer` actually evaluates them. |
 
-The human entry points are deliberately few: label an issue `action:develop`
-to start work, comment `/promote` to ship early, and step in only if a run
+The human entry points are deliberately few: file an issue (or let
+`trend-investigator` file one), which is evaluated and then developed
+automatically; label an issue `action:develop` to skip the evaluation and start
+work immediately; comment `/promote` to ship early; and step in only if a run
 fails (a failed check leaves the PR open rather than merging it).
 
 ## Required repository configuration
