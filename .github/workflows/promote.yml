@@ -1,12 +1,27 @@
 name: Promote Branch
 
+# The only path into `main`. Three ways in:
+#   * `schedule`          — the weekly, unattended promotion of `dev` -> `main`
+#   * `/promote` comment  — promote-dispatch.yml dispatches `promote-branch`
+#   * manual run          — the Actions "Run workflow" button
+# Every path funnels through the same dev -> main validation below.
 on:
   repository_dispatch:
     types: [promote-branch]
+  workflow_dispatch:
+  schedule:
+    # Mondays 10:00 UTC, after the weekly trend-investigator 09:00 run.
+    - cron: '0 10 * * 1'
 
 permissions:
   contents: write
   issues: write
+
+# `client_payload` only exists for the repository_dispatch path, so both other
+# triggers fall back to the repo's one supported promotion: dev -> main.
+env:
+  SOURCE: ${{ github.event.client_payload.source || 'dev' }}
+  TARGET: ${{ github.event.client_payload.target || 'main' }}
 
 jobs:
   promote:
@@ -14,13 +29,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Validate branch names
-        env:
-          SOURCE: ${{ github.event.client_payload.source }}
-          TARGET: ${{ github.event.client_payload.target }}
+        # Defense in depth: promote-dispatch.yml already validates this, but
+        # this workflow can push to any branch with PROMOTE_PAT, so it
+        # re-checks rather than trusting the dispatch payload blindly.
         run: |
-          # Defense in depth: promote-dispatch.yml already validates this, but
-          # this workflow can push to any branch with PROMOTE_PAT, so it
-          # re-checks rather than trusting the dispatch payload blindly.
           if [ "$SOURCE" != "dev" ] || [ "$TARGET" != "main" ]; then
             echo "Refusing unexpected promotion: source='${SOURCE}' target='${TARGET}'"
             exit 1
@@ -34,26 +46,44 @@ jobs:
 
       - name: Merge branch
         id: merge
-        env:
-          SOURCE: ${{ github.event.client_payload.source }}
-          TARGET: ${{ github.event.client_payload.target }}
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git fetch origin "${SOURCE}"
-          git checkout "${TARGET}"
+          git fetch origin "${SOURCE}" "${TARGET}"
+          git checkout -B "${TARGET}" "origin/${TARGET}"
 
-          if git merge "origin/${SOURCE}" --no-edit; then
-            git push origin "${TARGET}"
-            echo "status=success" >> "$GITHUB_OUTPUT"
-            echo "message=Successfully merged \`${SOURCE}\` into \`${TARGET}\`" >> "$GITHUB_OUTPUT"
-          else
+          # The scheduled run fires whether or not `dev` moved. Skip quietly
+          # instead of pushing an empty merge or reporting a failure.
+          if git merge-base --is-ancestor "origin/${SOURCE}" "${TARGET}"; then
+            echo "status=noop" >> "$GITHUB_OUTPUT"
+            echo "message=\`${SOURCE}\` has no new commits for \`${TARGET}\`" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if ! git merge "origin/${SOURCE}" --no-edit; then
             echo "status=conflict" >> "$GITHUB_OUTPUT"
             echo "message=Merge conflict when merging \`${SOURCE}\` into \`${TARGET}\`" >> "$GITHUB_OUTPUT"
             git merge --abort
             exit 1
           fi
+
+          # Unlike a PR, this push is unattended, so re-run the bundle checks on
+          # the merged tree before it leaves the runner rather than trusting
+          # that `dev` was green.
+          if ! python3 scripts/validate-refs.py >/dev/null \
+            || ! python3 scripts/build-lite.py --check >/dev/null \
+            || ! python3 scripts/validate-workflows.py >/dev/null; then
+            echo "status=failed" >> "$GITHUB_OUTPUT"
+            echo "message=Bundle validation failed on the merged tree; nothing was pushed" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          git push origin "${TARGET}"
+          echo "status=success" >> "$GITHUB_OUTPUT"
+          echo "message=Successfully merged \`${SOURCE}\` into \`${TARGET}\`" >> "$GITHUB_OUTPUT"
 
       - name: Report result
         if: always()
@@ -73,7 +103,9 @@ jobs:
             }
 
             const status = process.env.STATUS || 'failed';
-            const emoji = status === 'success' ? ':white_check_mark:' : ':x:';
+            const emoji = status === 'success' ? ':white_check_mark:'
+                        : status === 'noop' ? ':fast_forward:'
+                        : ':x:';
             const message = process.env.MESSAGE || 'Promotion failed before merge could be attempted.';
             const actor = process.env.ACTOR || 'unknown';
 

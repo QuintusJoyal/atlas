@@ -47,7 +47,13 @@ jobs:
       - name: Run OpenCode
         uses: anomalyco/opencode/github@v1.18.4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Must NOT be secrets.GITHUB_TOKEN: GitHub suppresses workflow runs
+          # for `push`/`pull_request` events raised by GITHUB_TOKEN, so a
+          # GITHUB_TOKEN PR would never trigger auto-reviewer or Validate
+          # Bundle and the chain would stall the instant the PR opened.
+          # PROMOTE_PAT is the repo's automation identity (classic `repo`
+          # scope, or Contents + Pull requests + Issues write if fine-grained).
+          GITHUB_TOKEN: ${{ secrets.PROMOTE_PAT }}
         with:
           model: opencode/big-pickle
           use_github_token: "true"
@@ -69,7 +75,7 @@ jobs:
         # `always()` so a failure after the PR is opened still retargets it.
         if: always()
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
           ISSUE_NUM: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail

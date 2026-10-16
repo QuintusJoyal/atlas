@@ -51,6 +51,7 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 - **Skills** (`skills/`): YAML frontmatter (`type: playbook|guide|reference`, `appliesTo`) + markdown body.
 - **Knowledge** (`knowledge/`): YAML frontmatter (`category: framework|charter|process|template|reference`) + markdown body.
 - **Workflows** (`workflows/`): YAML frontmatter (`type: pipeline|fast-lane|assessment`, `variants`, `conditions`, `state-machine`) + markdown body. Declared gates must be fed by a phase; injected phases are limited to `security-review` and `compliance`. `workflows/README.md` and `manifest.json` must match the presets.
+- **GitHub Actions** (`.github/workflows/`): unrelated to the `workflows/` presets above despite the name. These are the repo's own automation (issue → PR → review → merge → promote); see `.github/workflows/README.md` for the chain and the settings/secrets it needs.
 
 ## Before you open a change
 

@@ -4,6 +4,19 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.17.4] - 2026-10-17
+
+### Added
+
+- **`auto-merge.yml`** — approved PRs into `dev` now merge themselves. On a submitted approval of a same-repo PR targeting `dev` it waits for a check to appear, `gh pr checks --watch`es it to completion, then `gh pr merge --squash --delete-branch`. A red check leaves the PR open for a human instead of merging it.
+- **Unattended promotion.** `promote.yml` gained a weekly `schedule` (Mondays 10:00 UTC, after `trend-investigator`) and `workflow_dispatch`, so `dev` reaches `main` without a `/promote` comment. Because that push is unattended it now re-runs the three bundle validators on the merged tree and refuses to push if they fail. `client_payload` is now optional (`dev`/`main` fallbacks), an already-up-to-date `dev` exits `noop` instead of pushing an empty merge, and the report comment renders `:fast_forward:` for that case.
+- **`.github/workflows/README.md`** — a map of the automation chain, the repository settings and secrets it depends on, and the two-identity rule for create-vs-approve.
+
+### Fixed
+
+- **`auto-developer` opened PRs that no workflow could see.** A PR opened with the built-in `GITHUB_TOKEN` does not raise `pull_request` runs (GitHub suppresses recursive triggers), so `auto-reviewer` and `Validate Bundle` never fired and the chain stalled the moment the PR was created. The opencode step (and the retarget step) now use `PROMOTE_PAT`, a non-Actions identity, which both wakes the downstream workflows and keeps creation and approval on different actors.
+- **`auto-reviewer` could not rely on its approval landing.** The prompt told the agent to "pick one command" but the repository setting `can_approve_pull_request_reviews` (`false` until now) makes `gh pr review --approve` return 403, so runs silently degraded to a `COMMENTED` review that satisfies no branch protection. The prompt now insists the verdict command runs first and permits the `--comment` fallback only on that specific 403, and the job documents the setting it needs.
+
 ## [0.17.3] - 2026-10-17
 
 ### Fixed

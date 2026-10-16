@@ -9,6 +9,13 @@ permissions:
   issues: write
   pull-requests: write
 
+# This job approves PRs, which needs the repository setting
+# Settings -> Actions -> General -> Workflow permissions ->
+# "Allow GitHub Actions to create and approve pull requests"
+# (API: can_approve_pull_request_reviews). With it off, `gh pr review
+# --approve` returns 403 and the reviewer can only leave a COMMENTED review,
+# which does not satisfy branch protection and stalls auto-merge.
+
 concurrency:
   group: auto-reviewer-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -39,17 +46,20 @@ jobs:
             3. Knowledge cross-refs
             4. Token budgets
 
-            Decide a verdict: approve, request-changes, or comment.
-
-            Submit it as a real PR review, not a plain comment, using the gh CLI
+            Decide a verdict: approve, request-changes, or comment, then submit
+            it as a real PR review — not a plain comment — with the gh CLI
             (PR_NUMBER is set in the environment):
 
               gh pr review "$PR_NUMBER" --approve --body "<2-3 bullet summary>"
               gh pr review "$PR_NUMBER" --request-changes --body "<2-3 bullet summary, name what must change>"
               gh pr review "$PR_NUMBER" --comment --body "<2-3 bullet summary>"
 
-            Pick exactly one command matching your verdict and run it. A plain
-            issue/PR comment is not a substitute — it must be an actual review,
-            since only a real review can be wired into branch protection.
+            Always run the command matching your verdict FIRST. A plain comment
+            is not a substitute for a review: only a submitted `--approve`
+            review lets auto-merge land the PR.
+
+            If (and only if) `--approve` fails with "GitHub Actions is not
+            permitted to approve pull requests", retry with `--comment` and
+            state the approve verdict in the body.
 
             Keep the body under 100 words.

@@ -1,0 +1,60 @@
+name: Auto Merge
+
+# Closes the loop on `action:develop`: once Auto Reviewer approves a PR into
+# `dev`, squash-merge it so nobody has to click the button. This only handles
+# the integration branch (`dev`); `dev` -> `main` is a separate promotion step
+# in promote.yml, so `main` keeps its single reviewed entry point.
+#
+# Listens for `pull_request_review` rather than `workflow_run` because that is
+# the event that proves an approval exists, and it is enough to gate on: the
+# job then waits for the PR's checks itself before merging.
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    # Same-repo only (fork PRs get no secrets and are routed to human review,
+    # matching auto-reviewer), and only once a review actually approves.
+    if: |
+      github.event.review.state == 'approved' &&
+      github.event.pull_request.base.ref == 'dev' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Wait for checks, then merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          # Auto Reviewer can approve within seconds of `opened`, often before
+          # Validate Bundle has registered its check run. Wait for a check to
+          # exist before trusting `gh pr checks`, otherwise an empty run list
+          # would look like "nothing to fail" and merge an unvalidated PR.
+          # `|| true` keeps `set -e` off the assignment: `gh pr checks` exits 8
+          # while checks are pending, which is expected here and not an error.
+          for _ in $(seq 1 60); do
+            count=$(gh pr checks "$PR" --json name --jq 'length' 2>/dev/null) || true
+            if [ "${count:-0}" -gt 0 ]; then
+              break
+            fi
+            sleep 10
+          done
+
+          # --watch blocks until every check finishes and exits non-zero if any
+          # failed, so a red PR is left open for a human instead of merged.
+          gh pr checks "$PR" --watch --interval 15
+
+          gh pr merge "$PR" --squash --delete-branch
