@@ -29,7 +29,7 @@ auto-developer.yml ──opens PR──▶ auto-reviewer.yml ──approves─�
 | `validate.yml` | PR, push to `dev`/`main` | Runs `scripts/validate-refs.py`, `build-lite.py --check`, `validate-workflows.py`. |
 | `auto-developer.yml` | issue labeled `action:develop` | Runs opencode, which commits a branch and opens a PR, then retargets that PR from `main` to `dev`. |
 | `auto-reviewer.yml` | PR `opened` | Runs opencode to submit a real `gh pr review` (approve / request-changes / comment). |
-| `auto-merge.yml` | PR review `submitted` | On an approval of a same-repo PR into `dev`: waits for checks, then `gh pr merge --squash --delete-branch`. |
+| `auto-merge.yml` | PR review `submitted`, or PR opened/synchronized/retargeted | When a same-repo PR into `dev` has a current approval: waits for checks, then `gh pr merge --squash --delete-branch`. The PR's live state is the gate, so it also covers an approval that arrives before auto-developer has retargeted the PR onto `dev`. |
 | `promote.yml` | weekly schedule, `/promote` comment, manual dispatch | Re-runs the bundle validators on the merged tree, then merges `dev` into `main` and pushes. The only path into `main`. |
 | `promote-dispatch.yml` | `/promote` comment | Validates the command and dispatches `promote.yml`. |
 | `feature-reviewer.yml` | issue `opened`/labeled | Posts a feasibility evaluation comment. |

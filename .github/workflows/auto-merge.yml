@@ -5,13 +5,17 @@ name: Auto Merge
 # the integration branch (`dev`); `dev` -> `main` is a separate promotion step
 # in promote.yml, so `main` keeps its single reviewed entry point.
 #
-# Listens for `pull_request_review` rather than `workflow_run` because that is
-# the event that proves an approval exists, and it is enough to gate on: the
-# job then waits for the PR's checks itself before merging.
+# The job reads the PR's *current* state instead of trusting the trigger,
+# because approval and retargeting race: auto-developer opens its PR against
+# the default branch and immediately edits the base to `dev`, while
+# auto-reviewer is already running. Whichever of the two events lands last is
+# what must merge the PR, so both are triggers and neither is assumed.
 
 on:
   pull_request_review:
     types: [submitted]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
 
 permissions:
   contents: write
@@ -23,21 +27,33 @@ concurrency:
 
 jobs:
   merge:
-    # Same-repo only (fork PRs get no secrets and are routed to human review,
-    # matching auto-reviewer), and only once a review actually approves.
+    # Same-repo only: fork PRs get no secrets and are routed to human review,
+    # matching auto-reviewer. `main` never merges here (promote.yml owns it).
     if: |
-      github.event.review.state == 'approved' &&
       github.event.pull_request.base.ref == 'dev' &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Wait for checks, then merge
+      - name: Merge once approved and green
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
+
+          # A submitted approval is not enough on its own: `--request-changes`
+          # after an approval (or vice versa) must win. latestReviews keeps one
+          # review per reviewer, so require an APPROVED entry and no
+          # CHANGES_REQUESTED one.
+          approved=$(gh pr view "$PR" --json latestReviews \
+            --jq '[.latestReviews[] | select(.state == "APPROVED")] | length')
+          changes=$(gh pr view "$PR" --json latestReviews \
+            --jq '[.latestReviews[] | select(.state == "CHANGES_REQUESTED")] | length')
+          if [ "$approved" -eq 0 ] || [ "$changes" -gt 0 ]; then
+            echo "PR #${PR} has no current approval; nothing to merge."
+            exit 0
+          fi
 
           # Auto Reviewer can approve within seconds of `opened`, often before
           # Validate Bundle has registered its check run. Wait for a check to
