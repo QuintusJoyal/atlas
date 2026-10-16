@@ -5,24 +5,32 @@ name: Auto Merge
 # the integration branch (`dev`); `dev` -> `main` is a separate promotion step
 # in promote.yml, so `main` keeps its single reviewed entry point.
 #
-# The job reads the PR's *current* state instead of trusting the trigger,
-# because approval and retargeting race: auto-developer opens its PR against
-# the default branch and immediately edits the base to `dev`, while
-# auto-reviewer is already running. Whichever of the two events lands last is
-# what must merge the PR, so both are triggers and neither is assumed.
+# Do NOT trigger this on `pull_request_review`. The approval is submitted with
+# GITHUB_TOKEN, and GitHub raises no workflow run for events caused by
+# GITHUB_TOKEN, so that event never fires for the very review it is meant to
+# react to. A completed Auto Reviewer run is the one signal that survives that
+# guard, and `workflow_run` also guarantees this job runs main's copy of the
+# file rather than a possibly stale one from a PR branch.
 
 on:
-  pull_request_review:
-    types: [submitted]
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, edited]
+  workflow_run:
+    workflows: ["Auto Reviewer"]
+    types: [completed]
+  # Escape hatch: `gh workflow run auto-merge.yml -f pr=<n>` to retry a merge
+  # that failed on infrastructure (gh/lib) rather than on the PR itself.
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to merge
+        required: true
+        type: string
 
 permissions:
   contents: write
   pull-requests: write
 
 concurrency:
-  group: auto-merge-${{ github.event.pull_request.number }}
+  group: auto-merge-${{ github.event.inputs.pr || github.event.workflow_run.pull_requests[0].number || github.event.workflow_run.head_branch }}
   cancel-in-progress: false
 
 jobs:
@@ -30,17 +38,44 @@ jobs:
     # Same-repo only: fork PRs get no secrets and are routed to human review,
     # matching auto-reviewer. `main` never merges here (promote.yml owns it).
     if: |
-      github.event.pull_request.base.ref == 'dev' &&
-      github.event.pull_request.head.repo.full_name == github.repository
+      github.event_name == 'workflow_dispatch' || (
+        github.event.workflow_run.event == 'pull_request' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_repository.full_name == github.repository
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      # `gh` resolves the repository from a git remote; without a checkout the
+      # merge step dies with "fatal: not a git repository".
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
       - name: Merge once approved and green
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ github.event.pull_request.number }}
+          INPUT_PR: ${{ github.event.inputs.pr }}
+          PAYLOAD_PR: ${{ github.event.workflow_run.pull_requests[0].number }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
           set -euo pipefail
+
+          PR="${INPUT_PR:-${PAYLOAD_PR:-}}"
+          if [ -z "${PR}" ] && [ -n "${HEAD_BRANCH:-}" ]; then
+            PR=$(gh pr list --head "${HEAD_BRANCH}" --state open \
+              --json number --jq '.[0].number // empty')
+          fi
+          if [ -z "${PR}" ]; then
+            echo "No open PR found; nothing to merge."
+            exit 0
+          fi
+
+          base=$(gh pr view "$PR" --json baseRefName --jq .baseRefName)
+          if [ "$base" != "dev" ]; then
+            echo "PR #${PR} targets ${base}, not dev; nothing to merge."
+            exit 0
+          fi
 
           # A submitted approval is not enough on its own: `--request-changes`
           # after an approval (or vice versa) must win. latestReviews keeps one

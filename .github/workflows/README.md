@@ -29,7 +29,7 @@ auto-developer.yml ──opens PR──▶ auto-reviewer.yml ──approves─�
 | `validate.yml` | PR, push to `dev`/`main` | Runs `scripts/validate-refs.py`, `build-lite.py --check`, `validate-workflows.py`. |
 | `auto-developer.yml` | issue labeled `action:develop` | Runs opencode, which commits a branch and opens a PR, then retargets that PR from `main` to `dev`. |
 | `auto-reviewer.yml` | PR `opened` | Runs opencode to submit a real `gh pr review` (approve / request-changes / comment). |
-| `auto-merge.yml` | PR review `submitted`, or PR opened/synchronized/retargeted | When a same-repo PR into `dev` has a current approval: waits for checks, then `gh pr merge --squash --delete-branch`. The PR's live state is the gate, so it also covers an approval that arrives before auto-developer has retargeted the PR onto `dev`. |
+| `auto-merge.yml` | `Auto Reviewer` run completes (plus manual `workflow_dispatch`) | When a same-repo PR into `dev` has a current approval: waits for checks, then `gh pr merge --squash --delete-branch`. Triggered by `workflow_run`, not `pull_request_review`, because the bot's own approval is made with `GITHUB_TOKEN` and so raises no workflow run — and `workflow_run` also guarantees main's copy of the file runs. |
 | `promote.yml` | weekly schedule, `/promote` comment, manual dispatch | Re-runs the bundle validators on the merged tree, then merges `dev` into `main` and pushes. The only path into `main`. |
 | `promote-dispatch.yml` | `/promote` comment | Validates the command and dispatches `promote.yml`. |
 | `feature-reviewer.yml` | issue `opened`/labeled | Posts a feasibility evaluation comment. |
@@ -90,3 +90,11 @@ must be different actors. This repo uses `PROMOTE_PAT` (a human admin) to open
 PRs and the Actions `github-actions[bot]` (`GITHUB_TOKEN`) to approve them.
 Do not collapse both onto one token, or every approval will fail as
 self-approval.
+
+The split has a second consequence worth knowing before you wire anything else
+off a review: **an event raised by `GITHUB_TOKEN` does not trigger workflows.**
+That is why nothing listens on `pull_request_review` here — the bot's approval
+would not wake it. `auto-merge.yml` reacts to the *Auto Reviewer run
+completing* (`workflow_run`) instead, which is a system event and survives the
+guard. The same rule stops a `GITHUB_TOKEN`-opened PR from firing
+`pull_request` at all, which is why PR creation uses `PROMOTE_PAT` too.
