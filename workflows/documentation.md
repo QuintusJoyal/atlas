@@ -12,6 +12,7 @@ variants:
   small:
     description: Simple doc update, no review gate.
     gates: []
+    skip: [review]
     token-estimate: light
     kickoff: lightweight
     auto-approve: true
@@ -23,6 +24,7 @@ variants:
     kickoff: standard
     auto-approve: false
     tracking: full
+conditions: []
 state-machine: [pending, active, gated, completed, failed, paused, aborted]
 ---
 
@@ -34,6 +36,11 @@ Documentation-only changes. Draft content, review for accuracy, publish.
 
 - **small:** typo fixes, minor updates, README tweaks
 - **full:** new documentation, runbooks, API docs, changelogs
+
+## Phase 0: Kickoff
+
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
 
@@ -64,4 +71,4 @@ Documentation-only changes. Draft content, review for accuracy, publish.
 - [ ] Documentation accurate (matches code/behavior)
 - [ ] Documentation complete (covers all required topics)
 - [ ] Documentation clear (no jargon, good examples)
-- [ ] User has signed off
+- [ ] User has signed off (full variant only; small has no gate)

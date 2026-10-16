@@ -1,7 +1,7 @@
 ---
 name: disaster-recovery
 description: DR plan creation, failover testing, backup restoration, RPO/RTO validation, and DR drills.
-type: standard
+type: pipeline
 triggers:
   - dr-plan
   - failover-test
@@ -27,8 +27,7 @@ conditions:
     add: [compliance]
     add-roles: [atlas-compliance]
   - if: data-changes
-    add: [data-validation]
-    add-roles: [atlas-data-eng]
+    add-roles: [atlas-data-eng, atlas-dba]
 state-machine: [pending, active, gated, completed, failed, paused, aborted]
 ---
 
@@ -44,13 +43,13 @@ Pick variant based on scope:
 
 ## Phase 0: Kickoff
 
-- **Standard:** create run folder, seed team.json, write budget.md
-- **Lightweight:** create run folder, start immediately
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
 
 ### dr-assessment
-- **Gate:** null
+- **Gate:** design (full only)
 - **Parallel:** false
 - **Roles:** atlas-devops (standard), atlas-dba (standard for data stores), atlas-architect (standard for system-wide)
 - **Input:** system architecture, current backup config, business requirements
@@ -77,9 +76,15 @@ Pick variant based on scope:
 - **Input:** validated DR implementation
 - **Output:** drill-report.md (full drill executed, timeline documented, lessons learned, gaps closed)
 
-## Definition of Done
+## Definition of Done per gate
 
+### Design gate (full only)
 - [ ] RPO and RTO targets documented and agreed with business
+- [ ] Current capabilities compared against targets
+- [ ] Gaps identified with a remediation plan
+- [ ] User has signed off on the DR design
+
+### Final gate (auto-approve if small)
 - [ ] Backup procedures tested (restoration verified, not just backup completion)
 - [ ] Failover tested end-to-end (not just the switch, but data integrity post-failover)
 - [ ] Runbooks created for each DR scenario

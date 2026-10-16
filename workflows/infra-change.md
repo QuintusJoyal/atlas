@@ -10,7 +10,7 @@ variants:
   small:
     description: Small infra change, single gate. Skip requirements/design gates.
     gates: [final]
-    skip: [requirements-gate, design-gate, design]
+    skip: [requirements, design]
     token-estimate: light
     kickoff: lightweight
     auto-approve: true
@@ -23,9 +23,8 @@ variants:
     auto-approve: false
     tracking: full
 conditions:
-  - if: security-sensitive
-    add: [security-review]
-    add-roles: [atlas-security]
+  # No security-sensitive condition here: infra changes always run the native
+  # security-review phase below, so the condition would only duplicate it.
   - if: regulated
     add: [compliance]
     add-roles: [atlas-compliance]

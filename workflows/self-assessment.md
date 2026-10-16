@@ -22,6 +22,7 @@ variants:
     kickoff: standard
     auto-approve: false
     tracking: full
+conditions: []
 state-machine: [pending, active, gated, completed, failed, paused, aborted]
 ---
 
@@ -36,8 +37,8 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 
 ## Phase 0: Kickoff
 
-- **Standard:** create run folder, seed team.json, write budget.md
-- **Lightweight:** create run folder, start immediately
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
 
@@ -53,7 +54,7 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 - **Gate:** null
 - **Parallel:** false
 - **Roles:** atlas-ai-eng (standard)
-- **Input:** knowledge/reference/lessons.md always; knowledge/process/decision-quality-scoring.md and role-trust-profiles.md only if the user has opted into those experimental mechanisms — otherwise this phase works from lessons.md and trajectory logs alone
+- **Input:** knowledge/reference/lessons.md always; knowledge/process/decision-quality-scoring.md and knowledge/process/role-trust-profiles.md only if the user has opted into those experimental mechanisms — otherwise this phase works from knowledge/reference/lessons.md and trajectory logs alone
 - **Output:** performance summary with trends and patterns
 - **See:** `knowledge/process/decision-quality-scoring.md`
 
@@ -78,7 +79,7 @@ Monthly self-assessment workflow. Reviews Atlas performance against frontier har
 ## Definition of Done
 
 - [ ] Benchmark updated with current frontier harness features
-- [ ] Performance trends analyzed (lessons.md and trajectory patterns always; quality scores/trust profiles/drift alerts only if those experimental mechanisms are opted in)
+- [ ] Performance trends analyzed (knowledge/reference/lessons.md and trajectory patterns always; quality scores/trust profiles/drift alerts only if those experimental mechanisms are opted in)
 - [ ] Gaps prioritized by impact and effort (full only)
 - [ ] Improvement proposals created with risk tiers (full only)
 - [ ] User has approved/rejected all proposals (full only)

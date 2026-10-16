@@ -8,15 +8,22 @@ permissions:
   contents: read
   issues: write
 
+concurrency:
+  group: feature-reviewer-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
     if: |
       (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'type:feature')) ||
-      (github.event.action == 'labeled' && github.event.label.name == 'action:evaluate')
+      (github.event.action == 'labeled' && (
+        github.event.label.name == 'action:evaluate' ||
+        github.event.label.name == 'type:feature'
+      ))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Run OpenCode
         uses: anomalyco/opencode/github@v1.18.4

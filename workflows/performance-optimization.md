@@ -1,7 +1,7 @@
 ---
 name: performance-optimization
 description: Profile, identify bottleneck, optimize, benchmark, verify no regression.
-type: standard
+type: pipeline
 triggers:
   - slow-endpoint
   - high-latency
@@ -24,7 +24,6 @@ variants:
     tracking: full
 conditions:
   - if: technical-deep-dive
-    add: [architecture-review]
     add-roles: [atlas-architect]
   - if: security-sensitive
     add: [security-review]
@@ -44,13 +43,13 @@ Pick variant based on complexity:
 
 ## Phase 0: Kickoff
 
-- **Standard:** create run folder, seed team.json, write budget.md
-- **Lightweight:** create run folder, start immediately
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
 
 ### profiling
-- **Gate:** null
+- **Gate:** design (full only)
 - **Parallel:** false
 - **Roles:** atlas-dev (standard), atlas-devops (standard for infrastructure metrics)
 - **Input:** performance issue description, baseline metrics, affected endpoints
@@ -77,10 +76,15 @@ Pick variant based on complexity:
 - **Input:** implementation diff, benchmark results
 - **Output:** review.md (verdict, findings, performance impact confirmed)
 
-## Definition of Done
+## Definition of Done per gate
 
+### Design gate (full only)
 - [ ] Baseline measurements documented before optimization
 - [ ] Bottleneck identified with evidence (not guessed)
+- [ ] Optimization approach and expected improvement agreed
+- [ ] User has signed off on the plan
+
+### Final gate (auto-approve if small)
 - [ ] Optimization shows measurable improvement (statistically significant)
 - [ ] No regression in other areas (full test suite passes)
 - [ ] Changes are maintainable (no clever hacks that nobody understands)

@@ -9,21 +9,40 @@ permissions:
   issues: write
   pull-requests: write
 
+# Atlas never takes direct PRs to `main`: work lands on `dev` and is promoted to
+# `main` via `/promote` (see promote.yml). The opencode runner has no input for
+# the PR base and always targets the repository default branch (`main`), so the
+# job below cuts its branch from, and retargets its PR at, this branch.
+env:
+  TARGET_BRANCH: dev
+
+# One run per issue. A second `action:develop` label waits instead of
+# racing the first run and opening a duplicate branch/PR.
+concurrency:
+  group: auto-developer-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
 jobs:
   develop:
     if: github.event.label.name == 'action:develop'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      # Cut the feature branch from the target branch (not the default branch
+      # an `issues` event would otherwise check out), so the PR retargeted
+      # below merges cleanly into it.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
 
-      - name: Create branch
-        id: branch
+      - name: Configure git identity
         run: |
-          ISSUE_NUM=${{ github.event.issue.number }}
-          BRANCH="feat/issue-${ISSUE_NUM}"
-          git checkout -b "$BRANCH"
-          echo "branch=${BRANCH}" >> "$GITHUB_OUTPUT"
+          # opencode's GitHub runner commits its own changes and pushes a
+          # branch (then opens the PR). It refuses to commit unless an author
+          # identity is configured, which is why earlier runs failed with
+          # "Author identity unknown".
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run OpenCode
         uses: anomalyco/opencode/github@v1.18.4
@@ -42,3 +61,33 @@ jobs:
             4. Update knowledge/manifest if needed
 
             Keep changes small and targeted. Follow existing patterns.
+
+      - name: Retarget PR to ${{ env.TARGET_BRANCH }}
+        # The opencode action hardcodes the PR base to the repository's
+        # default branch (main); it exposes no input for it. Atlas never takes
+        # direct PRs to main, so repoint the PR it just opened at TARGET_BRANCH.
+        # `always()` so a failure after the PR is opened still retargets it.
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          # The runner names issue branches `opencode/issue<N>-<timestamp>`;
+          # this mirrors that contract (github/index.ts, generateBranchName).
+          prefix="opencode/issue${ISSUE_NUM}-"
+          prs="$(gh pr list --repo "${GITHUB_REPOSITORY}" --state open --limit 300 \
+            --json number,headRefName,baseRefName \
+            --jq ".[] | select(.headRefName | startswith(\"${prefix}\")) | [.number, .baseRefName] | @tsv")"
+          if [ -z "${prs}" ]; then
+            echo "No open PR from ${prefix}*; nothing to retarget."
+            exit 0
+          fi
+          while IFS=$'\t' read -r number base; do
+            if [ "${base}" = "${TARGET_BRANCH}" ]; then
+              echo "PR #${number} already targets ${TARGET_BRANCH}."
+              continue
+            fi
+            gh pr edit "${number}" --repo "${GITHUB_REPOSITORY}" --base "${TARGET_BRANCH}"
+            echo "Retargeted PR #${number}: ${base} -> ${TARGET_BRANCH}"
+          done <<< "${prs}"

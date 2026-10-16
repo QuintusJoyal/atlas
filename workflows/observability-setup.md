@@ -1,7 +1,7 @@
 ---
 name: observability-setup
 description: Define SLOs, instrument code, create dashboards, set alerts, validate monitoring.
-type: standard
+type: pipeline
 triggers:
   - new-service
   - observability-gap
@@ -44,13 +44,13 @@ Pick variant based on scope:
 
 ## Phase 0: Kickoff
 
-- **Standard:** create run folder, seed team.json, write budget.md
-- **Lightweight:** create run folder, start immediately
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
 
 ### slo-definition
-- **Gate:** null
+- **Gate:** design (full only)
 - **Parallel:** false
 - **Roles:** atlas-devops (standard), atlas-architect (standard for system-wide SLOs)
 - **Input:** service description, user-facing requirements, SLA commitments
@@ -77,10 +77,15 @@ Pick variant based on scope:
 - **Input:** all observability artifacts
 - **Output:** validation report (dashboards render correctly, alerts fire on test data, SLO measurement works)
 
-## Definition of Done
+## Definition of Done per gate
 
+### Design gate (full only)
 - [ ] SLIs defined and measurable (latency, error rate, throughput)
 - [ ] SLO targets set with error budgets calculated
+- [ ] Measurement approach documented
+- [ ] User has signed off on the SLO spec
+
+### Final gate (auto-approve if small)
 - [ ] Dashboards show golden signals for the service
 - [ ] Alerts fire on real issues (tested with synthetic data)
 - [ ] Alert routing reaches the right people/channels

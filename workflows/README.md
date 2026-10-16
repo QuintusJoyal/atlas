@@ -1,6 +1,8 @@
 # Workflow presets
 
-atlas-lead picks a preset to right-size the pipeline. Each preset defines phases, roles, approval gates, and a Definition of Done per gate. Unknown task shapes fall back to `feature`. The user can override the preset at any time.
+atlas-lead picks a preset to right-size the pipeline. Each preset defines phases, roles, approval gates, and Definition of Done criteria for its gates. Unknown task shapes fall back to `feature`. The user can override the preset at any time.
+
+The preset file's own frontmatter (`workflows/<preset>.md`) is the source of truth for its gates; the indexes in this directory and in `skills/`, `knowledge/`, and `agents/` must match it.
 
 ## Presets
 
@@ -9,9 +11,17 @@ atlas-lead picks a preset to right-size the pipeline. Each preset defines phases
 | feature | Net-new work, full pipeline with all three gates | small, full |
 | bugfix | Defects and hotfixes, fast lane, single final gate | small, full |
 | data-project | Data or analytics work, pulls the data roles | small, full |
-| infra-change | Infrastructure, network, or cloud changes | small, full |
+| infra-change | Infrastructure, network, or cloud changes; mandatory security review | small, full |
 | security-audit | Read-only security and compliance assessment | small, full |
 | discovery | Consulting: scope and proposal, no build | small, full |
+| api-design | API-first design with OpenAPI | small, full |
+| database-migration | Schema migration with staged rollout and cutover | small, full |
+| disaster-recovery | DR plan, failover testing, drills | small, full |
+| documentation | Documentation-only changes | small, full |
+| observability-setup | SLOs, dashboards, alerts | small, full |
+| performance-optimization | Profile, optimize, benchmark | small, full |
+| refactoring | Systematic code improvement | small, full |
+| self-assessment | Monthly Atlas capability review (read-only) | small, full |
 
 ## Variants
 
@@ -21,6 +31,12 @@ Every preset has two variants:
 - **full:** standard path with all gates, estimation huddle, and token-budget approval. Full tracking.
 
 atlas-lead picks the variant based on scope and complexity. Tell the user which variant and why.
+
+Each variant also declares:
+
+- **gates:** which gates are enforced in this variant. Small is usually `[final]`; `documentation` and `self-assessment` small enforce none (`[]`).
+- **skip:** the phases removed in this variant, by phase name. A phase can also carry `**Skip-if:** variant=small` in its body, which is the per-phase equivalent.
+- **token-estimate / kickoff / auto-approve / tracking:** as described above.
 
 ## Optimizations
 
@@ -62,9 +78,11 @@ Workflows support conditional phase injection. When a condition is true, additio
 
 Conditions are evaluated at kickoff. Matched conditions inject phases into the workflow. Injected phases follow the same state machine as native phases.
 
+`infra-change` is the exception: it defines `security-review` natively (it is mandatory for every infra change), so it does not use the `security-sensitive` condition.
+
 ### Injected phase definitions
 
-Any preset's `conditions:` block can inject these two phases. Defined once here so individual workflow files don't need to repeat the body — a preset that lists `add: [security-review]` or `add: [compliance]` in its frontmatter uses this definition:
+A preset's `conditions:` block may inject one of these two phases. They are defined once here so individual workflow files don't need to repeat the body — a preset that lists `add: [security-review]` or `add: [compliance]` in its frontmatter uses this definition:
 
 #### security-review
 - **Gate:** null
@@ -79,6 +97,8 @@ Any preset's `conditions:` block can inject these two phases. Defined once here 
 - **Roles:** atlas-compliance (standard)
 - **Input:** design.md or requirements.md (whichever exists), regulatory scope
 - **Output:** compliance-assessment.md (findings, control gaps)
+
+Phases must not be injected by any other name. If a preset needs another phase, define it in that preset's body rather than adding an undefined `add:` entry.
 
 ## State machine
 
@@ -136,7 +156,7 @@ Scope changes can restart from any prior phase. Variant can be switched during r
 ## Phase composition
 
 Phases can be added via conditions. Each phase has:
-- **Gate:** which gate it feeds (or null)
+- **Gate:** which gate it feeds (or null), annotated `(full only)` when enforced only in the full variant
 - **Parallel:** whether it runs concurrently with other phases
 - **Roles:** which roles participate
 - **Skip-if:** when to skip (e.g., variant=small)
@@ -160,14 +180,15 @@ Every pipeline run starts with Phase 0 kickoff:
 
 ## Gates
 
-Gates pause for user sign-off (full variant). Small variant auto-approves if DoD is met.
+Gates pause for user sign-off (full variant). Small variant auto-approves the final gate if DoD is met.
 
 | Gate | Phase transition | Auto-approve |
 | --- | --- | --- |
-| requirements | Requirements → Design | full only |
-| design | Design → Implementation | full only |
-| final | Implementation → Delivery | small: auto, full: user |
-| scope | Scoping → Audit (security-audit only) | full only |
-| research | Research → Proposal (discovery only) | full only |
+| token-budget | Kickoff → first phase (full only) | No; user approves heavy runs |
+| requirements | Requirements → Design (full only) | No |
+| design | Design → next phase (full only) | No |
+| final | Final review → Delivery | Small: auto when DoD passes; full: user |
+| scope | Scoping → Audit (security-audit only) | No |
+| research | Research → Feasibility (discovery only) | No |
 
 **Every pipeline run starts with Phase 0 kickoff:** workflow selection (lead announces + persists), estimation huddle (roles via Task, atlas-ai-eng aggregates), `budget.md` with Predicted and per-role estimates. See `knowledge/reference/budget-template.md`.

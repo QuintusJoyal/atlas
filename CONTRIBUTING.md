@@ -50,7 +50,7 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 - **Rules** (`rules/`): YAML frontmatter (`load: always|on-demand|contextual`) + markdown body.
 - **Skills** (`skills/`): YAML frontmatter (`type: playbook|guide|reference`, `appliesTo`) + markdown body.
 - **Knowledge** (`knowledge/`): YAML frontmatter (`category: framework|charter|process|template|reference`) + markdown body.
-- **Workflows** (`workflows/`): YAML frontmatter (`type: pipeline|fast-lane|assessment`) + markdown body.
+- **Workflows** (`workflows/`): YAML frontmatter (`type: pipeline|fast-lane|assessment`, `variants`, `conditions`, `state-machine`) + markdown body. Declared gates must be fed by a phase; injected phases are limited to `security-review` and `compliance`. `workflows/README.md` and `manifest.json` must match the presets.
 
 ## Before you open a change
 
@@ -58,3 +58,4 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 - Update `CHANGELOG.md` and bump `VERSION` when behavior changes.
 - Do not commit secrets. Keep the knowledge base free of credentials and PII.
 - Run `python3 scripts/validate-refs.py` and, if you touched a file with a `## Lite mode` block, `python3 scripts/build-lite.py --check`. Both should exit clean.
+- If you touched a file under `workflows/` or `manifest.json`'s `workflowMeta`, run `python3 scripts/validate-workflows.py`. It must exit clean.

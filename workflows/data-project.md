@@ -10,7 +10,7 @@ variants:
   small:
     description: Small data task, single gate. Skip requirements/design gates.
     gates: [final]
-    skip: [requirements-gate, design-gate, design]
+    skip: [requirements, design]
     token-estimate: light
     kickoff: lightweight
     auto-approve: true

@@ -23,6 +23,13 @@ variants:
     kickoff: standard
     auto-approve: false
     tracking: full
+conditions:
+  - if: security-sensitive
+    add: [security-review]
+    add-roles: [atlas-security]
+  - if: regulated
+    add: [compliance]
+    add-roles: [atlas-compliance]
 state-machine: [pending, active, gated, completed, failed, paused, aborted]
 ---
 
@@ -34,6 +41,11 @@ Systematic code improvement. Analyze current state, plan changes, refactor, test
 
 - **small:** local refactoring, <10 files, no API changes
 - **full:** cross-module refactoring, API changes, or architecture improvements
+
+## Phase 0: Kickoff
+
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
 
@@ -73,10 +85,17 @@ Systematic code improvement. Analyze current state, plan changes, refactor, test
 - **Input:** implementation diff, test results
 - **Output:** review.md (verdict, findings)
 
-## Definition of Done
+## Definition of Done per gate
 
+### Design gate (full only)
+- [ ] Target state and migration steps defined
+- [ ] Risk assessment complete (existing behavior preserved)
+- [ ] Test strategy for the refactor agreed
+- [ ] User has signed off on the refactoring plan
+
+### Final gate (auto-approve if small)
 - [ ] All existing tests pass
 - [ ] Code coverage maintained or improved
 - [ ] No new warnings or errors
 - [ ] Documentation updated if API changed
-- [ ] User has signed off
+- [ ] User has signed off (full only; small auto-approves if all above pass)

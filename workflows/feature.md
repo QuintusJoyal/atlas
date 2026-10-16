@@ -10,7 +10,7 @@ variants:
   small:
     description: Small feature, single gate. Skip design phase and requirements/design gates.
     gates: [final]
-    skip: [requirements-gate, design-gate, design]
+    skip: [requirements, design]
     token-estimate: light
     kickoff: lightweight
     auto-approve: true

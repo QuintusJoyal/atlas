@@ -9,12 +9,20 @@ permissions:
   issues: write
   pull-requests: write
 
+concurrency:
+  group: auto-reviewer-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
+    # Fork PRs get a read-only GITHUB_TOKEN and no secrets, so `gh pr review`
+    # cannot submit a review there. Skip forks rather than fail; fork PRs still
+    # go through the normal human review path.
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Run OpenCode
         uses: anomalyco/opencode/github@v1.18.4

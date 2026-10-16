@@ -4,6 +4,35 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ## [Unreleased]
 
+## [0.17.3] - 2026-10-17
+
+### Fixed
+
+A workflow audit found that 0.17.2's claimed workflow-README fix (extending the indexes to all 14 presets) never actually landed, and that several preset files contradicted their own frontmatter, the shared protocol, and the automation that runs them. This release reconciles them and adds CI so they cannot drift again.
+
+- **`auto-developer.yml` failed on every run it actually did work.** The opencode runner committed its changes and then died with `Author identity unknown` / `empty ident name`, so the branch was never pushed and no PR was ever opened. Added a "Configure git identity" step (github-actions bot, `41898282+github-actions[bot]@users.noreply.github.com`, verified against the bot's user id) and removed the dead `Create branch` step (the runner creates its own `opencode/issue-*` branch and opens the PR against the default branch).
+- **`auto-developer` opened its PR against `main`, bypassing `dev`.** The opencode runner hardcodes the PR base to the repository's default branch and exposes no input for it, but Atlas never takes direct PRs to `main` (`feat/*` → `dev` → `main`). Added a "Retarget PR to dev" step that finds the just-opened `opencode/issue<N>-*` PR and repoints it at `dev`; it runs on `always()`, so a failure after the PR is created still retargets it rather than stranding it on `main`. The target branch is defined once as `env.TARGET_BRANCH` and used for both the checkout ref and the retarget, and the job now checks out `dev` explicitly so the feature branch is cut from its eventual base instead of `main`.
+- **`workflows/README.md`'s preset table listed 6 of the 14 presets** (`api-design`, `database-migration`, `disaster-recovery`, `documentation`, `observability-setup`, `performance-optimization`, `refactoring`, `self-assessment` were absent) even though the 0.17.2 entry claims it was extended. Extended it to all 14 and added the missing `token-budget` gate to its gate table.
+- **Four presets used `type: standard`**, which is not in the documented workflow vocabulary (`pipeline|fast-lane|assessment`): `database-migration`, `disaster-recovery`, `observability-setup`, `performance-optimization`. Changed to `pipeline`.
+- **Four presets declared a `design` gate that no phase fed** (`database-migration`, `disaster-recovery`, `observability-setup`, `performance-optimization`), while every index (`skills/atlas-lead-playbook/SKILL.md`, `atlas-framework.md`, `manifest.json`) advertised that gate. Assigned it, full-only, to each preset's first planning phase (`schema-review`, `dr-assessment`, `slo-definition`, `profiling`) and added the matching per-gate Definition of Done sections.
+- **Three presets injected phases that are not defined anywhere** — `database-migration` and `disaster-recovery` injected `data-validation`, and `performance-optimization` injected `architecture-review`. The shared protocol allows only `security-review` and `compliance`. Removed the bogus `add:` entries; the `data-changes` condition now correctly adds both `atlas-data-eng` and `atlas-dba` (it previously dropped `atlas-dba`).
+- **Four presets were missing the required `conditions:` key** (`api-design`, `refactoring`, `documentation`, `self-assessment`). Added real conditions where they apply (`api-design`, `refactoring`) and `conditions: []` where they do not.
+- **Unknown condition name in `manifest.json`.** `workflowMeta.conditions` still carried `security-impacting`, the dead alias 0.17.2 said it removed. Removed it; `workflowMeta.gates` gained `token-budget`, and the design/final/scope/research transition text now matches `workflows/README.md`.
+- **Definition of Done contradicted `auto-approve` in three presets.** `api-design`, `refactoring`, and `documentation` ended with an unconditional "User has signed off" while their small variants auto-approve (or, for `documentation` small, enforce no gate at all). Made the sign-off line full-only.
+- **`api-design`'s small variant declared `skip: [design]` but its `design` phase had no `Skip-if: variant=small`**, so the phase was never actually skipped (matched `refactoring`'s existing treatment, and gave the small implement phase a fallback input).
+- **Kickoff drift.** `api-design`, `refactoring`, and `documentation` had no Phase 0 kickoff section at all; six presets dropped the estimation huddle, the token-budget gate, or the "(no tracking)" note from their standard/lightweight kickoff lines. Made every preset's kickoff match `workflows/README.md`.
+- **`infra-change` could double-inject `security-review`** (native phase for a mandatory review plus the `security-sensitive` condition). Removed the now-redundant condition and documented in `workflows/README.md` why this preset is the exception to the shared injected-phase rule.
+- **`security-audit` and `discovery` skipped their first phase via a body `Skip-if` but declared no `skip:` entry**, unlike the presets that use the key. Added `skip: [scope]` / `skip: [research]` and documented the `skip`/`gates` variant fields in `workflows/README.md`.
+
+### Added
+
+- **`scripts/validate-workflows.py`** and a "Validate Bundle" CI step. It checks preset frontmatter against the allowed schema, that every declared gate is fed by a phase and no phase feeds an undeclared gate, that `skip:` entries name real phases carrying a matching `Skip-if`, that conditions and injected phases are known, that every named role exists under `agents/`, and that the preset/gate/condition tables in `workflows/README.md` and `manifest.json` all agree. Wired into `CONTRIBUTING.md`'s pre-PR checklist.
+
+### Changed
+
+- **GitHub Actions bumped off the deprecated Node 20 runtime:** `actions/checkout` v4 → v7, `actions/setup-python` v5 → v7, `actions/github-script` v7 → v9. Added concurrency guards to the auto-developer, auto-reviewer, feature-reviewer, and trend-investigator workflows, and a fork-PR guard to auto-reviewer (fork PRs get a read-only token, so `gh pr review` cannot succeed there).
+- **`promote.yml` / `promote-dispatch.yml`:** added job timeouts, and the promote report step now skips its comment (with a warning) when the dispatch payload has no valid `issue_number` instead of calling the API with `NaN`.
+
 ## [0.17.2] - 2026-08-13
 
 ### Fixed

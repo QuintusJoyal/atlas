@@ -1,7 +1,7 @@
 ---
 name: database-migration
 description: Schema migration with forward/backward compatibility, data validation, staged rollout, and cutover.
-type: standard
+type: pipeline
 triggers:
   - schema-change
   - database-migration
@@ -23,8 +23,7 @@ variants:
     tracking: full
 conditions:
   - if: data-changes
-    add: [data-validation]
-    add-roles: [atlas-data-eng]
+    add-roles: [atlas-data-eng, atlas-dba]
   - if: regulated
     add: [compliance]
     add-roles: [atlas-compliance]
@@ -43,13 +42,13 @@ Pick variant based on migration complexity:
 
 ## Phase 0: Kickoff
 
-- **Standard:** create run folder, seed team.json, write budget.md
-- **Lightweight:** create run folder, start immediately
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
+- **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
 
 ### schema-review
-- **Gate:** null
+- **Gate:** design (full only)
 - **Parallel:** false
 - **Roles:** atlas-dba (standard), atlas-architect (standard if cross-service impact)
 - **Input:** proposed schema change, current schema, affected queries
@@ -83,8 +82,15 @@ Pick variant based on migration complexity:
 - **Input:** staging validation, production approval
 - **Output:** cutover report (migration executed, data verified, rollback status)
 
-## Definition of Done
+## Definition of Done per gate
 
+### Design gate (full only)
+- [ ] Schema change assessed for backward compatibility
+- [ ] Rollback DDL recorded and reviewed
+- [ ] Affected services and queries identified
+- [ ] User has signed off on the schema design
+
+### Final gate (auto-approve if small)
 - [ ] Schema change is backward-compatible (or has explicit migration strategy)
 - [ ] Rollback DDL exists and has been tested on staging
 - [ ] Data validation checks pass (row counts, constraints, integrity)

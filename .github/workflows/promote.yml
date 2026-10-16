@@ -11,6 +11,7 @@ permissions:
 jobs:
   promote:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Validate branch names
         env:
@@ -26,7 +27,7 @@ jobs:
           fi
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.PROMOTE_PAT }}
@@ -38,7 +39,7 @@ jobs:
           TARGET: ${{ github.event.client_payload.target }}
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git fetch origin "${SOURCE}"
           git checkout "${TARGET}"
@@ -56,7 +57,7 @@ jobs:
 
       - name: Report result
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           STATUS: ${{ steps.merge.outputs.status }}
           MESSAGE: ${{ steps.merge.outputs.message }}
@@ -65,13 +66,20 @@ jobs:
         with:
           github-token: ${{ secrets.PROMOTE_PAT }}
           script: |
+            const issueNumber = Number.parseInt(process.env.ISSUE_NUMBER || '', 10);
+            if (!Number.isInteger(issueNumber) || issueNumber <= 0) {
+              core.warning('No valid issue_number in dispatch payload; skipping result comment.');
+              return;
+            }
+
             const status = process.env.STATUS || 'failed';
             const emoji = status === 'success' ? ':white_check_mark:' : ':x:';
             const message = process.env.MESSAGE || 'Promotion failed before merge could be attempted.';
+            const actor = process.env.ACTOR || 'unknown';
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: parseInt(process.env.ISSUE_NUMBER, 10),
-              body: `## Promote ${emoji}\n\n${message}\n\n**Actor:** @${process.env.ACTOR}`
+              issue_number: issueNumber,
+              body: `## Promote ${emoji}\n\n${message}\n\n**Actor:** @${actor}`
             });

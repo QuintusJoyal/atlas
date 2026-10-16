@@ -10,6 +10,7 @@ variants:
   small:
     description: Quick feasibility check. Single gate.
     gates: [final]
+    skip: [research]
     token-estimate: light
     kickoff: lightweight
     auto-approve: true
@@ -41,7 +42,7 @@ Tell the user which variant you picked and why.
 
 ## Phase 0: Kickoff
 
-- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md
+- **Standard:** create run folder, seed team.json, estimation huddle, write budget.md, gate: token-budget if heavy
 - **Lightweight:** create run folder, start immediately (no tracking)
 
 ## Phases
