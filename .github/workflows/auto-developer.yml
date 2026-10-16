@@ -26,7 +26,7 @@ jobs:
   develop:
     if: github.event.label.name == 'action:develop'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       # Cut the feature branch from the target branch (not the default branch
       # an `issues` event would otherwise check out), so the PR retargeted

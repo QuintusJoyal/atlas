@@ -8,6 +8,22 @@ permissions:
   contents: read
   issues: write
 
+# The front half of the chain: a new `type:feature` issue gets an evaluation,
+# and the evaluation hands it straight to development by acquiring
+# `action:develop` (see auto-developer.yml). An `action:evaluate` label re-runs
+# the evaluation on demand, which is also how the existing backlog is swept.
+#
+# The evaluation text is posted by the action, not by the agent: on an issue
+# event whose branch ends up clean, the action comments the agent's final
+# message verbatim. The prompt therefore tells the agent to *reply* with the
+# evaluation and not to run `gh`, so a model that narrates a command instead of
+# running it cannot leave a missing or duplicated comment.
+#
+# It fires on `opened` (with the `type:feature` label) or on a `labeled` event
+# for `type:feature` / `action:evaluate`. Both paths are kept because the label
+# need not be present in the `opened` payload — if it is applied a moment later,
+# the `labeled` event covers it.
+
 concurrency:
   group: feature-reviewer-${{ github.event.issue.number }}
   cancel-in-progress: true
@@ -33,12 +49,15 @@ jobs:
           model: opencode/big-pickle
           use_github_token: "true"
           prompt: |
-            Review this feature request and post a concise evaluation comment.
+            Evaluate this feature request. Your reply is posted as the issue
+            comment automatically — do not run `gh`, and do not edit any file.
 
             Issue: ${{ github.event.issue.title }}
 
-            Post a comment with:
+            Reply with exactly:
+
             ## Evaluation
+
             | Feasibility | Priority | Effort | Risk |
             |-------------|----------|--------|------|
             | <H/M/L> | <P0-P3> | <S/M/L> | <L/M/H> |
@@ -49,4 +68,25 @@ jobs:
             ### Key Risks
             <1-2 bullets>
 
-            Keep response under 150 words.
+            Keep it under 150 words.
+
+      - name: Hand off to development
+        # The evaluation is the gate: once it is posted the issue moves to the
+        # development half of the chain by acquiring `action:develop`.
+        #
+        # PROMOTE_PAT, not GITHUB_TOKEN: a label applied with GITHUB_TOKEN
+        # raises no `issues: labeled` event, so auto-developer would never see
+        # it and the issue would stop here — the same suppression that left
+        # every bot-filed issue unevaluated.
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          gh issue edit "${ISSUE_NUM}" --repo "${GITHUB_REPOSITORY}" \
+            --add-label action:develop
+          # `action:evaluate` means "evaluate this", not "evaluate forever", so
+          # drop it; absent is fine.
+          gh issue edit "${ISSUE_NUM}" --repo "${GITHUB_REPOSITORY}" \
+            --remove-label action:evaluate || true

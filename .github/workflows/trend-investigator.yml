@@ -25,7 +25,13 @@ jobs:
       - name: Run OpenCode
         uses: anomalyco/opencode/github@v1.18.4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # PROMOTE_PAT, not GITHUB_TOKEN: the issues this step files have to
+          # raise a real `issues: opened` / `issues: labeled` event so that
+          # Feature Reviewer wakes up and evaluates them. GitHub suppresses
+          # workflow runs for events caused by the built-in GITHUB_TOKEN, so a
+          # bot-filed issue would be filed and then silently never reviewed —
+          # which is exactly what happened to every issue from #26 to #50.
+          GITHUB_TOKEN: ${{ secrets.PROMOTE_PAT }}
         with:
           model: opencode/big-pickle
           use_github_token: "true"
