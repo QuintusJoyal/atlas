@@ -2,7 +2,10 @@ name: Auto Reviewer
 
 on:
   pull_request:
-    types: [opened]
+    # `reopened` is the retry: a review that runs out of time can be re-queued
+    # by closing and reopening the PR, which is also how a review is redone
+    # after the branch is updated with a fix.
+    types: [opened, reopened]
 
 permissions:
   contents: read
@@ -28,6 +31,12 @@ permissions:
 # which hung the job until its timeout (observed on PR #56). `.atlas/` is
 # already gitignored, so writing there does not dirty the branch and make the
 # opencode action commit the verdict into the PR.
+#
+# The timeout is generous on purpose. A large PR (PR #63 rewrote 30 files) was
+# still streaming model output when the old 15-minute limit cut it off, so the
+# review never happened and the PR sat unreviewed. Reviewing is read-only, and a
+# cancelled run leaves the chain stalled, so headroom is worth more than a
+# shorter worst case.
 
 concurrency:
   group: auto-reviewer-${{ github.event.pull_request.number }}
@@ -40,7 +49,7 @@ jobs:
     # go through the normal human review path.
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v7
 
@@ -59,6 +68,11 @@ jobs:
             2. Atlas conventions
             3. Knowledge cross-refs
             4. Token budgets
+
+            Work from the diff, not the whole tree: read `git diff` (or
+            `gh pr diff`) once, and open an individual file only when a change
+            is unclear. Large PRs are common and re-reading every changed file
+            has blown the time limit before.
 
             Do not run `gh` and do not try to post anything yourself — the
             workflow submits the review for you. Your only job is to write the
