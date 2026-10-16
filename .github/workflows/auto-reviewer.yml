@@ -15,6 +15,12 @@ permissions:
 # (API: can_approve_pull_request_reviews). With it off, `gh pr review
 # --approve` returns 403 and the reviewer can only leave a COMMENTED review,
 # which does not satisfy branch protection and stalls auto-merge.
+#
+# The review is submitted by a workflow step, not by the agent. Prompting the
+# agent to run `gh pr review` itself is unreliable: it sometimes narrates the
+# command in a code block and never runs it (observed on PR #55), which leaves
+# the PR with no review at all and silently stalls the chain. The agent only
+# decides a verdict and writes it to a file; the shell step always submits it.
 
 concurrency:
   group: auto-reviewer-${{ github.event.pull_request.number }}
@@ -36,6 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_FILE: ${{ runner.temp }}/atlas-review.txt
         with:
           model: opencode/big-pickle
           use_github_token: "true"
@@ -46,20 +53,63 @@ jobs:
             3. Knowledge cross-refs
             4. Token budgets
 
-            Decide a verdict: approve, request-changes, or comment, then submit
-            it as a real PR review — not a plain comment — with the gh CLI
-            (PR_NUMBER is set in the environment):
+            Do not run `gh` and do not try to post anything yourself — the
+            workflow submits the review for you. Your only job is to write the
+            verdict to a file, using a tool (do not merely print it).
 
-              gh pr review "$PR_NUMBER" --approve --body "<2-3 bullet summary>"
-              gh pr review "$PR_NUMBER" --request-changes --body "<2-3 bullet summary, name what must change>"
-              gh pr review "$PR_NUMBER" --comment --body "<2-3 bullet summary>"
+            Create the file `${{ runner.temp }}/atlas-review.txt` containing
+            exactly two lines:
 
-            Always run the command matching your verdict FIRST. A plain comment
-            is not a substitute for a review: only a submitted `--approve`
-            review lets auto-merge land the PR.
+              verdict: approve
+              body: - <2-3 bullet summary, under 100 words>
 
-            If (and only if) `--approve` fails with "GitHub Actions is not
-            permitted to approve pull requests", retry with `--comment` and
-            state the approve verdict in the body.
+            The verdict must be one of:
+              approve          nothing must change; safe to merge
+              request-changes  must not merge as-is; name what is missing
+              comment          you are unsure; leave the decision to a human
 
-            Keep the body under 100 words.
+            Use `approve` only when the change is correct and self-contained.
+
+      - name: Submit review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_FILE: ${{ runner.temp }}/atlas-review.txt
+        run: |
+          set -euo pipefail
+
+          if [ ! -s "$REVIEW_FILE" ]; then
+            echo "::error::Reviewer produced no verdict file at $REVIEW_FILE"
+            gh pr comment "$PR_NUMBER" \
+              --body "Automated review produced no verdict. Needs a human look."
+            exit 1
+          fi
+
+          verdict=$(sed -n 's/^verdict:[[:space:]]*//Ip' "$REVIEW_FILE" \
+            | head -n1 | tr -d '\r' | tr '[:upper:]' '[:lower:]')
+          body=$(sed -n 's/^body:[[:space:]]*//Ip' "$REVIEW_FILE" \
+            | head -n1 | tr -d '\r')
+          [ -n "$body" ] || body="Automated review (no summary provided)."
+
+          case "$verdict" in
+            approve)         flag=--approve ;;
+            request-changes) flag=--request-changes ;;
+            comment)         flag=--comment ;;
+            *)
+              echo "::warning::Unknown verdict '${verdict}'; recording as a comment."
+              flag=--comment
+              ;;
+          esac
+
+          if gh pr review "$PR_NUMBER" "$flag" --body "$body"; then
+            exit 0
+          fi
+
+          # The one recoverable failure: the repo forbids Actions from
+          # approving. Degrade to a comment so the verdict is still recorded.
+          if [ "$flag" = "--approve" ]; then
+            echo "::warning::Approval rejected; is can_approve_pull_request_reviews on? Recording as a comment."
+            gh pr review "$PR_NUMBER" --comment --body "[approve requested] $body"
+          else
+            exit 1
+          fi

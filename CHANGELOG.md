@@ -15,7 +15,8 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 ### Fixed
 
 - **`auto-developer` opened PRs that no workflow could see.** A PR opened with the built-in `GITHUB_TOKEN` does not raise `pull_request` runs (GitHub suppresses recursive triggers), so `auto-reviewer` and `Validate Bundle` never fired and the chain stalled the moment the PR was created. The opencode step (and the retarget step) now use `PROMOTE_PAT`, a non-Actions identity, which both wakes the downstream workflows and keeps creation and approval on different actors.
-- **`auto-reviewer` could not rely on its approval landing.** The prompt told the agent to "pick one command" but the repository setting `can_approve_pull_request_reviews` (`false` until now) makes `gh pr review --approve` return 403, so runs silently degraded to a `COMMENTED` review that satisfies no branch protection. The prompt now insists the verdict command runs first and permits the `--comment` fallback only on that specific 403, and the job documents the setting it needs.
+- **`auto-reviewer` could not be trusted to submit its own review.** The repo setting `can_approve_pull_request_reviews` (`false` until
+  now) made `gh pr review --approve` return 403, so runs degraded to a `COMMENTED` review that satisfies no branch protection — and even with the setting on the agent is not dependable: on PR #55 it printed the `gh pr review` command in a code block, never ran it, and left the PR with no review at all, silently stalling the chain. The agent now only decides a verdict and writes it to a file, and a workflow step always performs the submission, retrying as a comment only on that specific 403.
 
 ## [0.17.3] - 2026-10-17
 
