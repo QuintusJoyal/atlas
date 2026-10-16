@@ -64,3 +64,5 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 ## Repository automation
 
 An issue labeled `action:develop` is implemented, reviewed, and merged without a human in the loop: `auto-developer` opens a PR into `dev`, `auto-reviewer` submits a review, and `auto-merge` squash-merges once that review approves and checks pass. `main` is then updated from `dev` by `promote.yml` on a weekly schedule. See `.github/workflows/README.md` for the full chain, the secrets and repository settings it needs, and the checks to run locally before pushing.
+
+When that PR merges, the issue it names (`Closes #N` in the body, or `issue<N>` in the branch) is closed automatically.
