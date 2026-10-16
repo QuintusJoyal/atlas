@@ -21,6 +21,13 @@ permissions:
 # command in a code block and never runs it (observed on PR #55), which leaves
 # the PR with no review at all and silently stalls the chain. The agent only
 # decides a verdict and writes it to a file; the shell step always submits it.
+#
+# The verdict file lives inside the checked-out workspace, under `.atlas/`:
+# a path outside the workspace (e.g. $RUNNER_TEMP) raises an interactive
+# `external_directory` permission prompt that nothing can answer on a runner,
+# which hung the job until its timeout (observed on PR #56). `.atlas/` is
+# already gitignored, so writing there does not dirty the branch and make the
+# opencode action commit the verdict into the PR.
 
 concurrency:
   group: auto-reviewer-${{ github.event.pull_request.number }}
@@ -42,7 +49,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          REVIEW_FILE: ${{ runner.temp }}/atlas-review.txt
+          REVIEW_FILE: ${{ github.workspace }}/.atlas/review-verdict.txt
         with:
           model: opencode/big-pickle
           use_github_token: "true"
@@ -57,8 +64,9 @@ jobs:
             workflow submits the review for you. Your only job is to write the
             verdict to a file, using a tool (do not merely print it).
 
-            Create the file `${{ runner.temp }}/atlas-review.txt` containing
-            exactly two lines:
+            Create the file `.atlas/review-verdict.txt` (inside this
+            repository; the `.atlas/` directory is gitignored, so create it if
+            it is missing) containing exactly two lines:
 
               verdict: approve
               body: - <2-3 bullet summary, under 100 words>
@@ -74,7 +82,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          REVIEW_FILE: ${{ runner.temp }}/atlas-review.txt
+          REVIEW_FILE: ${{ github.workspace }}/.atlas/review-verdict.txt
         run: |
           set -euo pipefail
 
