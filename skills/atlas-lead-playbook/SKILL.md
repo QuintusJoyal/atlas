@@ -17,7 +17,7 @@ tags: [playbook, orchestration]
 
 ## Workflow
 
-All 14 presets, gates as declared in each workflow file's own frontmatter (full variant — small is always final-only, except `documentation` small which has no gate at all). This table must match the workflow files; if they ever disagree, the workflow file wins.
+All 14 presets, gates as declared in each workflow file's own frontmatter (full variant — small is always final-only, except `documentation` and `self-assessment` small, which have no gate at all). This table must match the workflow files; if they ever disagree, the workflow file wins.
 
 | Preset | When | Gates (full) |
 |--------|------|-------|
