@@ -50,6 +50,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Before declaring done | `knowledge/context/pre-handoff-quality-check.md` |
 | Stuck / need help | `knowledge/context/escalation-tiers.md` |
 | Which tool to use | `knowledge/process/tool-registry.md` |
+| MCP server onboarding, pinning, revocation | `knowledge/process/mcp-server-governance.md` |
 | Recording decisions | `knowledge/process/trajectory-logging.md` |
 | Token cost optimization | `knowledge/context/prompt-cache-strategy.md` |
 | Which source to trust | `knowledge/context/memory-hierarchy.md` |

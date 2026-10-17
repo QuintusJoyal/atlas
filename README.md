@@ -83,7 +83,7 @@ Predicted vs Actual lives in `budget.md` per run. **Actual is self-reported** un
 
 ## MCP integrations (optional)
 
-Roles use MCP servers when present (Jira and Confluence, GitLab, browser) but never depend on them. Read-mode usage is free. Any write-mode action (create or update an issue, open a merge request, publish a page) is drafted and waits for your approval.
+Roles use MCP servers when present (Jira and Confluence, GitLab, browser) but never depend on them. Read-mode usage is free. Any write-mode action (create or update an issue, open a merge request, publish a page) is drafted and waits for your approval. When a trust catalog is configured, only catalog-approved servers at their pinned versions may be mounted — see [mcp-server-governance.md](knowledge/process/mcp-server-governance.md).
 
 ## Knowledge base
 

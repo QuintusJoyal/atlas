@@ -42,7 +42,7 @@ Each entry is a single JSON line:
 |-------|----------|-------------|
 | `ts` | yes | ISO 8601 timestamp |
 | `role` | yes | Agent role that made the decision |
-| `action` | yes | Tool or decision type: edit, read, grep, delegate, escalate, gate-check, plan |
+| `action` | yes | Tool or decision type: edit, read, grep, delegate, escalate, gate-check, plan, mcp_mount, mcp_tool_call, mcp_write, mcp_revoke (MCP governance, see `knowledge/process/mcp-server-governance.md`) |
 | `target` | no | File path, line number, or delegation target |
 | `why` | yes | Reasoning — why this action was chosen |
 | `approach` | no | Specific approach taken (when multiple were possible) |

@@ -1,0 +1,82 @@
+# Atlas MCP trust catalog
+# Schema: atlas-mcp-trust/1 — validated by scripts/validate-mcp-catalog.py
+# Governance: knowledge/process/mcp-server-governance.md
+#
+# Opt-in: delete or empty this file and MCP behavior is unchanged.
+# Only servers listed here with status: approved may be mounted.
+# Entries below are examples; replace with your organization's vetted servers.
+
+schema: atlas-mcp-trust/1
+
+servers:
+  - id: jira
+    name: Jira Cloud
+    owner: atlas-devops
+    version: "1.4.2"
+    status: approved
+    source: "npm:@atlassian/mcp-server-jira"
+    capabilities:
+      tools: [jira_search, jira_get_issue, jira_create_issue]
+      resources: []
+      prompts: []
+    access:
+      read: [all]
+      write: [atlas-dev, atlas-lead]
+    review:
+      reviewed_by: atlas-security
+      reviewed_at: "2026-08-10"
+
+  - id: gitlab
+    name: GitLab
+    owner: atlas-devops
+    version: "2.3.0"
+    status: approved
+    source: "npm:@gitlab-org/mcp-server-gitlab"
+    capabilities:
+      tools: [gitlab_get_project, gitlab_list_merge_requests, gitlab_create_merge_request]
+      resources: [gitlab_wiki]
+      prompts: []
+    access:
+      read: [all]
+      write: [atlas-lead]
+    review:
+      reviewed_by: atlas-security
+      reviewed_at: "2026-08-10"
+
+  - id: browser
+    name: Browser automation
+    owner: atlas-security
+    version: "0.5.1"
+    status: approved
+    source: "npm:@modelcontextprotocol/server-puppeteer"
+    capabilities:
+      tools: [browser_navigate, browser_snapshot, browser_click]
+      resources: []
+      prompts: []
+    access:
+      read: [atlas-dev, atlas-qa, atlas-architect, atlas-security, atlas-lead]
+      write: []
+    review:
+      reviewed_by: atlas-security
+      reviewed_at: "2026-08-12"
+
+  # Kill-switch example: keep the entry, set status: revoked, clear write scope.
+  # The server must be disconnected immediately; entry stays for the audit trail.
+  - id: legacy-wiki
+    name: Legacy wiki (retired)
+    owner: atlas-devops
+    version: "0.9.1"
+    status: revoked
+    revoked_at: "2026-09-01"
+    revoked_reason: "Unvetted write scope discovered in re-review; replaced by governed server"
+    source: "npm:legacy-wiki-mcp"
+    capabilities:
+      tools: [wiki_get_page, wiki_update_page]
+      resources: []
+      prompts: []
+    access:
+      read: []
+      write: []
+    review:
+      reviewed_by: atlas-security
+      reviewed_at: "2026-06-15"
