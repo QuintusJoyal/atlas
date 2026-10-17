@@ -253,6 +253,7 @@
   "tiers": {
     "premium": {
       "label": "Premium",
+      "aliases": ["frontier"],
       "capabilities": ["deep-reasoning", "long-context", "complex-planning"],
       "description": "For gate roles requiring careful analysis: architect, security, reviewer, enterprise architect, cloud, compliance.",
       "modelHints": {
@@ -266,6 +267,7 @@
     },
     "standard": {
       "label": "Standard",
+      "aliases": ["mid", "mid-tier"],
       "capabilities": ["balanced", "general-purpose"],
       "description": "For orchestrator and everyday specialist work: lead, PM, BA, UX, QA, DevOps, maintenance, and enterprise specialists.",
       "modelHints": {
@@ -279,6 +281,7 @@
     },
     "fast": {
       "label": "Fast",
+      "aliases": ["small", "cheap", "economy"],
       "capabilities": ["high-volume", "low-latency"],
       "description": "For implementation-heavy and documentation roles: dev, docs, data analyst.",
       "modelHints": {
@@ -290,6 +293,12 @@
         "antigravity": "gemini-3.1-flash-lite",
         "windsurf": "anthropic/claude-haiku-4-5"
       }
+    },
+    "auto": {
+      "label": "Auto",
+      "aliases": ["dynamic"],
+      "capabilities": ["adaptive", "context-aware"],
+      "description": "Dynamic routing: let the orchestrator select the optimal tier based on task complexity, latency, and cost constraints."
     }
   },
   "delegation": {
@@ -365,7 +374,7 @@
       "agents/atlas-consultant.md": "2143bcad89c0b22c141abe04c48eccd8a59dfb132c37058aecd8c718a2410542",
       "agents/atlas-compliance.md": "7c80b8107b28e13e0d5bea43d64b18ef99dd3b8c32f304cf12040b2b95cdf79a",
       "rules/atlas-core.md": "6609dd6074fb5d3a05e0333db582cd18daebe2ad1906b5c93f60af0cecdc9f2c",
-      "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
+      "rules/atlas-lead-orchestration.md": "bee22aa83abe015b1c99d409d9968f357fb995253aa66843d20a2fd71db12009",
       "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
       "rules/engineering-standards.md": "0f5bb325119c5146de3126101c6048920bc397b8b810f4356e88bfe7ee5ab886",
       "rules/handoff-protocol.md": "cfc031e6784092e829a030cffdbafb18eba6bac8f8e07cda068c4d5c1aa5fb48",
@@ -407,13 +416,13 @@
       "knowledge/reference/proposed.md": "d7d378c9c692424ca55281727fb8cf80da8c20028e47f176a56a00eb4521ba5b",
       "knowledge/reference/ways-of-working.md": "b696386f16b625045e81504ece8f935329b84e8188aa7ee9559ba2ab42286f31",
       "knowledge/reference/usage-insights.md": "b7f7dd51f4b95f71b3de95b73a7ff1f7d3eb14954a92fad023b46b7757faf62a",
-      "knowledge/reference/model-resilience.md": "ddd5f7d95f6047e3a485952514beaab7a72103d40cd39d13edc5f40c3649cf6f",
+      "knowledge/reference/model-resilience.md": "9fe341fdce959b67fc48c750bd146c819dfee000bcd4c6965079a85cea24f746",
       "knowledge/reference/collaboration.md": "e0f438bf49a8591a69cf16b179bd84d63b19045e7992e753e5d231a14a0a30a8",
-      "knowledge/reference/core-values-charter.md": "e253c2b797f90a3cd6cb04910e4865567f5715b2034fa3adc2847935cb163349",
+      "knowledge/reference/core-values-charter.md": "72fff3c028ae48f117bbaf4f6ed48d0cc51359951f9050fe3c1cb824b96adad0",
       "knowledge/reference/enterprise-org-model.md": "aae0c449bc51b4400625f64d688b8ed3fbc4103ff4608f5b89a5b07f52187ae5",
       "knowledge/reference/atlas-framework.md": "a729ab62a745027e510fa068c525167e9e924925937da713d24bc5863227960b",
-      "knowledge/reference/budget-template.md": "a48a5c1d228cf76b3583f7612c26e54469281b66c5fde5353c5d5ab9f75dbd69",
-      "knowledge/reference/retro-template.md": "53afba00950e9e4b4dd4940dc62fd3cf0670e22dda2dcc200e45943e36eac8ed",
+      "knowledge/reference/budget-template.md": "e4f1de8d55972e2b75c5f0f78fa9f4a5ba95e858f7badd6f007090c500560f17",
+      "knowledge/reference/retro-template.md": "c4f88467848cbe692c2cc9cb488a849395549667ece9ba825d80abedf40db529",
       "knowledge/reference/branding-values.md": "574a7618d66cadb14af943c7b7c1e1501958628dbd313b457f959aa109156aa9",
       "knowledge/reference/README.md": "b9a9a79137529a7a298db01b36fbedcf75194230f97b7f12ee1bb273408060ce",
       "knowledge/reference/definition-of-done.md": "ab9cc2790d3c56c8329fb985ab39fa7d40d850c464d776218a8dc0ed0a32a449",
@@ -492,7 +501,7 @@
       "knowledge/context/escalation-tiers.md": "94916c63fff418bb29e9a0bf4ddc28b737f3363d81a95877eb499ac0fb34ef1f",
       "knowledge/context/memory-hierarchy.md": "6acd96f60ed5886a67684942457125815b25894d2907a6298c9e5f3d836b9ec5",
       "knowledge/context/prompt-cache-strategy.md": "07a5c64fde2932f6078874be1a8e8eb49ddafb2ff0df0212dcdcde4ac71ff7b0",
-      "knowledge/context/lead-routing.md": "6243aba7669948f50e5222a10801108e84b39c2236c7dbce79e03b89397b63ee",
+      "knowledge/context/lead-routing.md": "7b46448d05763e38f899255534f24f69ae167b8857cbb7c0cd6f1ff3938f4937",
       "knowledge/context/codebase-context.md": "9615f8862748c0bb2bd2da464b558ab829239051ffeed79feb9093051ae96fd5",
       "knowledge/process/tool-registry.md": "25c1a840dd54c853c5c78656c78b18ba4ca1c4113ac53ea39e55b145cf050d59",
       "knowledge/process/trajectory-logging.md": "a0dbede15fb5a609864d48a330c9feea1b6cdf07c3cea71834a8311a805c136b",
@@ -510,7 +519,7 @@
       "knowledge/process/runtime-execution.md": "d2b2cc8cda8ed2f66529395f111899826018f8337a1d41ab5422900f79f1b1e2",
       "knowledge/process/dashboard-spec.md": "d9c1459646d2731ec7feb89c5fa7128920b51005b11d3a168c337d725af76001",
       "knowledge/benchmark/frontier-benchmark.md": "57ae6d7895f4b350f2a1c05893d6f0a7add44d631b811c0db7ad6001ff40b22a",
-      "knowledge/benchmark/performance-benchmarks.md": "4374d511d529a7beff24d104574e4a30a22359fca4d4c473e9aae3c5e57bf794",
+      "knowledge/benchmark/performance-benchmarks.md": "12957d6e9f2b765a6db392ade89c8387d9d3c52a5b8accab854480a8b40f9693",
       "knowledge/critic-prompts/role-adherence.md": "b4cba8f2cc530a28ef65f9122031c6c569b8a2bd26b76935c1bc0e575188f5e7",
       "knowledge/critic-prompts/spec-integrity.md": "70da24f910e88431e79712d7a7d1e3b868b4dab33e66ee3c2091fadfa1502191",
       "knowledge/critic-prompts/oracle.md": "0771f1042897075aecfcd0c3857cfb9085413e27fe99858e4153967097b6ba33",

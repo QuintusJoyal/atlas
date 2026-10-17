@@ -19,6 +19,8 @@ Canonical reference for keeping the workflow running when a model is quota-limit
 - Log downgrades in budget.md: `downgrade: <role> <from> to <to>, reason <reason>`
 - If all tiers exhausted: stop and tell the user
 - Quality flag: if a premium gate role ran downgraded, flag it in the handoff
+- Compute profile gateway: resolve role → tier (frontier/mid/small/auto) with alias mapping and fallback when preferred tier unavailable or rate-limited
+- Cost telemetry: track per-role spend vs budget; record in budget.md cost telemetry section
 
 ## Tier cascade
 
@@ -29,6 +31,8 @@ Retry the affected step at the next tier down, in order:
 | premium | standard |
 | standard | fast |
 | fast | (exhausted: address the user) |
+
+Tier aliases (for declarative compute profiles): frontier→premium, mid/mid-tier→standard, small/cheap/economy→fast, auto→resolve dynamically.
 
 Each IDE maps tiers to its available models. The `modelHints` field in agent frontmatter provides per-IDE suggestions. The exact model used depends on the IDE's runtime.
 
@@ -74,6 +78,7 @@ For a transient rate limit, one short retry at the same tier is fine first. If i
 2. Continue the workflow. Never block or ask permission to downgrade.
 3. Start the next step at its own assigned tier. The limit may have cleared.
 4. If every tier is exhausted, stop and address the user with what failed and the options.
+5. **Runtime gateway (compute-profile routing):** When resolving a role's compute profile (frontier/mid/small/auto), select the mapped concrete tier; if the preferred tier is unavailable or rate-limited, fall back to next tier per cascade (frontier→mid→small) before exhausting. For auto, choose tier based on task complexity/latency/cost heuristics (gate roles default to frontier/premium; mechanical work defaults to small/fast; balanced to mid/standard). Record choice and fallback in budget.md/cost telemetry.
 
 ## Orchestrator: re-delegate as a team
 

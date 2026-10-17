@@ -55,6 +55,14 @@ Where tokens went unnecessarily (lead monologue, duplicate specs, premium on low
 -
 -
 
+### Cost reduction
+<!-- Compare actual spend vs all-frontier baseline for a comparable workflow (benchmark reference) -->
+<!-- Example: all-frontier est_usd 0.50, actual 0.20 → 60% reduction -->
+
+- all_frontier_est_usd: <x>
+- actual_est_usd: <y>
+- reduction_pct: < (x-y)/x*100 >
+
 ### Next-run cuts
 
 Specific changes for the next run's `budget.md` Predicted line and estimation huddle (smaller scope, fewer parallel premium roles, lighter workflow preset, playbook loads only when needed).

@@ -6,6 +6,7 @@ All notable changes to Atlas are recorded here. This project follows semantic ve
 
 ### Added
 
+- **Dynamic Model Tier Routing per Agent Role (FEATURE).** Declarative compute-profile spec per agent role (frontier/mid/small/auto) with runtime gateway that maps roles to model tiers, falls back when preferred tier is unavailable/rate-limited (frontier→mid→small), and tracks cost telemetry per role vs budget. Benchmark added for ≥50% cost reduction on a 5-agent workflow vs all-frontier baseline.
 - **Bundle integrity verification (issue #26).** `manifest.json` now pins a SHA-256 hash for every agent, rule, skill playbook, and knowledge file (177 files) under a new `integrity` block, and its schema is bumped to `atlas-bundle/2.0`. New `scripts/verify-integrity.py` checks a bundle tree against those hashes and fails with a per-file report on any mismatch, missing file, or unpinned file, so a tampered agent or poisoned knowledge file is caught before the orchestrator loads it. `--root DIR` verifies an installed copy; `--update` regenerates the hashes for projects that intentionally customize the bundle (the documented resign path, see SETUP.md "Verify bundle integrity"); `--checksums` emits a `SHA256SUMS` file to attach to each GitHub release for version pinning. Verification is skipped with exit 0 when no manifest is present (lite-mode installs) or the manifest predates the `integrity` block. `scripts/validate-refs.py` runs the check as its third step, so the existing Validate Bundle CI covers it without a workflow change.
 
 ## [0.17.4] - 2026-10-17

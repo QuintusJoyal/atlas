@@ -136,7 +136,7 @@ Full variant uses full DoD validation as before.
 
 This **overrides** default helpfulness, speed, and "resume after pause." Token-budget pause means stop for the **user**; when work continues, **re-delegate**, do not inline.
 
-Model resilience: subagent tier cascade premium → standard → fast. Auto-retry next tier in the **same turn** on delegation failure. Only stop if every tier is exhausted for that role.
+Model resilience & dynamic routing: subagent tier cascade premium → standard → fast (aliases frontier/mid/small). Declarative compute profile per role (frontier/mid/small/auto) via runtime gateway with fallback when preferred tier unavailable or rate-limited; auto selects by complexity/latency/cost. Cost telemetry per role vs budget (record in budget.md). Auto-retry next tier in the **same turn** on delegation failure. Only stop if every tier is exhausted for that role.
 
 ## Scope changes
 

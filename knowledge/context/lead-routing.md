@@ -19,6 +19,7 @@ Reference for atlas-lead when classifying intent, matching keywords, and routing
 - Bugfix pipeline: maintenance → dev → qa → reviewer → devops
 - Parallel when independent: architect+ux, security+compliance, dev+docs
 - Sequential when dependent: pm→architect, architect→dev, dev→qa
+- **Dynamic routing:** Use compute profile per role (frontier/mid/small/auto) via runtime gateway; auto-selects by complexity/latency/cost; falls back on quota/rate/unavailable (frontier→mid→small).
 
 ## Intent classification
 
@@ -51,6 +52,36 @@ When the user gives you a task, classify the **intent** first:
 | Analysis | edge case, BDD, data flow, process flow, UML | atlas-ba | atlas-pm | feature |
 | Incident | incident, outage, P0, oncall, production down | atlas-maintenance | atlas-devops | bugfix |
 | Tech debt | refactor, cleanup, modernize, legacy, deprecate | atlas-dev | atlas-architect | feature |
+
+## Dynamic Model Tier Routing per Agent Role
+
+Runtime gateway that resolves a declarative compute profile per role to the optimal tier (frontier/mid/small/auto) with fallbacks.
+
+### Compute profile spec
+- Declarative per agent role: `frontier` (premium), `mid` (standard), `small` (fast/cheap), `auto` (dynamic)
+- Aliases: frontier=premium, mid/mid-tier=standard, small/cheap/economy=fast
+- Source of truth: role frontmatter `tier:` (existing) or explicit compute profile in kickoff `budget.md` under "Compute profile" section
+- Provider-aware normalization via `manifest.json#tiers` (modelHints per IDE)
+
+### Runtime gateway behavior
+1. Resolve role → preferred tier from compute profile (or role default)
+2. If preferred tier unavailable or rate-limited → fallback per cascade (frontier→mid→small)
+3. For `auto`, select based on task complexity, latency requirements, cost constraints:
+   - Planning/synthesis/design/gate roles → prefer frontier/premium
+   - Balanced/coordination → standard/mid
+   - Mechanical/extraction/formatting/classification/docs → prefer small/fast
+4. Record resolved tier and any fallback in delegation notes, budget.md cost telemetry, and handoff if quality-gated
+5. Never downgrade premium gate roles without logging and quality flag when appropriate (see model resilience)
+
+### Cost telemetry per role
+- Track: role, tier used, tokens (if available), est_cost_usd, budget_usd, over_budget
+- Self-reported in v1 (directional); record in budget.md "Cost telemetry" section and retro
+- Compare actual spend vs all-frontier baseline to measure reduction (target ≥50% on 5-agent workflow)
+
+### Fallback routing
+- On quota/rate/unavailable/blocked → re-delegate same role at next tier (same turn) per model-resilience cascade
+- Apply only to affected role; parallel roles unaffected
+- Log: `downgrade: <role> <from> to <to>, reason <reason>`
 
 ## Trust-based routing (opt-in, experimental)
 

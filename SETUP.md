@@ -288,6 +288,7 @@ Task(subagent_type="atlas-dev", description="atlas-dev: implement feature", prom
 
 - Set `model:` in each agent's frontmatter to the Cursor model slug
 - The Task tool accepts a `model` parameter for tier override
+- Roles can declare a compute profile (frontier/mid/small/auto) for dynamic model tier routing; runtime gateway maps to concrete models with fallback per tier cascade
 
 **Verify:**
 
@@ -444,11 +445,12 @@ This recomputes the hashes from the files on disk and rewrites the `integrity` b
 
 | Tier | Capabilities | Claude Code | OpenCode | VS Code | Cursor | Antigravity | Windsurf |
 |------|-------------|-------------|----------|---------|--------|-------------|----------|
-| Premium | deep-reasoning, long-context, complex-planning | `opus` | `anthropic/claude-opus-4-8` | `gpt-5.5` | `claude-opus-4-8-thinking-high` | `gemini-3.1-pro` | `anthropic/claude-opus-4-7` |
-| Standard | balanced, general-purpose | `sonnet` | `anthropic/claude-sonnet-5` | `gpt-5.4` | `composer-2.5` | `gemini-3.5-flash` | `anthropic/claude-sonnet-4-6` |
-| Fast | high-volume, low-latency | `haiku` | `anthropic/claude-haiku-4-5` | `gpt-5 mini` | `composer-2.5` (fast) | `gemini-3.1-flash-lite` | `anthropic/claude-haiku-4-5` |
+| Premium (frontier) | deep-reasoning, long-context, complex-planning | `opus` | `anthropic/claude-opus-4-8` | `gpt-5.5` | `claude-opus-4-8-thinking-high` | `gemini-3.1-pro` | `anthropic/claude-opus-4-7` |
+| Standard (mid) | balanced, general-purpose | `sonnet` | `anthropic/claude-sonnet-5` | `gpt-5.4` | `composer-2.5` | `gemini-3.5-flash` | `anthropic/claude-sonnet-4-6` |
+| Fast (small/cheap) | high-volume, low-latency | `haiku` | `anthropic/claude-haiku-4-5` | `gpt-5 mini` | `composer-2.5` (fast) | `gemini-3.1-flash-lite` | `anthropic/claude-haiku-4-5` |
+| Auto | dynamic (select by complexity/latency/cost) | per policy | per policy | per policy | per policy | per policy | per policy |
 
-Adjust these mappings based on your plan and account. The `modelHints` field in each agent's frontmatter stores IDE-specific suggestions.
+Adjust these mappings based on your plan and account. The `modelHints` field in each agent's frontmatter stores IDE-specific suggestions. Dynamic model tier routing per agent role resolves compute profiles (frontier/mid/small/auto) to concrete models with fallback (frontier→mid→small) on quota/rate limits.
 
 ## Multi-agent configuration
 
