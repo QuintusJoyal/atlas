@@ -11,6 +11,7 @@ skip-when: Specific AI risks (see owasp-llm-top-10), model documentation (see mo
 - Progressive disclosure: load only what's needed, when needed
 - Just-in-time loading: defer loading until the current step requires it
 - Tool-as-context: extract relevant findings, not raw output
+- Position-aware ordering: static top, retrieved evidence middle, immediate task bottom (lost-in-the-middle)
 - Structured note-taking: persist notes for long tasks
 - Compaction: summarize when context exceeds ~80% of window
 
@@ -50,6 +51,13 @@ When NOT to compact:
 - Mid-derivation
 - During active reasoning chains
 - When working on multiple parallel tasks
+
+### Position-Aware Ordering (Lost in the Middle)
+Attention over long context is U-shaped: the beginning and end are recalled well, the middle is forgotten — 30-40% accuracy loss mid-context even below claimed limits. Order context by attention value:
+- Layout: `[STATIC_TOP] [RETRIEVED_EVIDENCE] [IMMEDIATE_TASK]`
+- Critical role instructions at the top, retrieved evidence in the middle, the immediate question/task at the bottom
+- Structured formatting (headers, numbered sections) improves retrieval from middle positions
+- Cross-reference: `knowledge/context/context-engineering.md` (full guidelines), `knowledge/context/prompt-cache-strategy.md` (cache breakpoints for this layout), `rules/atlas-core.md` (Atlas loading rules)
 
 ### Token Budget Guidelines
 - Routine task: 2-3 quick refs (~400-600 tokens)

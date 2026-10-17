@@ -15,6 +15,7 @@ Most IDEs don't give direct control over caching, but you can structure content 
 ## Quick Reference
 - Static rules first, dynamic context last
 - Stable prefix = cache hit on subsequent turns
+- Cache breakpoint after static top; dynamic task stays at the very bottom
 - `cache_control` breakpoint concept for Anthropic/OpenAI
 - Progressive loading defeats caching if not ordered carefully
 
@@ -38,6 +39,15 @@ The solution: order content so the **stable prefix** (always-loaded rules) comes
 ```
 
 Items 1-3 are identical every turn. Items 4-6 change. If the IDE caches the system prompt, items 1-3 are cached; only 4-6 are re-processed.
+
+## Position-aware breakpoints (lost-in-the-middle)
+
+U-shaped attention means the top and end of context are recalled best; the middle is forgotten. The position-aware layout `[STATIC_TOP] [RETRIEVED_EVIDENCE] [IMMEDIATE_TASK]` (see `knowledge/context/context-engineering.md`) still keeps the cache-stable prefix first:
+
+- **`STATIC_TOP` stays byte-stable** — same rules, same order, no session-specific edits. This preserves the cached prefix; reordering or editing it mid-session invalidates the cache.
+- **Cache breakpoint sits after `STATIC_TOP`**, before `RETRIEVED_EVIDENCE`. Everything above the breakpoint is static and cached; everything below may change per turn.
+- **`IMMEDIATE_TASK` lives below the breakpoint** (dynamic, uncached) but at the very end of context — high attention without costing cache hits.
+- Retrieval in the middle changes per turn, which is fine: it's already outside the cached prefix, so position-aware ordering adds recall without adding cache misses.
 
 ## Cache control breakpoint
 
