@@ -16,15 +16,50 @@ permissions:
 env:
   TARGET_BRANCH: dev
 
-# One run per issue. A second `action:develop` label waits instead of
-# racing the first run and opening a duplicate branch/PR.
+# Work in progress is 1. Every feature edits the same few shared files
+# (`manifest.json`'s `integrity` hash map, `CHANGELOG.md`, `rules/atlas-core.md`),
+# so two implementations in flight at the same time are guaranteed to conflict
+# when the second one merges — that is exactly what stranded 28 PRs, 13 of them
+# approved, in a single afternoon. One lane, plus the "one open PR" guard below,
+# means every branch is cut from a `dev` that already contains all earlier work.
+#
+# A single group also serialises runs for the same issue, so a repeated
+# `action:develop` cannot open a duplicate branch/PR.
 concurrency:
-  group: auto-developer-${{ github.event.issue.number }}
+  group: auto-developer
   cancel-in-progress: false
 
 jobs:
-  develop:
+  gate:
     if: github.event.label.name == 'action:develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      go: ${{ steps.lane.outputs.go }}
+    steps:
+      - name: Wait for the lane (WIP = 1)
+        id: lane
+        env:
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
+        run: |
+          set -euo pipefail
+          wip="$(gh pr list --repo "${GITHUB_REPOSITORY}" --state open --limit 300 \
+            --json headRefName,latestReviews \
+            --jq '[.[] | select(.headRefName | startswith("opencode/issue"))
+                  | select([.latestReviews[].state] | index("CHANGES_REQUESTED") | not)]
+                  | length')"
+          if [ "${wip}" -gt 0 ]; then
+            echo "::notice::Lane busy: ${wip} implementation PR(s) in flight. Yielding."
+            echo "go=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "go=true" >> "${GITHUB_OUTPUT}"
+          fi
+
+  develop:
+    needs: gate
+    # A rejected PR is parked for a human and does not hold the lane, so the
+    # next issue still starts; everything else waits for the merge.
+    if: github.event.label.name == 'action:develop' && needs.gate.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -75,9 +110,21 @@ jobs:
             1. Read the issue body for requirements
             2. Explore relevant Atlas files
             3. Make minimal, focused changes
-            4. Update knowledge/manifest if needed
+            4. Regenerate the derived files before finishing, then validate:
+               if you added or removed anything under knowledge/, rules/,
+               skills/, or agents/, update manifest.json's lists to match and
+               run
+                 python3 scripts/verify-integrity.py --update   # re-pin integrity hashes
+                 python3 scripts/build-lite.py                  # rebuild lite/
+               and finish with both of these passing:
+                 python3 scripts/validate-refs.py
+                 python3 scripts/build-lite.py --check
+               These are derived files and leaving them stale fails Validate
+               Bundle, which is how dev drifted out of sync.
 
-            Keep changes small and targeted. Follow existing patterns.
+            Hard limits. Keep the change under 20 files and 1000 changed lines.
+            The reviewer refuses anything larger, so a bigger change must be
+            split across separate issues rather than landed as one.
 
             Do not create or modify anything under `.github/workflows/`. The
             automation token cannot push those files — GitHub rejects the push
@@ -89,6 +136,10 @@ jobs:
             Work efficiently. The job has a bounded time limit and the model is
             slow here, so prefer one small correct change over an exhaustive
             one, and stop as soon as the change is complete.
+
+            End your reply with exactly one short line, at most 200 characters,
+            naming what changed. That line becomes the pull request's title, and
+            a longer one is rejected by the API, failing the run.
 
       - name: Finalize PR (retarget and title)
         # The opencode action hardcodes the PR base to the repository's

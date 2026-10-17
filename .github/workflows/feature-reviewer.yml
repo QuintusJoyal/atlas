@@ -24,6 +24,11 @@ permissions:
 # need not be present in the `opened` payload — if it is applied a moment later,
 # the `labeled` event covers it.
 
+# Development is the stage that had to be serialised (auto-developer.yml runs
+# WIP = 1); evaluation cuts no branch and touches no files, so there is nothing
+# to conflict here. Keeping the group per issue only means a repeated label for
+# the same issue waits instead of double-evaluating.
+#
 # `cancel-in-progress` must stay false. The hand-off step below labels the issue
 # `action:develop`, which raises a second `issues: labeled` event for the same
 # issue, so a new run enters this group. With `cancel-in-progress: true` that new

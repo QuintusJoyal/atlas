@@ -1,0 +1,86 @@
+name: Queue
+
+# Drains the pipeline one issue at a time.
+#
+# auto-developer.yml runs with WIP = 1: every feature edits the same shared files
+# (`manifest.json`'s `integrity` hash map, `CHANGELOG.md`, `rules/atlas-core.md`),
+# so two implementations in flight at once are guaranteed to collide when the
+# second one merges. That collision stranded 28 PRs, 13 of them approved.
+#
+# A concurrency group can only serialise *runs*; it cannot express "wait until
+# that PR has merged". So the lane is drained here on a schedule: when nothing is
+# in flight, re-trigger the oldest waiting issue by re-adding `action:develop`,
+# which is the one event auto-developer.yml listens for.
+#
+# The schedule doubles as the safety net. An issue whose run yielded the lane,
+# whose PR was closed, or whose development failed is picked up on a later pass
+# instead of sitting on a label forever. It does not retry a PR the reviewer has
+# rejected — those are parked for a human by design.
+
+on:
+  schedule:
+    # Offset from the quarter hour so it never collides with another schedule.
+    - cron: "7,22,37,52 * * * *"
+  # Escape hatch: `gh workflow run queue.yml` to drain one issue on demand.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+# At most one drain at a time, so two schedules cannot start two issues.
+concurrency:
+  group: queue
+  cancel-in-progress: false
+
+jobs:
+  next:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Start the next issue if the lane is free
+        env:
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
+        run: |
+          set -euo pipefail
+          repo="${GITHUB_REPOSITORY}"
+
+          # Lane occupancy: open implementation PRs still moving through review.
+          # A PR the reviewer rejected is parked, not work in progress, so it
+          # must not hold the lane open forever.
+          wip="$(gh pr list --repo "${repo}" --state open --limit 300 \
+            --json headRefName,latestReviews \
+            --jq '[.[] | select(.headRefName | startswith("opencode/issue"))
+                  | select([.latestReviews[].state] | index("CHANGES_REQUESTED") | not)]
+                  | length')"
+          if [ "${wip}" -gt 0 ]; then
+            echo "Lane busy: ${wip} implementation PR(s) in flight. Nothing to start."
+            exit 0
+          fi
+
+          # Oldest waiting issue: labelled for development with no open PR of its
+          # own. Re-adding the label raises a fresh `issues: labeled` event.
+          waiting="$(gh issue list --repo "${repo}" --state open --label action:develop \
+            --limit 300 --json number,createdAt --jq 'sort_by(.createdAt) | .[].number')"
+          if [ -z "${waiting}" ]; then
+            echo "Queue empty."
+            exit 0
+          fi
+
+          while read -r n; do
+            [ -n "${n}" ] || continue
+            open="$(gh pr list --repo "${repo}" --state open --limit 300 \
+              --json headRefName \
+              --jq "[.[] | select(.headRefName | startswith(\"opencode/issue${n}-\"))] | length")"
+            if [ "${open}" -gt 0 ]; then
+              continue
+            fi
+            echo "Starting issue #${n}."
+            gh issue edit "${n}" --repo "${repo}" --remove-label action:develop
+            sleep 2
+            gh issue edit "${n}" --repo "${repo}" --add-label action:develop
+            exit 0
+          done <<< "${waiting}"
+
+          echo "Every waiting issue already has an open PR."

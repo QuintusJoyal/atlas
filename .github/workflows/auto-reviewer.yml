@@ -53,7 +53,34 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Size gate
+        # A structural limit on how much one issue may change. Anything over
+        # this cannot be reviewed inside the job budget, and large changes are
+        # also what collide with every other branch in flight. Reject here, in
+        # the workflow, rather than asking the model to make sense of a
+        # 4,000-line diff it cannot finish reading.
+        id: size
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MAX_FILES: "20"
+          MAX_LINES: "1000"
+        run: |
+          set -euo pipefail
+          read -r files lines <<<"$(gh pr view "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" \
+            --json files,additions,deletions \
+            --jq '"\(.files|length) \(.additions + .deletions)"')"
+          echo "PR #${PR_NUMBER}: ${files} files, ${lines} changed lines."
+          if [ "${files}" -gt "${MAX_FILES}" ] || [ "${lines}" -gt "${MAX_LINES}" ]; then
+            gh pr review "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --request-changes \
+              --body "This PR changes ${files} files and ${lines} lines, over the ${MAX_FILES}-file / ${MAX_LINES}-line review budget, so it was not reviewed. Split it into smaller changes, one per issue, and re-queue the work."
+            echo "ok=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "ok=true" >> "${GITHUB_OUTPUT}"
+          fi
+
       - name: Run OpenCode
+        if: steps.size.outputs.ok == 'true'
         uses: anomalyco/opencode/github@v1.18.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -101,6 +128,9 @@ jobs:
             Use `approve` only when the change is correct and self-contained.
 
       - name: Submit review
+        # Skipped alongside the reviewer when the size gate rejected the PR;
+        # otherwise the missing verdict file would fail the job spuriously.
+        if: steps.size.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
