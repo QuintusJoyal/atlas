@@ -77,6 +77,14 @@ IDEs implement trajectory logging via:
 - Tool call hooks (pre/post action callbacks)
 - Post-action append after each significant tool use
 - Batch write at phase transitions
+- **Pre-persistence redaction:** Apply `rules/artifact-governance.md` before appending (redact `toolInput`/`toolOutput`, PII in `why`/`error`).
+- **Data minimization:** Pass only scoped inputs to subagents; avoid logging full sensitive payloads.
+
+The schema is IDE-agnostic. Each IDE implements appending however it wants.
+
+- Tool call hooks (pre/post action callbacks)
+- Post-action append after each significant tool use
+- Batch write at phase transitions
 
 The schema is IDE-agnostic. Each IDE implements appending however it wants.
 

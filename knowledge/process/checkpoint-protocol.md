@@ -228,6 +228,8 @@ Validating checkpoint: cp-20260711-001
 - Keep all deep checkpoints for active runs
 - Auto-delete lightweight checkpoints older than 7 days
 - Auto-delete standard checkpoints older than 30 days
+- Follow `rules/artifact-governance.md` for redaction before checkpoint creation and automated expiry per artifact class
+- Retain deep checkpoints per active run policy; align with `$ATLAS_DATA_DIR/runs/<run-id>/` retention
 
 ```text
 Cleanup: removed 3 lightweight checkpoints older than 7 days

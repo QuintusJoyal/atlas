@@ -38,3 +38,6 @@ Data has lifecycle, access boundaries, and regulatory obligations. Treat it acco
 - Schema migrations require atlas-dba review before execution.
 - Backward-compatible changes preferred. Breaking changes need a migration plan.
 - Reference: `k/kimball-dimensional-modeling.md` for analytical data modeling.
+
+## Runtime artifacts
+- See `rules/artifact-governance.md` for agentic governance of trajectories, checkpoints, handoffs, and context loads.

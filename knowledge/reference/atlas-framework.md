@@ -134,3 +134,7 @@ See `workflows/*.md` and `skills/atlas-lead-playbook/SKILL.md`.
 - `knowledge/reference/model-resilience.md`
 - `knowledge/reference/budget-template.md`
 - [`atlas-control-center/sdk/README.md`](https://github.com/QuintusJoyal/atlas-control-center/blob/main/sdk/README.md)
+
+
+## Runtime data governance
+- Atlas runtime artifacts under `$ATLAS_DATA_DIR/runs/<run-id>/` are governed by `rules/artifact-governance.md` (PII detection/redaction, retention, data-minimization, subagent inheritance, audit).

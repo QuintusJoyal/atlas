@@ -113,6 +113,7 @@ When a role produces a handoff, it must include:
 - **Decisions made:** what was chosen and why
 - **Next action:** what the next role should do first (concrete, not "continue the work")
 - **Token budget:** light / medium / heavy with one-line rationale
+- **Governance:** redact sensitive content per `rules/artifact-governance.md`; use scoped briefs (data-minimization) for delegation.
 
 ### Team manifest
 Update `$ATLAS_DATA_DIR/runs/<run-id>/team.json` for your role: set your entry to `completed` or `failed`, add a short `note`, and set `completedAt`. If you ran on a downgraded tier, set `model` and `downgradedFrom` when atlas-lead re-delegated after a quota interrupt. If no entry exists, atlas-lead should have seeded the file; add your row if missing. See `knowledge/reference/collaboration.md`.
