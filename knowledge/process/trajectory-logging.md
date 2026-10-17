@@ -91,6 +91,8 @@ After a successful run, review trajectory entries where `outcome=failure` follow
 ### Metrics
 Aggregate `tokens` field per role to understand token consumption patterns. Use for budget optimization.
 
+For full context telemetry — per-phase/category token accounting, cache hit rate, compaction events, poisoning/distraction/confusion/clash flags, and OTel export of the 8 Atlas metrics — see `knowledge/context/context-telemetry.md` and run `scripts/context-telemetry.py`.
+
 ## Extended schema example
 
 ```jsonl
