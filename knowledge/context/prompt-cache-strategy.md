@@ -70,3 +70,12 @@ Lite mode is already cache-optimized: ~1,100 token system prompt that's identica
 - Loading different knowledge files as system prompt each turn (defeats cache)
 - Placing dynamic content (task state, tool output) before static rules
 - Changing atlas-core.md content mid-session (invalidates cache)
+
+## Budget enforcement and cache stability
+
+Token budget enforcement (`knowledge/process/token-budget-enforcement.md`) is the mechanism that protects the stable prefix. An unbounded load grows the dynamic tail every turn, and a growing tail is a shifting tail — cache hits depend on the prefix being byte-stable and the loaded set being small and repeatable.
+
+- Cap the dynamic tail by tier (routine 400-600, complex 1,500-2,500, hard cap 5,000) so turns that need the same context produce the same tail.
+- Do not re-load a file already loaded this session. A re-load pays full cost again and can reorder content in the tail.
+- When the cap is hit, truncate to a summary rather than loading a variable full file. A small fixed summary is more cache-friendly than an arbitrarily large one.
+- In lite mode the whole system prompt is a stable ~1,100-token prefix; the 1,000-token external budget keeps the tail from crowding it out on the 8K window.

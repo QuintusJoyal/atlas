@@ -48,6 +48,10 @@ Each entry is a single JSON line:
 | `approach` | no | Specific approach taken (when multiple were possible) |
 | `outcome` | yes | success, failure, blocked, escalated |
 | `tokens` | no | Approximate tokens consumed by this decision |
+| `budgetTier` | no | Knowledge-loading tier in force: routine / complex / hard-cap / lite |
+| `tokensLoaded` | no | Running total of knowledge-loading tokens after this action |
+| `budgetExceeded` | no | true when this action crossed its tier or the hard cap |
+| `truncatedTo` | no | What was summarized instead of loaded (when budgetExceeded) |
 | `delegatedTo` | no | Role delegated to (when action=delegate) |
 | `error` | no | Error message (when outcome=failure) |
 | `toolInput` | no | Key arguments passed to the tool (for transition analysis) |
@@ -90,6 +94,8 @@ After a successful run, review trajectory entries where `outcome=failure` follow
 
 ### Metrics
 Aggregate `tokens` field per role to understand token consumption patterns. Use for budget optimization.
+
+Aggregate `tokensLoaded` by `budgetTier` to see how often a role crosses its knowledge-loading budget. Entries with `budgetExceeded=true` and their `truncatedTo` values show where context was reduced — the signal to tighten the tier budget or improve the playbook's inline facts. See `knowledge/process/token-budget-enforcement.md`.
 
 ## Extended schema example
 

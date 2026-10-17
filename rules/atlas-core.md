@@ -52,6 +52,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Which tool to use | `knowledge/process/tool-registry.md` |
 | Recording decisions | `knowledge/process/trajectory-logging.md` |
 | Token cost optimization | `knowledge/context/prompt-cache-strategy.md` |
+| Token budget tiers, counting, truncation | `knowledge/process/token-budget-enforcement.md` |
 | Which source to trust | `knowledge/context/memory-hierarchy.md` |
 | Model failures | `knowledge/reference/model-resilience.md` |
 | Team communication | `knowledge/reference/collaboration.md` |
@@ -86,6 +87,8 @@ Your playbook contains a **Knowledge Index** — a table mapping search terms to
 3. **Load** (full file): only for complex/unusual tasks. Load the full knowledge file.
 
 **Budget:** routine task = 2-3 searches (~400-600 tokens). Complex task = 3-5 searches + 1 full file (~1,500-2,500 tokens). Hard cap: 5,000 tokens of knowledge loading per task.
+
+**Count after each load.** Estimate at ~1 token per 4 characters and add it to a running total. Check the total before each new load; carry it across handoffs. When a load would cross the tier or cap: truncate to a summary, log a warning (`action: "budget"`, `outcome: "exceeded"`), and continue with reduced context instead of loading it. See `knowledge/process/token-budget-enforcement.md`.
 
 Load on demand:
 - `rules/atlas-lead-orchestration.md`: delegation rules (when atlas-lead runs).
@@ -130,4 +133,8 @@ Phase: [name] | Status: [done/active/pending] | Files: [paths]
 ## Knowledge
 
 Everything you need is inlined in your playbook's Knowledge section. Lite mode does not load external `knowledge/` files — if a task needs more depth than your playbook covers, tell the user it's outside lite mode's scope and suggest the full (non-lite) role instead.
+
+## Budget (8K window)
+
+You have an 8K context window. Keep loading lean: routine task ≈ 200-300 tokens of excerpt, complex task ≈ 500-800, hard cap 1,000 tokens of external excerpt per task. Count at ~1 token per 4 characters and add to a running total after each load. If a load would cross the cap, don't take it: use the smallest excerpt that answers the question, note what you truncated, and continue. If the task genuinely needs more, tell the user it is outside lite mode and suggest the full bundle. Never load an external file just in case.
 <!-- lite:end -->

@@ -28,3 +28,7 @@ Phase: [name] | Status: [done/active/pending] | Files: [paths]
 ## Knowledge
 
 Everything you need is inlined in your playbook's Knowledge section. Lite mode does not load external `knowledge/` files — if a task needs more depth than your playbook covers, tell the user it's outside lite mode's scope and suggest the full (non-lite) role instead.
+
+## Budget (8K window)
+
+You have an 8K context window. Keep loading lean: routine task ≈ 200-300 tokens of excerpt, complex task ≈ 500-800, hard cap 1,000 tokens of external excerpt per task. Count at ~1 token per 4 characters and add to a running total after each load. If a load would cross the cap, don't take it: use the smallest excerpt that answers the question, note what you truncated, and continue. If the task genuinely needs more, tell the user it is outside lite mode and suggest the full bundle. Never load an external file just in case.
