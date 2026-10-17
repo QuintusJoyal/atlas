@@ -57,6 +57,7 @@ Each entry is a single JSON line:
 | `recoveryAction` | conditional | What the agent did after the error (retry/re-escalate/abandon) |
 | `toolReceiptId` | conditional | Receipt for file-mutating operations (conflict detection) |
 | `checkpointId` | no | Links entry to a checkpoint (when checkpoint system active) |
+| `cassetteSeq` | no | Links entry to the flight-recorder exchange that produced it (when recording is on). See `knowledge/process/flight-recorder.md`. |
 | `parentId` | no | ID of the entry that caused this one (e.g. a delegation entry that spawned a sub-role's entries) — lets you reconstruct a call tree by grepping for a shared `parentId` without a real tracing backend |
 
 ## When to record
@@ -79,6 +80,10 @@ IDEs implement trajectory logging via:
 - Batch write at phase transitions
 
 The schema is IDE-agnostic. Each IDE implements appending however it wants.
+
+## Flight recorder linkage
+
+`trajectory.jsonl` records decisions (why, outcome); a separate flight-recorder cassette records full exchange I/O so the run can be replayed offline. When recording is on, set `cassetteSeq` on a decision entry to point at the exchange that produced it, and never copy payloads the cassette already holds. See `knowledge/process/flight-recorder.md`.
 
 ## Usage
 
