@@ -69,14 +69,22 @@ jobs:
             3. Knowledge cross-refs
             4. Token budgets
 
-            Work from the diff, not the whole tree: read `git diff` (or
-            `gh pr diff`) once, and open an individual file only when a change
-            is unclear. Large PRs are common and re-reading every changed file
-            has blown the time limit before.
+            Budget: finish in at most 15 tool calls, then write the verdict.
+            The model is slow here, and an exhaustive review runs out of the
+            job's time limit — PR #63 spent 40 minutes and 113 shell calls
+            comparing every schema file and was cancelled with no review at all.
+            A short review that lands beats a thorough one that does not.
 
-            Do not run `gh` and do not try to post anything yourself — the
-            workflow submits the review for you. Your only job is to write the
-            verdict to a file, using a tool (do not merely print it).
+            Start with `gh pr diff --stat` (read-only), then read the diff with
+            `gh pr diff`. Open at most a handful of changed files, and only
+            where the diff alone is not enough to judge the change. Do not walk
+            or script over the whole tree, and do not re-read a file you have
+            already seen.
+
+            Do not post anything with `gh` (no `gh pr review`, no `gh pr
+            comment`) — the workflow submits the review for you. Your only job
+            is to write the verdict to a file, using a tool (do not merely
+            print it).
 
             Create the file `.atlas/review-verdict.txt` (inside this
             repository; the `.atlas/` directory is gitignored, so create it if

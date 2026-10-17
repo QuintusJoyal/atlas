@@ -38,10 +38,16 @@ jobs:
   merge:
     # Same-repo only: fork PRs get no secrets and are routed to human review,
     # matching auto-reviewer. `main` never merges here (promote.yml owns it).
+    #
+    # Deliberately does NOT require the Auto Reviewer run to have concluded
+    # `success`. When a review fails or is cancelled (a timeout, say) this job
+    # is the only thing still listening, and it is where "the review never
+    # happened" gets reported instead of the PR sitting silent. The merge itself
+    # is still gated on a live APPROVED review below, so a failed run can never
+    # cause a merge.
     if: |
       github.event_name == 'workflow_dispatch' || (
         github.event.workflow_run.event == 'pull_request' &&
-        github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.head_repository.full_name == github.repository
       )
     runs-on: ubuntu-latest
@@ -59,6 +65,7 @@ jobs:
           INPUT_PR: ${{ github.event.inputs.pr }}
           PAYLOAD_PR: ${{ github.event.workflow_run.pull_requests[0].number }}
           HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          REVIEW_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
         run: |
           set -euo pipefail
 
@@ -88,6 +95,14 @@ jobs:
             --jq '[.latestReviews[] | select(.state == "CHANGES_REQUESTED")] | length')
           if [ "$approved" -eq 0 ] || [ "$changes" -gt 0 ]; then
             echo "PR #${PR} has no current approval; nothing to merge."
+            # A review that never completed (timeout, cancellation, crash) posts
+            # nothing of its own, so the PR would look merely unapproved with no
+            # explanation. Report it once, with the retry path, and only when
+            # this really was a review run.
+            if [ -n "${REVIEW_CONCLUSION:-}" ] && [ "${REVIEW_CONCLUSION}" != "success" ]; then
+              gh pr comment "$PR" --body \
+                "Automated review did not complete (Auto Reviewer concluded: \`${REVIEW_CONCLUSION}\`). Nothing has been merged. Close and reopen this PR to re-queue a review."
+            fi
             exit 0
           fi
 
