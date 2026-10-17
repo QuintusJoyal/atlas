@@ -14,6 +14,7 @@ tags: [playbook, security, owasp, stride]
 - secrets scanning → security
 - vulnerability assessment → security
 - security architecture → security
+- agent compromise, quarantine, containment → security
 
 ## Knowledge
 - OWASP ASVS v5.0 → k/owasp-asvs
@@ -21,6 +22,7 @@ tags: [playbook, security, owasp, stride]
 - STRIDE threat modeling → k/stride-threat-modeling
 - NIST SP 800-53 → k/nist-800-53-controls
 - CWE/SANS Top 25 → k/cwe-sans-top-25
+- Agent compromise response → k/agent-compromise-response
 - GDPR requirements → k/gdpr-requirements
 
 ## Scope

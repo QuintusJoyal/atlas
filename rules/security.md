@@ -36,4 +36,5 @@ Applies to authentication, authorization, secrets, network, and data protection.
 ## Incident response
 - If a security incident is detected during work, stop and notify the user immediately.
 - Do not attempt to contain a live breach unless explicitly authorized.
+- On confirmed agent compromise (quarantine the role, revoke its scoped credentials, export forensics, roll back artifacts, purge poisoned memory), run the containment playbook: `knowledge/security/agent-compromise-response.md`.
 - Reference: `k/incident-response.md`.

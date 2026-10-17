@@ -132,3 +132,11 @@ Trust scores reset when:
 - User explicitly resets a role's trust
 - Role definition changes significantly (new agent file)
 - Role has been inactive for 90+ days (full decay)
+
+## Downgrade on confirmed incident
+
+A confirmed agent compromise (`knowledge/security/agent-compromise-response.md`) forces an immediate downgrade that bypasses the formula:
+
+- `trustScore` → 0.0, `tier` → UNTRUSTED, `driftAlerts` + 1, incident id recorded in the profile
+- The role stays quarantined: atlas-lead does not delegate to it, regardless of tier defaults
+- Restoration is a user decision after the post-incident report is accepted — never automatic decay
