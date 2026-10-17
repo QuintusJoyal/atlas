@@ -17,7 +17,7 @@ Keep the body concise, but never omit context the next actor needs to act.
 ## Phase state: <pending|active|gated|completed|failed|paused|aborted>
 
 ### Inputs
-What this role received: prior artifact **paths**, user decisions, constraints, and relevant code locations. Enough detail that someone who did not run the prior step can understand the starting point.
+What this role received: prior artifact **paths**, user decisions, constraints, and relevant code locations. Enough detail that someone who did not run the prior step can understand the starting point. Record loaded context fragments with `loaded_at`, `source_mtime`, and `max_staleness_hours` (see `knowledge/context/context-freshness.md`).
 
 ### Work done
 A short summary of what was produced or decided. Name key files changed or created (paths).
@@ -113,6 +113,7 @@ When a role produces a handoff, it must include:
 - **Decisions made:** what was chosen and why
 - **Next action:** what the next role should do first (concrete, not "continue the work")
 - **Token budget:** light / medium / heavy with one-line rationale
+- **Context freshness:** the fragments consumed, each with `source`, `source_mtime`, and `max_staleness_hours`; flag any stale/expired fragment and the policy applied (`knowledge/context/context-freshness.md`)
 
 ### Team manifest
 Update `$ATLAS_DATA_DIR/runs/<run-id>/team.json` for your role: set your entry to `completed` or `failed`, add a short `note`, and set `completedAt`. If you ran on a downgraded tier, set `model` and `downgradedFrom` when atlas-lead re-delegated after a quota interrupt. If no entry exists, atlas-lead should have seeded the file; add your row if missing. See `knowledge/reference/collaboration.md`.

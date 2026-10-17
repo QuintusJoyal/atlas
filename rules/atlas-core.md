@@ -32,6 +32,7 @@ Non-negotiables:
 - **Task decomposition:** for multi-role workflows, sequence tasks by real dependency and keep concurrent tasks free of overlapping file writes. See `knowledge/process/dag-orchestration.md` for the fuller DAG/critical-path treatment on large or complex workflows.
 - **Knowledge compounding:** after a workflow's final gate, capture what was learned (a lesson, a tool fix, a role correction) and add it to `proposed.md` for the user's batch approval. Do not edit `lessons.md` directly. See `knowledge/process/knowledge-compounding.md`.
 - **Position-aware context ordering:** arrange context for U-shaped attention (lost-in-the-middle). Layout: `[STATIC_TOP] [RETRIEVED_EVIDENCE] [IMMEDIATE_TASK]` — always-loaded rules first, grepped/loaded knowledge in the middle, the current question or task last. Never append retrieved knowledge after the task. See `knowledge/context/context-engineering.md`.
+- **Context freshness:** context is perishable. Before incorporating a loaded knowledge file or handoff artifact, check its `source_mtime` and `max_staleness_hours` and apply the phase policy (`warn`/`refresh`/`block`). Unknown metadata is `warn`, never block. See `knowledge/context/context-freshness.md`.
 
 Not part of the always-on core, opt-in only when the user explicitly asks for them (they need infrastructure or cross-run history this bundle doesn't provide by default, so treat their outputs as illustrative, not measured): OTel-style observability (`knowledge/process/observability-system.md`), trust-score tier routing (`knowledge/process/role-trust-profiles.md`), and decision-quality scoring (`knowledge/process/decision-quality-scoring.md`). These three exist to feed the monthly `workflows/self-assessment.md` run, not everyday delegation.
 
@@ -42,6 +43,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Need | Knowledge file |
 |------|---------------|
 | Context management | `knowledge/context/context-engineering.md` |
+| Stale context, TTLs, freshness policies | `knowledge/context/context-freshness.md` |
 | Reasoning patterns | `knowledge/context/structured-reasoning.md` |
 | When to ask user | `knowledge/context/clarification-strategy.md` |
 | Document structure | `knowledge/context/document-sharding.md` |
@@ -76,6 +78,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 Before any task:
 1. Grep `knowledge/reference/lessons.md` for your role name.
 2. Grep `knowledge/reference/model-resilience.md` for your role name.
+3. Check the freshness of any context you bootstrap (`lessons.md`, knowledge files, prior handoffs): stale items surface under `### Stale context` with their age. See `knowledge/context/context-freshness.md`.
 
 ## Knowledge loading
 

@@ -165,6 +165,7 @@
     "context/prompt-cache-strategy.md",
     "context/lead-routing.md",
     "context/codebase-context.md",
+    "context/context-freshness.md",
     "process/tool-registry.md",
     "process/trajectory-logging.md",
     "process/aci-enforcement.md",
@@ -237,6 +238,29 @@
       "final": "Final review → Delivery (auto-approve if small)",
       "scope": "Scoping → Audit (security-audit only)",
       "research": "Research → Feasibility (discovery only)"
+    },
+    "freshness": {
+      "description": "Temporal validity of loaded context. Every knowledge file and handoff artifact carries loaded_at, source, source_mtime, and max_staleness_hours. Gate: stale when now - source_mtime > max_staleness_hours. See knowledge/context/context-freshness.md.",
+      "fragmentSchema": ["loaded_at", "source", "source_mtime", "max_staleness_hours"],
+      "policies": {
+        "warn": "Use the fragment and append a staleness warning; log to trajectory.jsonl.",
+        "refresh": "Re-read the fragment from source and reset timestamps; fall back to warn on failure.",
+        "block": "Refuse the fragment, log a stale-context error, escalate if no fresh replacement."
+      },
+      "phaseTTLHours": {
+        "planning": 24,
+        "implementation": 1,
+        "test": 2,
+        "review": 4,
+        "deploy": 4
+      },
+      "defaultPolicy": {
+        "planning": "warn",
+        "implementation": "refresh",
+        "test": "refresh",
+        "review": "warn",
+        "deploy": "block"
+      }
     },
     "transitions": {
       "pending→active": "Lead delegates to role",
@@ -364,11 +388,11 @@
       "agents/atlas-delivery.md": "b6ea5d9bdd22837a84c40099f6d983679a2d2a2f256c5789ddc2b413168b1706",
       "agents/atlas-consultant.md": "2143bcad89c0b22c141abe04c48eccd8a59dfb132c37058aecd8c718a2410542",
       "agents/atlas-compliance.md": "7c80b8107b28e13e0d5bea43d64b18ef99dd3b8c32f304cf12040b2b95cdf79a",
-      "rules/atlas-core.md": "6609dd6074fb5d3a05e0333db582cd18daebe2ad1906b5c93f60af0cecdc9f2c",
+      "rules/atlas-core.md": "dc156272e01d44376b7fc8248c59673c8dc096109f14cd92ec262a02e2f5f91a",
       "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
       "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
       "rules/engineering-standards.md": "0f5bb325119c5146de3126101c6048920bc397b8b810f4356e88bfe7ee5ab886",
-      "rules/handoff-protocol.md": "cfc031e6784092e829a030cffdbafb18eba6bac8f8e07cda068c4d5c1aa5fb48",
+      "rules/handoff-protocol.md": "8d2d9c22680a553a8aa123de24eacb6382b45c1825aa272f734accb0c7a2014d",
       "rules/writing-style.md": "531ed82c3e4ac1a3b9813d4bee6f799e01c22853db912f5133c4fdcafcc03543",
       "rules/security.md": "92479c247958ec5962d8565e99f6d61096919dc7234a3abfdecb921ccc540a0b",
       "rules/data-governance.md": "990a231068deb938d9e761bfd181c8791d2feb88048e351e39c3d695b1f210e3",
@@ -485,7 +509,7 @@
       "knowledge/context/structured-reasoning.md": "05668d1f3680dde0b5ebadcfe276d06aa98816e0405fc8e636c8eee3cae0b3a1",
       "knowledge/context/clarification-strategy.md": "26e46e05faebfbf50fe35b305b5a51f8b5bec4359b2c1257f874895fd2ebbe87",
       "knowledge/context/document-sharding.md": "37866360415ce6102528c75e83c53ed61bdf125171e1ca581b87f8a43b30ec6f",
-      "knowledge/context/pre-action-gates.md": "fd230c6a796fb84077b3c125587ec66c60446a26b2515a7bfbb99eb4abeb58cd",
+      "knowledge/context/pre-action-gates.md": "87637ecd771407067e309cd1be8d2f8e5da8f9e4c852f69700d6be90f525e241",
       "knowledge/context/problem-domain-classification.md": "1c56146aa6c851059687b970cbf818944ae965bf1edafcbeb48e6fc4b230a2a0",
       "knowledge/context/observe-before-act.md": "4b1dd8d7017d62bfd5132c09c11a8f74475da8d5ed957fabf859e9346f42a26f",
       "knowledge/context/pre-handoff-quality-check.md": "5187252a5c47c4ec5321d76d950c3476a4837de7f5715ea1ecad21a4125f248c",
@@ -494,6 +518,7 @@
       "knowledge/context/prompt-cache-strategy.md": "07a5c64fde2932f6078874be1a8e8eb49ddafb2ff0df0212dcdcde4ac71ff7b0",
       "knowledge/context/lead-routing.md": "6243aba7669948f50e5222a10801108e84b39c2236c7dbce79e03b89397b63ee",
       "knowledge/context/codebase-context.md": "9615f8862748c0bb2bd2da464b558ab829239051ffeed79feb9093051ae96fd5",
+      "knowledge/context/context-freshness.md": "5fa26e1b838d8eedf60b3dbee92738c2c7676159392c5730ff46cb09e78662b1",
       "knowledge/process/tool-registry.md": "25c1a840dd54c853c5c78656c78b18ba4ca1c4113ac53ea39e55b145cf050d59",
       "knowledge/process/trajectory-logging.md": "a0dbede15fb5a609864d48a330c9feea1b6cdf07c3cea71834a8311a805c136b",
       "knowledge/process/aci-enforcement.md": "cb7d03847dafd617a50c3f6d3686bb717cbda536f912df15aa74ce18963b466e",
@@ -508,7 +533,7 @@
       "knowledge/process/knowledge-compounding.md": "aa673b4594682292effc3fd6a2e07994bb76d8aac1de1bc9d20d76a5620a7a5e",
       "knowledge/process/self-assessment-protocol.md": "632a89e50786cbbffd97837b404ae8e37535f71e273f58a897e709a77d502aa1",
       "knowledge/process/runtime-execution.md": "d2b2cc8cda8ed2f66529395f111899826018f8337a1d41ab5422900f79f1b1e2",
-      "knowledge/process/dashboard-spec.md": "d9c1459646d2731ec7feb89c5fa7128920b51005b11d3a168c337d725af76001",
+      "knowledge/process/dashboard-spec.md": "758bb8f921d0874f7be66b5b05d938df633abab642f57cb5734937c8e12e4399",
       "knowledge/benchmark/frontier-benchmark.md": "57ae6d7895f4b350f2a1c05893d6f0a7add44d631b811c0db7ad6001ff40b22a",
       "knowledge/benchmark/performance-benchmarks.md": "4374d511d529a7beff24d104574e4a30a22359fca4d4c473e9aae3c5e57bf794",
       "knowledge/critic-prompts/role-adherence.md": "b4cba8f2cc530a28ef65f9122031c6c569b8a2bd26b76935c1bc0e575188f5e7",

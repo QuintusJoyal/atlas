@@ -124,6 +124,27 @@ This is a layout spec, not a working dashboard. Every number in the panels below
 - `lessons.md` for drift alerts
 - `usage-insights.md` for pattern history
 
+## Panel 5: Context Freshness
+
+### Layout
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Context Freshness                                           │
+├────────────────────────────┬──────────┬──────┬──────┬───────┤
+│ Fragment                   │ Source   │ Age  │ TTL  │ Status│
+├────────────────────────────┼──────────┼──────┼──────┼───────┤
+│ context/codebase-context   │ 09:00Z   │ 5h   │ 1h   │ stale │
+│ reference/lessons          │ 10-01Z   │ 16d  │ 24h  │ exp.  │
+│ run-.../design             │ 13:00Z   │ 1h   │ 24h  │ fresh │
+├────────────────────────────┴──────────┴──────┴──────┴───────┤
+│ Stale: 1 | Expired: 1 | Unknown: 0 | Policies applied: 2    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Data source
+- `freshness.json` in the run workspace (or the `freshness` block of `team.json`)
+- `knowledge/context/context-freshness.md` for the status thresholds and policies
+
 ## Update frequency
 
 | Panel | During Run | After Run | Daily |
@@ -132,6 +153,7 @@ This is a layout spec, not a working dashboard. Every number in the panels below
 | Per-Role | After each delegation | Final | Trend |
 | Team Coordination | After each handoff | Final | Trend |
 | Anomaly Panel | Real-time | Final | Cleanup |
+| Context Freshness | At each context load | Final | Trend |
 
 ## Data flow
 

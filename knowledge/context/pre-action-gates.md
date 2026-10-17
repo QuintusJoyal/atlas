@@ -16,6 +16,7 @@ Before critical decisions, verify a short checklist. Don't skip gates for speed.
 - Security: threat model documented, control addresses specific threat, doesn't break functionality
 - Architecture: simpler alternatives considered, trade-offs documented, scale clear
 - Final delivery: all criteria met, tests pass, docs complete, rollback exists
+- Context freshness: source_mtime within max_staleness_hours, else apply warn/refresh/block policy
 - Gate rule: when triggered, pause and verify before proceeding
 
 ## Gate checklists
@@ -38,6 +39,14 @@ Before marking complete, verify:
 2. All tests pass
 3. Documentation complete
 4. Rollback plan exists
+
+### Context freshness
+Before incorporating any loaded knowledge file or handoff artifact, verify:
+1. The fragment carries `source_mtime` and `max_staleness_hours` (unknown → treat as `warn`)
+2. `now - source_mtime <= max_staleness_hours`, or the phase policy (`warn`/`refresh`/`block`) was applied
+3. A `refresh` actually re-read the source; a `block` logged a `stale-context` error
+
+See `knowledge/context/context-freshness.md` for the schema, TTL table, and policies.
 
 ## Gate rule
 When a pre-action gate triggers, pause and verify the checklist before proceeding. Speed is not a valid reason to skip a gate.
