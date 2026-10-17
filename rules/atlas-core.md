@@ -54,6 +54,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Token cost optimization | `knowledge/context/prompt-cache-strategy.md` |
 | Which source to trust | `knowledge/context/memory-hierarchy.md` |
 | Model failures | `knowledge/reference/model-resilience.md` |
+| Self-healing, recovery runtime, stuck-agent respawn | `knowledge/process/self-healing-protocol.md` |
 | Team communication | `knowledge/reference/collaboration.md` |
 | Routing and delegation | `knowledge/context/lead-routing.md` |
 | ACI rules, error protocol, output standards | `knowledge/process/aci-enforcement.md` |

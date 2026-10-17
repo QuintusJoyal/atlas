@@ -142,6 +142,10 @@ Record each downgrade in the run `budget.md` and append to `usage-insights.md`:
 
 If a premium gate role (atlas-security, atlas-reviewer, atlas-architect) ran downgraded, flag it in the handoff and final summary so the user can re-run that gate at full tier if they want. The flag is informational and does not block delivery.
 
+## Programmatic enforcement
+
+This reference is the policy. The runtime that enforces it lives in `knowledge/process/self-healing-protocol.md` and `scripts/self-healing.py`: retry with exponential backoff, the 75% context compaction trigger, the premium to standard to fast cascade with a cooldown, stuck-agent kill-and-respawn from the last checkpoint, and graceful degradation that preserves partial results so atlas-lead re-delegates only the remaining scope.
+
 ## Frontier behavior patterns
 
 These patterns keep agents efficient when running on models with limited context windows or tool budgets.

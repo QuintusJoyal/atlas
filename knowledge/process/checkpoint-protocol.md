@@ -18,6 +18,7 @@ ACP enables multi-day work by saving and restoring agent state. Every checkpoint
 - 3 levels of fork: replay (re-run), branch (try alternative), resume (continue from checkpoint)
 - Cross-surface: checkpoints work across IDEs, terminals, and web UIs
 - Stored in `ATLAS_DATA_DIR/checkpoints/`
+- Programmatic writer, retry, stuck detection, and graceful degradation: `knowledge/process/self-healing-protocol.md`
 
 ## Checkpoint structure
 
