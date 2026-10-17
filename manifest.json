@@ -339,6 +339,33 @@
       "roster is 5 roles only (lead, dev, qa, architect, security) — a task needing any other role should be told to switch to full mode, not delegated to a nonexistent lite agent"
     ]
   },
+  "eval": {
+    "description": "Offline golden-task regression harness for bundle changes (agents, rules, skills, workflows). Run before release; see CONTRIBUTING.md 'Before you open a change'.",
+    "runner": "scripts/eval",
+    "tasks": "knowledge/benchmark/golden-tasks.json",
+    "baseline": "knowledge/benchmark/regression-baseline.json",
+    "onlineSignals": "knowledge/benchmark/online-signals.json",
+    "signals": ["accuracy", "scopeAdherence", "handoffCompliance"],
+    "suites": {
+      "full": "all golden tasks, >=3 per ROLES.md category, deterministic bundle checks plus LLM-as-judge when configured",
+      "lite": "smoke subset (one task per role category), deterministic bundle checks only, no judge"
+    },
+    "commands": {
+      "run": "python3 scripts/eval run",
+      "lite": "python3 scripts/eval run --lite",
+      "updateBaseline": "python3 scripts/eval run --write-baseline",
+      "collect": "python3 scripts/eval collect --update-baseline"
+    },
+    "agent": {
+      "env": "ATLAS_EVAL_AGENT_CMD",
+      "contract": "stdin task JSON, stdout response text"
+    },
+    "judge": {
+      "env": "ATLAS_EVAL_JUDGE_CMD",
+      "temperature": 0,
+      "contract": "stdin {task, response, threshold} JSON, stdout {accuracy, scope_adherence, handoff_compliance, notes} JSON"
+    }
+  },
   "integrity": {
     "algorithm": "sha256",
     "files": {
