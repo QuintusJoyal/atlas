@@ -160,6 +160,22 @@ def main():
         for line in result.stdout.strip().splitlines():
             print(f"   {line}")
 
+    print("\n5. Checking bundle files for leaked secrets...")
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "scan-secrets.py"), "--skip-runs"],
+        capture_output=True,
+        text=True,
+    )
+    for line in result.stdout.strip().splitlines():
+        # Keep the scanner's findings and summary, drop its banner/step header.
+        if not line.strip() or line.startswith(("Atlas Secret Scanner", "=")):
+            continue
+        if line.startswith("1. Scanning bundle files"):
+            continue
+        print(f"   {line}")
+    if result.returncode != 0:
+        issues += 1
+
     print("\n" + "=" * 50)
     if issues == 0:
         print("RESULT: CLEAN - No issues found")

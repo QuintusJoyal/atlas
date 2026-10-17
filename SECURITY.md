@@ -27,7 +27,7 @@ We aim to acknowledge reports within 5 business days and will coordinate disclos
 
 ## Secrets and environment variables
 
-This bundle does **not** ship credentials. Operators supply secrets locally via their IDE's environment configuration.
+This bundle does **not** ship credentials. Operators supply secrets locally via their IDE's environment configuration. `scripts/scan-secrets.py` scans the bundle and `$ATLAS_DATA_DIR/runs/` for provider keys and high-entropy strings, redacts every finding, and fails CI via `validate-refs.py`.
 
 ## Operator hygiene
 

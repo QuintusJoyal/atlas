@@ -13,10 +13,21 @@ Atlas is meant to be copied, extended, and shared. Keep it self-contained and le
 
 This repo is public. Before you open a pull request:
 
-- **No secrets.** Do not commit API keys, tokens, `.env` files, or credentials of any kind.
+- **No secrets.** Do not commit API keys, tokens, `.env` files, or credentials of any kind. Run `python3 scripts/scan-secrets.py` before pushing; it fails the build on provider keys (AWS, GCP, GitHub, OpenAI, Anthropic, Slack), private key blocks, credential assignments, and high-entropy strings, and prints findings redacted.
 - **No PII in `knowledge/`.** The knowledge base ships with the bundle. Keep `lessons.md`, `proposed.md`, `ways-of-working.md`, and `usage-insights.md` free of personal data, internal URLs, or customer-specific details. Use generic examples.
 
 If you find sensitive data in a fork or local install, remove it before pushing. Report accidental exposure through GitHub Security Advisories if needed.
+
+### Pre-commit secret scan
+
+`scripts/scan-secrets.py` scans the tracked bundle (agents, rules, skills, workflows, knowledge, examples, scripts, CI configs) and any run artifacts under `$ATLAS_DATA_DIR/runs/`. Before committing, scan just what you staged:
+
+```bash
+git add -A
+python3 scripts/scan-secrets.py --staged
+```
+
+The exit code is non-zero on any finding, so it drops straight into a `pre-commit` hook or a manual pre-push check. Findings are never echoed; each is reported as `file:line [rule] redacted sha256:<fingerprint>`. Documented placeholder values are allowlisted in `.secrets.baseline`, keyed by file plus SHA-256 of the matched value; only add genuinely fake values there, never a live credential.
 
 ## Adding or editing a role
 
@@ -57,7 +68,7 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 
 - Review all changed files for Cursor-specific references (model slugs, `Task` tool, `~/.cursor/`, `.mdc` extensions).
 - Update `CHANGELOG.md` and bump `VERSION` when behavior changes.
-- Do not commit secrets. Keep the knowledge base free of credentials and PII.
+- Do not commit secrets. Keep the knowledge base free of credentials and PII, and run `python3 scripts/scan-secrets.py --staged` to confirm.
 - Run `python3 scripts/validate-refs.py` and, if you touched a file with a `## Lite mode` block, `python3 scripts/build-lite.py --check`. Both should exit clean.
 - If you changed any file under `agents/`, `rules/`, `skills/`, or `knowledge/`, run `python3 scripts/verify-integrity.py --update` to re-pin the SHA-256 hashes in `manifest.json`. `validate-refs.py` fails otherwise.
 - If you touched a file under `workflows/` or `manifest.json`'s `workflowMeta`, run `python3 scripts/validate-workflows.py`. It must exit clean.
