@@ -27,6 +27,7 @@ Canonical Framework docs (`core-values-charter.md`, `enterprise-org-model.md`, `
 - `proposed.md`: a queue of new lessons drafted by roles. The user approves in batches; approved items move to `lessons.md`. **The repo copy includes example entries** that show the format. They are not private data; replace or clear them after install if you prefer a clean queue.
 - `ways-of-working.md`: approved process and idea changes, plus a proposed section.
 - `usage-insights.md`: atlas-ai-eng logs usage patterns and efficiency recommendations here.
+- `memory-layer.md`: persistent long-term memory under `$ATLAS_DATA_DIR/memory/` — episodic/semantic/procedural schema, scopes, retention, write governance, and the lite-mode append-only fallback.
 - `branding-values.md`: Atlas name, tagline, core values, visual identity, and voice.
 
 ## How it works

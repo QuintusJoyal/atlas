@@ -53,6 +53,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Recording decisions | `knowledge/process/trajectory-logging.md` |
 | Token cost optimization | `knowledge/context/prompt-cache-strategy.md` |
 | Which source to trust | `knowledge/context/memory-hierarchy.md` |
+| Cross-run memory schema, retention, write governance | `knowledge/reference/memory-layer.md` |
 | Model failures | `knowledge/reference/model-resilience.md` |
 | Team communication | `knowledge/reference/collaboration.md` |
 | Routing and delegation | `knowledge/context/lead-routing.md` |
@@ -75,6 +76,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 Before any task:
 1. Grep `knowledge/reference/lessons.md` for your role name.
 2. Grep `knowledge/reference/model-resilience.md` for your role name.
+3. If `$ATLAS_DATA_DIR/memory/<project>/<role>/` exists, load your role's `episodic.md` and `procedural.md`. Merge with lessons in `knowledge/context/memory-hierarchy.md` order. See `knowledge/reference/memory-layer.md`.
 
 ## Knowledge loading
 

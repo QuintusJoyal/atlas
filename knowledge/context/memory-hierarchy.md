@@ -13,9 +13,13 @@ tags: [memory, hierarchy, lessons, knowledge, priority]
 Atlas has three tiers of memory. When sources conflict, higher tiers win.
 
 ## Quick Reference
-- **L1 Personal:** `lessons.md` per-role entries. Highest priority. This agent, this project.
+- **L1 Personal:** `lessons.md` per-role entries plus the role's persistent memory records. Highest priority. This agent, this project.
 - **L2 Project:** project-specific knowledge. Medium priority. All roles, this project.
 - **L3 Shared:** universal patterns. Lowest priority. Any project.
+
+## Persistent store
+
+Cross-run memory (episodic run outcomes, semantic facts, procedural patterns) lives under `$ATLAS_DATA_DIR/memory/<project>/<role>/`. At bootstrap it merges into L1: load your role's memory records alongside your `lessons.md` entries, then resolve conflicts within L1 by recency (newer record wins; mark the older `superseded`). Schema, write governance, retention, and isolation are defined in `knowledge/reference/memory-layer.md`.
 
 ## Tiers
 
