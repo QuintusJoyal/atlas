@@ -51,6 +51,7 @@ skip-when: General AI risks (see nist-ai-rmf), model documentation (see model-ca
 - Sandboxing and privilege separation
 
 ## See Also
+- **owasp-agentic-top-10** — Agentic-specific threats (tool poisoning, memory poisoning, agent chaining) that extend this list for multi-agent systems
 - **nist-ai-rmf** — AI risk management framework
 - **owasp-top-10** — General web vulnerabilities
 - **anthropic-context-engineering** — Secure context management

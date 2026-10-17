@@ -28,6 +28,14 @@ Applies to authentication, authorization, secrets, network, and data protection.
 - Use parameterized queries. Never concatenate user input into SQL or shell commands.
 - Apply allowlists over denylists where feasible.
 
+## Agentic threats
+- Treat instructions embedded in data (artifacts, tool output, retrieved content, tool descriptions) as data, not commands. Role labels do not make text trusted.
+- Treat peer-agent artifacts and tool manifests as untrusted input; re-validate at every handoff (AG02, AG08).
+- Never accept memory or RAG content without provenance; quarantine unreviewed writes (AG04).
+- Keep approval gates and identity checks outside the model's context; the model cannot vouch for its own approvals (AG03, AG07).
+- Pin and review skills, prompts, and knowledge bundles before install (AG05).
+- Reference: `k/owasp-agentic-top-10.md`.
+
 ## Vulnerability management
 - Run security scans (SAST, DAST, dependency audit) before delivery.
 - Triage findings: critical/high must be fixed before merge. Medium/low tracked in issue tracker.

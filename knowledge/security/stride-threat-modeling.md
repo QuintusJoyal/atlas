@@ -55,8 +55,20 @@ skip-when: Quick vulnerability list (see owasp-top-10), detailed controls (see o
 - After major architecture changes
 - During security reviews and audits
 
+### Agentic Threat Patterns
+For multi-agent or LLM-driven systems, layer these onto STRIDE (see `knowledge/security/owasp-agentic-top-10.md`):
+| STRIDE | Agentic Pattern |
+|--------|-----------------|
+| Spoofing | Identity Spoofing (AG03) — role claims in free text, forged agent/user identity |
+| Tampering | Tool Poisoning (AG02), Memory Poisoning (AG04), Goal Manipulation (AG01) |
+| Repudiation | Escalation bypass (AG07) — model-forged approvals without out-of-band audit |
+| Information Disclosure | Action Confidentiality Breach (AG10) — secrets in tool args, traces, artifacts |
+| Denial of Service | Unintended Execution (AG06) — untrusted input triggers runaway tool calls |
+| Elevation of Privilege | Dynamic Agent Chaining (AG08), Agentic Supply Chain (AG05) |
+
 ## See Also
 - **owasp-top-10** — Quick vulnerability list mapped to STRIDE categories
+- **owasp-agentic-top-10** — Threats specific to multi-agent and autonomous AI systems
 - **owasp-asvs** — Detailed security controls for mitigations
 - **nist-800-53-controls** — Security control families
 - **architecture-decision-records** — Documenting security design decisions
