@@ -116,6 +116,7 @@ Each file is standalone and shareable. Agents search via playbook Knowledge Inde
 | owasp-llm-top-10.md | LLM vulnerabilities | ai-eng |
 | anthropic-context-engineering.md | Context windows, progressive disclosure | ai-eng |
 | model-cards.md | Model documentation | ai-eng, data-sci |
+| hybrid-reasoning.md | LLM + symbolic decision chains, traces | reasoner, ai-eng |
 
 ### UX
 | File | Topic | Used By |

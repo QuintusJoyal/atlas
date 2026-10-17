@@ -28,7 +28,8 @@
     "atlas-ent-arch.md",
     "atlas-delivery.md",
     "atlas-consultant.md",
-    "atlas-compliance.md"
+    "atlas-compliance.md",
+    "atlas-reasoner.md"
   ],
   "skills": [
     "atlas-lead-playbook",
@@ -71,7 +72,8 @@
     "architectural-governance.md",
     "compliance.md",
     "delivery-governance.md",
-    "client-engagement.md"
+    "client-engagement.md",
+    "hybrid-reasoning.md"
   ],
   "knowledge": [
     "reference/lessons.md",
@@ -140,6 +142,7 @@
     "ai/owasp-llm-top-10.md",
     "ai/anthropic-context-engineering.md",
     "ai/model-cards.md",
+    "ai/hybrid-reasoning.md",
     "ux/wcag-2-1-checklist.md",
     "ux/nielsen-heuristics.md",
     "ux/material-design-principles.md",
@@ -364,6 +367,7 @@
       "agents/atlas-delivery.md": "b6ea5d9bdd22837a84c40099f6d983679a2d2a2f256c5789ddc2b413168b1706",
       "agents/atlas-consultant.md": "2143bcad89c0b22c141abe04c48eccd8a59dfb132c37058aecd8c718a2410542",
       "agents/atlas-compliance.md": "7c80b8107b28e13e0d5bea43d64b18ef99dd3b8c32f304cf12040b2b95cdf79a",
+      "agents/atlas-reasoner.md": "0f754a0986506beb7e3743f0687f7c8b97d633a45d27c3eaa3628cdb52f24ea2",
       "rules/atlas-core.md": "6609dd6074fb5d3a05e0333db582cd18daebe2ad1906b5c93f60af0cecdc9f2c",
       "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
       "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
@@ -379,6 +383,7 @@
       "rules/compliance.md": "954c125285c487f5d6749f83ca945fa1ebcb56db6a97f8799ced27d8eacdd4d9",
       "rules/delivery-governance.md": "7dfff88f16be33492b9de0e3b3dcb7aafc6afc422f735fb08f2638b1ae3579c1",
       "rules/client-engagement.md": "f89d8d7021f579aded920ed3005340a1553b24a4b759ecd94bff8a5bfcfd876d",
+      "rules/hybrid-reasoning.md": "e365bc161ead651a9d97e7846f414ccd8268437770850bdfe3547ab002f67b75",
       "skills/atlas-lead-playbook/SKILL.md": "002eaf5bd507a0ed30e053fb088f39a6a9d1f9c568d92c5a21886e8b4182ff76",
       "skills/atlas-pm-playbook/SKILL.md": "3b656da4200ec0b44af4e5f03c3146b792edffd236e16d9a0e12474da2d9f448",
       "skills/atlas-ba-playbook/SKILL.md": "baa1c7d35b772d3b9e1eba2d87eddc7c9a2021bca6be411334f25a2cf167609f",
@@ -415,7 +420,7 @@
       "knowledge/reference/budget-template.md": "a48a5c1d228cf76b3583f7612c26e54469281b66c5fde5353c5d5ab9f75dbd69",
       "knowledge/reference/retro-template.md": "53afba00950e9e4b4dd4940dc62fd3cf0670e22dda2dcc200e45943e36eac8ed",
       "knowledge/reference/branding-values.md": "574a7618d66cadb14af943c7b7c1e1501958628dbd313b457f959aa109156aa9",
-      "knowledge/reference/README.md": "b9a9a79137529a7a298db01b36fbedcf75194230f97b7f12ee1bb273408060ce",
+      "knowledge/reference/README.md": "2a93bcd3e71209da366c87556f08c948a11e961d600c6777f3154b2e82d74184",
       "knowledge/reference/definition-of-done.md": "ab9cc2790d3c56c8329fb985ab39fa7d40d850c464d776218a8dc0ed0a32a449",
       "knowledge/reference/review-checklists.md": "af4027fbd6ef4687ec9646ca8ae3f88526689aca662e17dfe323ae2ed8411c43",
       "knowledge/reference/quality-gates.md": "57f7a822eb5973881ba6c9e770a8999b3fbde35057c7fadbb647b96b171bc250",
@@ -469,6 +474,7 @@
       "knowledge/ai/owasp-llm-top-10.md": "1787b657b6d1fbe600cd275ba680384a2ca63403a3f08b3659762d4fa00c4b16",
       "knowledge/ai/anthropic-context-engineering.md": "55e5ce8dc0e1cc6d8c0e701ae4abf549edf58785f93bd393977d1d2bd2cd1120",
       "knowledge/ai/model-cards.md": "49dbcc829f43184a8704dd9f285ec1bdf8ec5b847aa09d87dcf052491d1821a9",
+      "knowledge/ai/hybrid-reasoning.md": "9c10234ec969080801234b0824c2f1680d5d0431178da9cd125c664c613e611c",
       "knowledge/ux/wcag-2-1-checklist.md": "c5ccbadc88eb97678554511b0a854ae881b8308f786ecd4e833867776629664c",
       "knowledge/ux/nielsen-heuristics.md": "e5cdd628d194ae367d07dd3d142a246f9ef8b06ca96f79d9e4a8dc0808a2638d",
       "knowledge/ux/material-design-principles.md": "5fd311e2f87d0d278bf002c66a5c29e8aced6f34b8950f5b455f3e661d9ff8f4",

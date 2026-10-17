@@ -44,6 +44,7 @@ Invoke any role directly with `atlas-<role>` for a consultative session, or let 
 | atlas-delivery | Planning, RAID and risk, stakeholder management | **Keeps** projects on track | `atlas-delivery build a delivery plan for Q3` |
 | atlas-consultant | Discovery, proposals and SOWs, client communication | **Frames** problems | `atlas-consultant run discovery for the new engagement` |
 | atlas-compliance | GDPR, SOC 2, ISO 27001, data governance, privacy | **Ensures** compliance | `atlas-compliance assess the data retention policy` |
+| atlas-reasoner | Hybrid LLM + symbolic decisions: policy checks, knowledge-graph grounding, explainability traces | **Grounds** decisions | `atlas-reasoner vet the refund policy exception with a trace` |
 
 ---
 
@@ -74,6 +75,7 @@ Invoke any role directly with `atlas-<role>` for a consultative session, or let 
 | Project planning | atlas-delivery | atlas-pm |
 | Client engagement | atlas-consultant | atlas-delivery |
 | Regulatory compliance | atlas-compliance | atlas-security |
+| Hybrid reasoning & policy decisions | atlas-reasoner | atlas-architect |
 
 **Secondary means consulted, not an alternate deliverable owner.** The secondary role reviews, advises, or fills a gap when the primary is unavailable — it does not independently produce the primary's deliverable. Each role's own I DO NOT list (in its `agents/atlas-<role>.md`) is the authority on what it will actually do; where this table's Secondary column and a role's I DO NOT list seem to disagree, the I DO NOT list wins; route the deliverable to the primary and use the secondary only for review/input.
 
