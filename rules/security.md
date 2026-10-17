@@ -23,6 +23,10 @@ Applies to authentication, authorization, secrets, network, and data protection.
 - Separate duties: no single role should hold both creation and approval authority.
 - Audit access changes. Log who granted what, when, and why.
 
+## Runtime enforcement
+- Tool permissions, prompt injection scans, scoped credentials, and the audit trail are enforced as runtime code by `scripts/guardrails.py` against `guardrails/policy.yaml`. Refer to `k/deterministic-guardrails.md`.
+- Route every tool call through the guardrail `check` before execution and let the deny decision stand; never override a policy denial from inside the agent.
+
 ## Input validation
 - Validate and sanitize all external input at the boundary. Never trust client-side validation alone.
 - Use parameterized queries. Never concatenate user input into SQL or shell commands.

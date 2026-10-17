@@ -1,0 +1,89 @@
+# Atlas deterministic guardrails policy.
+#
+# Declarative rules consumed by scripts/guardrails.py (JSON with the same
+# shape is accepted too). Every field is data, not LLM judgment: the engine
+# evaluates it as runtime code.
+#
+# Decisions: allow | deny | readonly (bash read-only commands only).
+# Unknown roles, phases, or tools fall back to defaultDecision.
+
+version: 1
+defaultDecision: deny
+
+# Tools that operate on a filesystem path argument (pathPolicy applies).
+tools:
+  read: {path: true}
+  grep: {path: false}
+  glob: {path: true}
+  write: {path: true}
+  edit: {path: true}
+  bash: {path: false}
+  task: {path: false}
+  webfetch: {path: false}
+  websearch: {path: false}
+
+# Phase x tool matrix (mirrors knowledge/process/role-tool-scoping.md).
+phases:
+  discovery: {read: allow, grep: allow, glob: allow, write: deny, edit: deny, bash: readonly, task: allow, webfetch: allow, websearch: allow}
+  design: {read: allow, grep: allow, glob: allow, write: deny, edit: deny, bash: readonly, task: allow, webfetch: allow, websearch: deny}
+  implementation: {read: allow, grep: allow, glob: allow, write: allow, edit: allow, bash: allow, task: allow, webfetch: deny, websearch: deny}
+  testing: {read: allow, grep: allow, glob: allow, write: deny, edit: deny, bash: allow, task: allow, webfetch: deny, websearch: deny}
+  review: {read: allow, grep: allow, glob: allow, write: deny, edit: deny, bash: readonly, task: allow, webfetch: deny, websearch: deny}
+  documentation: {read: allow, grep: allow, glob: allow, write: allow, edit: deny, bash: deny, task: deny, webfetch: deny, websearch: deny}
+
+# Permanent role overrides (role-tool-scoping.md "Role-specific scope overrides").
+# deny always wins; allow overrides a phase denial; only is a strict allowlist.
+roles:
+  atlas-lead:
+    deny: [edit, write, bash]
+  atlas-devops:
+    allow: [bash]
+  atlas-docs:
+    allow: [write]
+  atlas-compliance:
+    only: [read, grep]
+
+# Filesystem scopes for path-bearing tools. deny is evaluated first.
+pathPolicy:
+  allow:
+    - '.'
+  deny:
+    - '.git/**'
+    - '**/.git/**'
+    - '.env'
+    - '**/.env'
+    - '.env.*'
+    - '**/.env.*'
+    - '*.pem'
+    - '**/*.pem'
+    - '*.key'
+    - '**/*.key'
+    - '**/id_rsa'
+    - '**/id_rsa*'
+    - '**/secrets/**'
+    - '**/credentials*'
+
+# Commands permitted when a phase grants bash=readonly.
+shellReadonly:
+  - '^(ls|cat|head|tail|wc|grep|rg|find|pwd|echo|which|file|stat|git (status|log|diff|show|branch|remote)|npm (ls|view)|node --version|python3? --version)\b'
+
+# MCP credential scoping and the "MCP write actions need approval" rule.
+mcp:
+  prefixes: ['mcp__', 'mcp:', 'mcp-']
+  writeIndicators: [write, create, update, delete, remove, send, post, put, patch, execute, run, publish, deploy, mutate]
+  writeRequiresApproval: true
+
+# Prompt injection scanner: named regex patterns plus a Shannon-entropy check
+# for encoded payload blobs.
+injection:
+  minEntropy: 4.5
+  minTokenLength: 20
+  patterns:
+    ignore-instructions: '(?i)ignore\s+(all\s+)?(previous|prior|above|earlier|preceding)\s+(instructions|prompts|rules|context)'
+    system-prompt-exfiltration: '(?i)(reveal|show|print|repeat|leak|disclose|output)\s+(your\s+|the\s+)?(system\s+prompt|initial\s+instructions|hidden\s+rules|developer\s+message)'
+    role-override: '(?i)(you\s+are\s+now|from\s+now\s+on,?\s+you|pretend\s+to\s+be|act\s+as\s+if\s+you)'
+    policy-bypass: '(?i)(bypass|disable|ignore|skip)\s+(the\s+)?(security|safety|guardrail|permission|policy|filter)s?'
+    secrecy: '(?i)do\s+not\s+(tell|inform|alert|notify)\s+(the\s+)?(user|human|operator)'
+    exfiltration: '(?i)(send|post|upload|exfiltrate|transmit)\s+(this|the|all|these)\s+.*\b(to|at)\b\s+(https?://|[\w.-]+@)'
+    shell-injection: '(?i)(;\s*(curl|wget|nc|bash|sh|python)\b|\|\s*(bash|sh)\b|`[^`]+`)'
+    encoded-payload: '(?i)\b(base64|atob|fromCharCode|eval|exec)\s*[\(\`]'
