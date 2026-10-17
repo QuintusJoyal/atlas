@@ -181,6 +181,7 @@
     "process/self-assessment-protocol.md",
     "process/runtime-execution.md",
     "process/dashboard-spec.md",
+    "process/agent-interface-contract.md",
     "process/skill-registry.md",
     "benchmark/frontier-benchmark.md",
     "benchmark/performance-benchmarks.md",
@@ -300,6 +301,11 @@
     "maxDepth": "varies-by-ide",
     "description": "Roles communicate through structured handoff artifacts, not shared chat. The orchestrator spawns specialists with self-contained briefs and collects their output artifacts."
   },
+  "interfaceContract": {
+    "doc": "knowledge/process/agent-interface-contract.md",
+    "validator": "scripts/lint-interfaces.py",
+    "description": "Agent-first interface standards for tools and skills (schema completeness, description quality, naming, versioning). Validate with: python3 scripts/lint-interfaces.py (runs as step 5 of scripts/validate-refs.py)."
+  },
   "dataHome": {
     "envVar": "ATLAS_DATA_DIR",
     "default": "~/.atlas/data",
@@ -369,7 +375,7 @@
       "rules/atlas-core.md": "6609dd6074fb5d3a05e0333db582cd18daebe2ad1906b5c93f60af0cecdc9f2c",
       "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
       "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
-      "rules/engineering-standards.md": "0f5bb325119c5146de3126101c6048920bc397b8b810f4356e88bfe7ee5ab886",
+      "rules/engineering-standards.md": "831b65e7e8db0fac7df5141db97d83ce0ceb70deed2f7d31ed2277cfd0f8e81d",
       "rules/handoff-protocol.md": "cfc031e6784092e829a030cffdbafb18eba6bac8f8e07cda068c4d5c1aa5fb48",
       "rules/writing-style.md": "531ed82c3e4ac1a3b9813d4bee6f799e01c22853db912f5133c4fdcafcc03543",
       "rules/security.md": "92479c247958ec5962d8565e99f6d61096919dc7234a3abfdecb921ccc540a0b",
@@ -512,6 +518,7 @@
       "knowledge/process/self-assessment-protocol.md": "632a89e50786cbbffd97837b404ae8e37535f71e273f58a897e709a77d502aa1",
       "knowledge/process/runtime-execution.md": "d2b2cc8cda8ed2f66529395f111899826018f8337a1d41ab5422900f79f1b1e2",
       "knowledge/process/dashboard-spec.md": "d9c1459646d2731ec7feb89c5fa7128920b51005b11d3a168c337d725af76001",
+      "knowledge/process/agent-interface-contract.md": "5d76253384b1a3865f9e6889d9a70e44ab2f92e979afd87a1c3bbd7cf3e197d6",
       "knowledge/process/skill-registry.md": "60517fd07b92848c331493befeae712ac4449015fa1a3b53567f984f6d360fe2",
       "knowledge/benchmark/frontier-benchmark.md": "57ae6d7895f4b350f2a1c05893d6f0a7add44d631b811c0db7ad6001ff40b22a",
       "knowledge/benchmark/performance-benchmarks.md": "4374d511d529a7beff24d104574e4a30a22359fca4d4c473e9aae3c5e57bf794",
