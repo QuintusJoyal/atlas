@@ -42,6 +42,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Need | Knowledge file |
 |------|---------------|
 | Context management | `knowledge/context/context-engineering.md` |
+| Context assembly: slots, budgets, dedup, telemetry | `knowledge/context/assembly-pipeline.md` |
 | Reasoning patterns | `knowledge/context/structured-reasoning.md` |
 | When to ask user | `knowledge/context/clarification-strategy.md` |
 | Document structure | `knowledge/context/document-sharding.md` |

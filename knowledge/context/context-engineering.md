@@ -49,6 +49,10 @@ LLM attention is U-shaped: content at the beginning and end of context is recall
 
 See `knowledge/context/prompt-cache-strategy.md` for how this interacts with cache breakpoints.
 
+## Assembly pipeline
+
+Ordering decides where context sits; the assembly pipeline decides what enters the window at all. For slot definitions (system, memory, steps, rag, tools, task), per-slot budgets and compression, deduplication, and cost telemetry, see `knowledge/context/assembly-pipeline.md`.
+
 ## Anti-patterns
 - Loading a full knowledge file when a grep would suffice
 - Carrying raw tool output into the next reasoning step
