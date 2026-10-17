@@ -148,14 +148,59 @@ These patterns keep agents efficient when running on models with limited context
 
 ### Context compaction
 
-When context usage exceeds ~80% of the model window:
+When context usage reaches your role's compaction threshold (table below):
 
-1. Summarize completed work into a compact state block: current phase, owned artifacts, delegation status, open questions.
+1. Fold completed work into the rolling phase summary (see Progressive summarization): current phase, owned artifacts, delegation status, decisions, gate verdicts, handoffs, open questions.
 2. Discard verbose tool outputs (full file contents, detailed logs) and retain only paths, line references, and key findings.
-3. Continue the current task without restart. The state block replaces raw history.
-4. If compaction is not enough (still over budget), delegate the remaining work to a fresh session with the compact state as the brief.
+3. Append one entry to the compaction audit recording what was kept and what was dropped.
+4. Continue the current task without restart. The summary replaces raw history.
+5. If compaction is not enough (still over budget), delegate the remaining work to a fresh session with the compact state as the brief.
 
-**Never lose:** current task goal, owned artifact paths, delegation state in `team.json`, user decisions, and open blockers.
+**Never lose:** current task goal, owned artifact paths, delegation state in `team.json`, user decisions, gate verdicts, and open blockers.
+
+### Role-specific compaction thresholds
+
+Compact at your role's threshold, not at the global ceiling. Token counts are self-reported estimates until IDE token telemetry is available — err early and compact at the threshold, never after quota.
+
+| Role | Threshold | Why |
+| --- | --- | --- |
+| atlas-lead | 70% of window | Longest run; lost routing and delegation state is the costliest |
+| Gate roles (atlas-architect, atlas-security, atlas-reviewer) | 75% of window | Verdicts and conditions must survive to the final gate |
+| All other roles | 80% of window | Default ceiling; shorter runs |
+
+### Progressive summarization
+
+Maintain one rolling summary per completed phase in `$ATLAS_DATA_DIR/runs/<run-id>/state.md`. Write a phase's summary block when the phase completes, before starting the next one. Compaction folds raw turns and tool output into the **current** block only; never re-summarize an older block (summary-of-summary drift loses decisions and verdicts).
+
+```markdown
+### Phase summary: [phase] ([date])
+- **Decisions:** [user/lead decisions made]
+- **Gate verdicts:** [gate] -> [PASS|FAIL|BLOCKED] ([conditions])
+- **Handoffs:** [from role] -> [to role]: [artifact path]
+- **Artifacts:** [paths promoted this phase]
+- **Dropped:** [raw transcript/tool output removed at compaction]
+- **Next:** [next action]
+```
+
+Fidelity rule: the summary preserves decisions, gate verdicts, and handoffs verbatim (IDs, paths, PASS/FAIL). Everything else compresses to one line.
+
+### Delta re-injection
+
+The rolling summary is an index, not the source of truth. When a topic re-enters motion (a gate reopens, a file is edited again, a decision is revisited), reload its exact detail from the disk artifact for that topic — run file, checkpoint, or source file — at that moment. Rules: one topic at a time, scoped to the current step, and compress it back to a summary line when it leaves motion. Never keep every topic's detail resident "just in case", and never re-derive detail the summary only paraphrases.
+
+### Compaction audit
+
+Append-only log at `$ATLAS_DATA_DIR/runs/<run-id>/compaction-audit.md`. One line per compaction, written in the same turn:
+
+```
+- compaction: <role>, run <run-id>, <when>, trigger <70%|75%|80%|phase-switch|subtask-done>, kept <state.md phase summaries, active task, delegation state>, dropped <raw tool output/transcript: what>, re-inject <topic|none>, recovery <ok|restored|missing: <paths>>
+```
+
+The audit answers two questions after the fact: what left context, and where the full detail still lives on disk.
+
+### Verifiable recovery
+
+Compaction drops transcript and tool-output text held **in context** only. Promoted run artifacts (gates, handoffs, budgets, state, decisions) live on disk under `$ATLAS_DATA_DIR/runs/<run-id>/` and are never deleted by compaction. After each compaction, verify recovery before continuing: confirm every artifact path listed in the state block exists, restore any missing one from its checkpoint, and record the result in the audit entry's `recovery:` field.
 
 ### Compaction state block template (~100 tokens)
 
@@ -190,7 +235,7 @@ When compaction is insufficient and a fresh session is needed, send this as the 
 | Compact when | Don't compact when |
 |---|---|
 | A sub-task is resolved (test written, design approved, etc.) | Mid-derivation (reasoning chain in progress) |
-| Context exceeds ~80% of the model window | Active exploration (grep/glob in flight) |
+| Context reaches your role's threshold (70/75/80%) | Active exploration (grep/glob in flight) |
 | Switching phases (design → implementation) | Waiting for user input (hold state as-is) |
 | Returning from a long subagent run | Early in a turn (under 50% context) |
 | Starting a new delegation cycle | During a pre-action gate checklist |
@@ -215,7 +260,7 @@ Persist workflow state to `$ATLAS_DATA_DIR/runs/<run-id>/state.md` after each ph
 - **Context budget:** [~X% remaining]
 ```
 
-This state file enables resume-from-failure without re-exploring context. Read it at the start of each session to restore orientation.
+This state file enables resume-from-failure without re-exploring context. Read it at the start of each session to restore orientation. Completed phases append their `### Phase summary` block (Progressive summarization) below this header; compaction edits only the live header and the newest block. What compaction dropped is recorded separately in `compaction-audit.md`, never in the state file.
 
 ### Tool clearing
 

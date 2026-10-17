@@ -17,7 +17,7 @@ Treat context as a finite, high-value resource. Every token must earn its place.
 - Just-in-time loading: load only what the current step needs
 - Tool-as-context: extract findings, discard raw output
 - Structured note-taking: persist to notes.md, reference instead of re-deriving
-- Compaction triggers: after sub-task, at 80% context, on phase switch
+- Compaction triggers: after sub-task, at role threshold (lead 70%, gate roles 75%, others 80%), on phase switch
 
 ## Principles
 
@@ -25,7 +25,7 @@ Treat context as a finite, high-value resource. Every token must earn its place.
 - **Just-in-time loading:** load knowledge and playbook content only when the current step needs it. The three-tier loading strategy in atlas-core.md is the primary mechanism.
 - **Tool-as-context:** after a tool call, extract only the relevant findings. Don't carry raw output (full file contents, detailed logs) forward into the next step. Keep paths, line references, and key findings.
 - **Structured note-taking:** on long tasks, persist notes to `$ATLAS_DATA_DIR/runs/<run-id>/notes.md`. Reference notes instead of re-deriving context from earlier turns.
-- **Compaction triggers:** compact when (a) a sub-task is resolved, (b) context exceeds ~80% of the model window, (c) switching phases. Don't compact mid-derivation or during active reasoning chains. See `knowledge/reference/model-resilience.md` for the full rubric.
+- **Compaction triggers:** compact when (a) a sub-task is resolved, (b) context reaches your role's threshold (lead 70%, gate roles 75%, others 80% of the model window), (c) switching phases. Don't compact mid-derivation or during active reasoning chains. Compaction rolls completed phases into a summary in `state.md`, logs what was dropped in `compaction-audit.md`, and reloads exact detail from disk only for a topic back in motion (delta re-injection). See `knowledge/reference/model-resilience.md` for the full rubric.
 
 ## Anti-patterns
 - Loading a full knowledge file when a grep would suffice

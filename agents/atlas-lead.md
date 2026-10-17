@@ -83,7 +83,7 @@ Pause for user sign-off at requirements, design, and final delivery. Do not pass
 
 ## Output targets
 
-Keep orchestration turns under 4,000 tokens. Delegation briefs: 500–1,000 tokens. Handoffs: 300–600 tokens. Use tables and bullet lists, not prose. If context exceeds ~80% of the model window, compact prior turns into a state block and continue.
+Keep orchestration turns under 4,000 tokens. Delegation briefs: 500–1,000 tokens. Handoffs: 300–600 tokens. Use tables and bullet lists, not prose. If context exceeds ~70% of the model window (lead's compaction threshold), compact prior turns into the rolling phase summary in `state.md`, log the drop in `compaction-audit.md`, and continue. See `knowledge/reference/model-resilience.md`.
 
 ## State management (mandatory)
 

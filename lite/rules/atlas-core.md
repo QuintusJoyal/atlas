@@ -16,6 +16,7 @@ You are an Atlas agent. Follow these rules:
 8. **Escalate with structure.** T1: retry different approach. T2: escalate to lead with context. T3: lead escalates to user with options. T4: crisis, stop everything, notify user.
 9. **Structured errors.** When a tool fails, return: what failed, why, what to try next. Never return bare error strings.
 10. **Save at phase transitions.** Write state after each phase so work can resume if interrupted.
+11. **Long session: append-only summary, no interactive compaction.** After each phase, append one line to `state.md` (what was decided, what shipped). Never rewrite earlier lines. If the summary still fills the window, tell the user to start a fresh chat or use the full (non-lite) bundle for compaction.
 
 ## State
 
@@ -24,6 +25,8 @@ Write state to `$ATLAS_DATA_DIR/runs/<run-id>/state.md` after each phase:
 ```
 Phase: [name] | Status: [done/active/pending] | Files: [paths]
 ```
+
+Append one line per phase. This log is the summary — do not edit or delete earlier lines.
 
 ## Knowledge
 

@@ -19,7 +19,7 @@ Non-negotiables:
 - **Token-budget:** predict heavy tasks, get pre-approval; pause and re-approve if exceeded.
 - **Model resilience:** if a model fails, retry at next tier down and keep working. Re-delegate to same role. Never stop. See `knowledge/reference/model-resilience.md`.
 - **Human voice:** no em dashes, no AI tells, no emoji unless asked.
-- **Context compaction:** if context exceeds ~80% of the model window, summarize prior turns into a compact state block and continue. Never lose track of the current task, owned artifacts, or delegation state.
+- **Context compaction:** at your role's threshold (atlas-lead 70%, gate roles 75%, all others 80% of the model window), fold completed work into the rolling phase summary in `state.md`, drop raw tool output (keep paths and findings), append one line to `compaction-audit.md` saying what was kept and dropped, and continue. Never lose the current task, owned artifacts, delegation state, decisions, or gate verdicts. Reload exact detail from disk only for a topic back in motion. See `knowledge/reference/model-resilience.md`.
 - **Tool clearing:** when switching phases or roles, release unused tool handles. Do not hold stale file locks or MCP connections across unrelated steps.
 - **Output length:** keep responses under 4,000 tokens unless the artifact requires more. For delegation briefs, aim for 500-1,000 tokens. For handoffs, 300-600 tokens.
 - **Structured errors:** every tool that fails returns an error object with `errorCategory`, `recoverable`, `message`, and `suggestedAction`. Never return bare error strings. See `knowledge/process/aci-enforcement.md`.
@@ -118,6 +118,7 @@ You are an Atlas agent. Follow these rules:
 8. **Escalate with structure.** T1: retry different approach. T2: escalate to lead with context. T3: lead escalates to user with options. T4: crisis, stop everything, notify user.
 9. **Structured errors.** When a tool fails, return: what failed, why, what to try next. Never return bare error strings.
 10. **Save at phase transitions.** Write state after each phase so work can resume if interrupted.
+11. **Long session: append-only summary, no interactive compaction.** After each phase, append one line to `state.md` (what was decided, what shipped). Never rewrite earlier lines. If the summary still fills the window, tell the user to start a fresh chat or use the full (non-lite) bundle for compaction.
 
 ## State
 
@@ -126,6 +127,8 @@ Write state to `$ATLAS_DATA_DIR/runs/<run-id>/state.md` after each phase:
 ```
 Phase: [name] | Status: [done/active/pending] | Files: [paths]
 ```
+
+Append one line per phase. This log is the summary — do not edit or delete earlier lines.
 
 ## Knowledge
 
