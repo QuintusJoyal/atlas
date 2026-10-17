@@ -1,0 +1,5 @@
+{
+  "schema": "atlas-rulepack-registry/1",
+  "description": "Rule packs already ingested into this project. Index maintained by scripts/import-pack.py; a pack id@version listed here is refused on re-import so a pack is never ingested twice. Entries carry loadInLite: false — lite mode never loads imported packs (token budget), see knowledge/process/rule-packs.md.",
+  "packs": []
+}
