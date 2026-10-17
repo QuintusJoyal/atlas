@@ -15,8 +15,9 @@ This bundle has no OTel collector, span exporter, or metrics store. What follows
 
 ## Quick Reference
 - Trace = run-id, Span = individual decision/tool call
-- 8 multi-agent metrics unique to Atlas
-- 6 anomaly patterns with detection rules
+- 8 multi-agent metrics unique to Atlas (IAHQS, DAS, EJR, GYR, REI, CPS, PER, MTAS)
+- OpenTelemetry (OTLP) export support for these metrics and spans
+- 6 anomaly patterns with detection rules (stuck-agent detection, timeouts, escalation)
 - Dashboard: run overview, per-role drill-down, team coordination, anomaly panel
 
 ## OTel span hierarchy
@@ -91,6 +92,7 @@ Measures token efficiency per role relative to task complexity.
 REI = expected_tokens / actual_tokens
 ```
 REI > 1.0 means the role used fewer tokens than expected. < 1.0 means over-consumption.
+- Data source: `tokens_in`/`tokens_out` or `tokens` from `trajectory.jsonl`; `expected_tokens` from budgets/plans.
 
 ### 6. CPS — Context Propagation Score
 Measures whether context flows correctly through the pipeline.
@@ -105,6 +107,7 @@ Measures how effectively parallel phases use concurrent execution.
 PER = serial_time_if_sequential / actual_parallel_time
 ```
 PER > 1.0 means parallelism saved time. PER = 1.0 means no benefit from parallelism.
+- `serial_time_if_sequential` = sum of durations of parallel-subtask spans if run serially; `actual_parallel_time` = wall-clock duration of the parallel phase (max(span_end)-min(span_start) for phase). Duration can be aggregated from `duration` in trajectory entries or span start/end.
 
 ### 8. MTAS — Model Tier Appropriateness Score
 Measures whether the right tier was used for each role.
@@ -115,12 +118,18 @@ A tier mismatch = fast tier used for a premium-gate role, or premium used for a 
 
 ## Anomaly detection patterns
 
-Six patterns that indicate agent dysfunction:
+Six patterns that indicate agent dysfunction, including stuck-agent detection with configurable timeouts and auto-escalation:
 
 ### 1. Repeater
 Same error 3+ times from same role.
 - Detection: count outcome=failure entries with same error field per role
 - Action: escalate to T3, inject corrective lesson into role brief
+
+### Stuck-agent detection (timeout-based)
+An agent is considered "stuck" if it has been in `active` state for longer than a configurable timeout without producing a new trajectory entry or transition.
+- Detection: last trajectory entry for `agent_id`/`role` at `ts`; if `now - ts > timeout_threshold` and phase status is `active` -> stuck alert.
+- Configurable: `stuck_agent_timeout_ms` (per role or global), `stuck_check_interval_ms`.
+- Auto-escalation: on stuck -> emit alert (anomaly panel), escalate to T2/T3 per policy; optionally pause role. Record as `escalated` with `error`/reason "stuck_agent_timeout".
 
 ### 2. Wanderer
 Topic drift — outputs diverge from original task.
@@ -146,6 +155,9 @@ Token consumption exceeds predicted by 2x.
 Gate fails 3+ times (3-strike exhausted).
 - Detection: count gate-check entries with outcome=failure for same gate
 - Action: escalate to user with critic findings
+
+### Stuck-phase / idle detection
+Phase is `active` but no trajectory entries in `idle_timeout_ms` — treat as stuck. Auto-escalate with context from last entry.
 
 ## Dashboard concepts
 

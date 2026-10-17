@@ -26,13 +26,21 @@ Each entry is a single JSON line:
 ```jsonl
 {
   "ts": "2026-07-11T14:30:00Z",
+  "agent_id": "atlas-dev",
   "role": "atlas-dev",
+  "phase": "implementation",
   "action": "edit",
+  "tool": "edit",
   "target": "src/api.ts:42",
+  "duration": 120,
+  "tokens_in": 400,
+  "tokens_out": 800,
+  "tokens": 1200,
+  "status": "success",
+  "outcome": "success",
   "why": "Fix N+1 query in user endpoint",
   "approach": "Batch query with Promise.all",
-  "outcome": "success",
-  "tokens": 1200
+  "error": null
 }
 ```
 
@@ -41,18 +49,25 @@ Each entry is a single JSON line:
 | Field | Required | Description |
 |-------|----------|-------------|
 | `ts` | yes | ISO 8601 timestamp |
-| `role` | yes | Agent role that made the decision |
+| `agent_id` | yes | Agent identifier (preferably role name). Canonical for trace visualization. |
+| `role` | yes | Agent role that made the decision (kept for backward compatibility) |
+| `phase` | no | Workflow phase (e.g., requirements, design, implementation, test, review, deploy) |
 | `action` | yes | Tool or decision type: edit, read, grep, delegate, escalate, gate-check, plan |
+| `tool` | no | Tool name used (alias of `action`; preferred for dashboard visualization) |
 | `target` | no | File path, line number, or delegation target |
+| `duration` | no | Duration of the action/tool call in milliseconds |
+| `tokens_in` | no | Input tokens consumed for this decision/tool call |
+| `tokens_out` | no | Output tokens produced for this decision/tool call |
+| `tokens` | no | Approximate total tokens consumed by this decision (may equal `tokens_in+tokens_out`) |
+| `status` | yes | Canonical outcome: success, failure, blocked, escalated (dashboard uses `status`) |
+| `outcome` | yes | Backward-compatible outcome: success, failure, blocked, escalated |
 | `why` | yes | Reasoning — why this action was chosen |
 | `approach` | no | Specific approach taken (when multiple were possible) |
-| `outcome` | yes | success, failure, blocked, escalated |
-| `tokens` | no | Approximate tokens consumed by this decision |
+| `error` | no | Error message/details when `status`/`outcome` is `failure` |
 | `delegatedTo` | no | Role delegated to (when action=delegate) |
-| `error` | no | Error message (when outcome=failure) |
 | `toolInput` | no | Key arguments passed to the tool (for transition analysis) |
 | `toolOutput` | no | Summary of tool output: success/failure + key data |
-| `errorCategory` | conditional | Error category when outcome=failure (transient/validation/business/permission/not_found) |
+| `errorCategory` | conditional | Error category when outcome/failure (transient/validation/business/permission/not_found) |
 | `tokensEstimate` | no | Estimated tokens consumed by tool output |
 | `recoveryAction` | conditional | What the agent did after the error (retry/re-escalate/abandon) |
 | `toolReceiptId` | conditional | Receipt for file-mutating operations (conflict detection) |

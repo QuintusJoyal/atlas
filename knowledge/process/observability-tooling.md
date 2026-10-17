@@ -15,7 +15,7 @@ Prometheus: pull-based metrics collection. PromQL for querying. Service discover
 
 Grafana: visualization layer. Dashboards for metrics, logs, traces. Alert rules from dashboards. Data source plugins for Prometheus, Loki, Tempo, Elasticsearch.
 
-OpenTelemetry (OTel): vendor-neutral instrumentation. Auto-instrumentation for common libraries. OTel Collector for processing and exporting. Supports logs, metrics, traces.
+OpenTelemetry (OTel): vendor-neutral instrumentation. Auto-instrumentation for common libraries. OTel Collector for processing and exporting. Supports logs, metrics, traces; OTLP exporter for metrics/traces (including Atlas 8 metrics: IAHQS, DAS, EJR, GYR, REI, CPS, PER, MTAS).
 
 Jaeger / Tempo: distributed tracing backends. Jaeger is standalone. Tempo is Grafana-integrated. Trace context propagation via W3C Trace Context headers.
 
@@ -54,6 +54,7 @@ Structured logging: JSON logs with consistent fields. Include: timestamp, level,
 - **Alert on symptoms, not causes:** alert on "error rate > 1%" not "pod restarted."
 - **SLO-based alerting:** alert when error budget is being consumed too fast.
 - **Alert routing:** PagerDuty for SEV1/SEV2, Slack for SEV3, email for informational.
+- **Agent alerting:** stuck-agent detection with configurable timeout thresholds and auto-escalation alerts (T2/T3).
 - **Alert fatigue:** reduce noise. Tune thresholds. Use recording rules for complex conditions.
 
 ## See Also
