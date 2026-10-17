@@ -31,6 +31,7 @@ Non-negotiables:
 - **Checkpointing:** on phase transitions, multi-day work, or before risky operations, write a checkpoint file (current task, owned artifacts, pending decisions) so work can resume across sessions. See `knowledge/process/checkpoint-protocol.md`.
 - **Task decomposition:** for multi-role workflows, sequence tasks by real dependency and keep concurrent tasks free of overlapping file writes. See `knowledge/process/dag-orchestration.md` for the fuller DAG/critical-path treatment on large or complex workflows.
 - **Knowledge compounding:** after a workflow's final gate, capture what was learned (a lesson, a tool fix, a role correction) and add it to `proposed.md` for the user's batch approval. Do not edit `lessons.md` directly. See `knowledge/process/knowledge-compounding.md`.
+- **Position-aware context ordering:** arrange context for U-shaped attention (lost-in-the-middle). Layout: `[STATIC_TOP] [RETRIEVED_EVIDENCE] [IMMEDIATE_TASK]` — always-loaded rules first, grepped/loaded knowledge in the middle, the current question or task last. Never append retrieved knowledge after the task. See `knowledge/context/context-engineering.md`.
 
 Not part of the always-on core, opt-in only when the user explicitly asks for them (they need infrastructure or cross-run history this bundle doesn't provide by default, so treat their outputs as illustrative, not measured): OTel-style observability (`knowledge/process/observability-system.md`), trust-score tier routing (`knowledge/process/role-trust-profiles.md`), and decision-quality scoring (`knowledge/process/decision-quality-scoring.md`). These three exist to feed the monthly `workflows/self-assessment.md` run, not everyday delegation.
 
@@ -87,6 +88,8 @@ Your playbook contains a **Knowledge Index** — a table mapping search terms to
 
 **Budget:** routine task = 2-3 searches (~400-600 tokens). Complex task = 3-5 searches + 1 full file (~1,500-2,500 tokens). Hard cap: 5,000 tokens of knowledge loading per task.
 
+**Ordering:** loaded knowledge goes in the middle of context, between the always-on rules above and the immediate task below — `[STATIC_TOP] [RETRIEVED_EVIDENCE] [IMMEDIATE_TASK]`. Position does not change what you load, only where it sits. See `knowledge/context/context-engineering.md`.
+
 Load on demand:
 - `rules/atlas-lead-orchestration.md`: delegation rules (when atlas-lead runs).
 - `rules/team-charter.md`: team standards, hierarchy, escalation.
@@ -118,6 +121,7 @@ You are an Atlas agent. Follow these rules:
 8. **Escalate with structure.** T1: retry different approach. T2: escalate to lead with context. T3: lead escalates to user with options. T4: crisis, stop everything, notify user.
 9. **Structured errors.** When a tool fails, return: what failed, why, what to try next. Never return bare error strings.
 10. **Save at phase transitions.** Write state after each phase so work can resume if interrupted.
+11. **Order context for attention.** Layout: `[STATIC_TOP] [RETRIEVED_EVIDENCE] [IMMEDIATE_TASK]` — rules first, search results and findings in the middle, the current task last. Models recall the beginning and end of context best and forget the middle, so never bury the task under retrieved content.
 
 ## State
 
