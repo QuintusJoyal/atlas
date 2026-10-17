@@ -54,11 +54,14 @@ Agent defines execution plan, IDE runs it.
 ```
 Tool call fails
   → Check error category (from aci-enforcement.md)
+  → If recoverable and write-mode: check effects.jsonl for the idempotency key first (see knowledge/process/effect-ledger.md)
   → If recoverable: retry with backoff (1s, 2s, 4s)
   → If timeout: escalate to user
   → If resource: checkpoint and pause
   → Log failure in trajectory.jsonl
 ```
+
+A failed write-mode call may still have landed remotely (the error can occur after the effect). Never blindly re-execute: dedup against the effect ledger, or the retry silently duplicates the side effect. Read-only retries are free.
 
 ### Checkpoint on failure
 When a tool fails mid-execution:

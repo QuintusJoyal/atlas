@@ -212,6 +212,7 @@ Before restoring, validate:
 2. Referenced artifacts still exist (or note which are missing)
 3. Budget state is consistent
 4. No corruption in trajectory references
+5. Effect ledger reconciles: every `applied` entry since the checkpoint still exists and is still wanted (see below)
 
 ```text
 Validating checkpoint: cp-20260711-001
@@ -221,6 +222,16 @@ Validating checkpoint: cp-20260711-001
   ✓ Trajectory references valid
   → Ready to restore
 ```
+
+### Reconcile effects on resume
+
+A checkpoint restore is also a resume of side effects. Before continuing work, read the run's effect ledger (`$ATLAS_DATA_DIR/runs/<run-id>/effects.jsonl`, schema in `knowledge/process/effect-ledger.md`) and for every entry with `status: "applied"` since the checkpoint:
+
+- Confirm the effect still exists and is still wanted; leave it alone if so
+- If it is stale, compensate it (LIFO, per the compensation registry) as an explicit new decision with its own ledger entry
+- Never re-apply an identical effect silently; check the idempotency key first, so a retried write is deduped rather than duplicated
+
+Report the reconciliation result (applied count, compensated count, uncompensated leftovers) in the restore confirmation before resuming the task.
 
 ### Checkpoint cleanup
 

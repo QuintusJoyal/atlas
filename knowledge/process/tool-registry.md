@@ -77,3 +77,7 @@ When delegating to another role or handing off work, include:
 
 ### Poka-yoke principle
 When you make the same tool error twice, the fix is a constraint, not a reminder. Add an input validation rule, improve the error message, or change the tool's default behavior. One constraint change eliminates the entire error class.
+
+## Write-mode tools and compensation
+
+Every write-mode tool (filesystem writes, bash with side effects, git push, MCP create/update/delete, API POST/DELETE) has an idempotency key and a designated inverse. Before executing: derive the key, check `effects.jsonl`, record the effect. On abort or unrecoverable failure, unwind completed effects LIFO. The full schema, key derivation, dedup protocol, and per-tool compensation registry live in `knowledge/process/effect-ledger.md` — load it before any external write, retry of a write, or run rollback. Never silently re-apply an effect.

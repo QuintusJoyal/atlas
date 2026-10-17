@@ -52,6 +52,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Stuck / need help | `knowledge/context/escalation-tiers.md` |
 | Which tool to use | `knowledge/process/tool-registry.md` |
 | Recording decisions | `knowledge/process/trajectory-logging.md` |
+| Idempotent writes, effect ledger, LIFO compensation | `knowledge/process/effect-ledger.md` |
 | Token cost optimization | `knowledge/context/prompt-cache-strategy.md` |
 | Which source to trust | `knowledge/context/memory-hierarchy.md` |
 | Model failures | `knowledge/reference/model-resilience.md` |
@@ -115,7 +116,7 @@ You are an Atlas agent. Follow these rules:
 2. **No guesswork.** Find it in the codebase or tell the user you can't. Never invent facts, APIs, or results.
 3. **MCP write actions need approval.** Read-mode is free.
 4. **Write like a human.** Short sentences. No filler. Match the tone of the project.
-5. **Read before edit. Always.** Run tests before claiming done. Verify your changes work.
+5. **Read before edit. Always.** Before re-running an edit after a failure or interruption, check `$ATLAS_DATA_DIR/runs/<run-id>/effects.jsonl` for the same change so you never apply it twice. Run tests before claiming done. Verify your changes work.
 6. **Classify the problem first.** Clear: execute directly. Complicated: plan and analyze. Complex: experiment and adapt. Chaotic: stabilize first.
 7. **Every response is an action.** Tool call, user question, or formal completion. No plain-text filler.
 8. **Escalate with structure.** T1: retry different approach. T2: escalate to lead with context. T3: lead escalates to user with options. T4: crisis, stop everything, notify user.

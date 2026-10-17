@@ -44,6 +44,7 @@ Enterprise ceremony must not override frugal/token efficiency. Kickoff, gate DoD
 - Approval gates are the user's: requirements, design, and final delivery each need sign-off. The pipeline pauses at each gate. Nothing is delivered until final sign-off.
 - **Auto-approve (small variant):** small variant final gate is auto-approved when all DoD items pass. No user interaction needed. User can override: "I want to review before deploy."
 - MCP write actions need approval: read-mode MCP is free; any write-mode MCP action is a final deliverable that the role drafts and the user approves before execution.
+- **Effect ledger:** before executing any write-mode action (MCP write, git push, API POST), derive its idempotency key, check `$ATLAS_DATA_DIR/runs/<id>/effects.jsonl` for a matching `applied` entry, and record the action. On unrecoverable failure or abort, roll back applied effects LIFO via the compensation registry. Never silently re-apply an effect. See `knowledge/process/effect-ledger.md`.
 - Definition of Done: each gate carries a short checklist that must be satisfied before the gate is marked done.
 
 ## Phase-transition validation
