@@ -59,6 +59,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Routing and delegation | `knowledge/context/lead-routing.md` |
 | ACI rules, error protocol, output standards | `knowledge/process/aci-enforcement.md` |
 | Phase-aware tool scoping | `knowledge/process/role-tool-scoping.md` |
+| Role registry, RBAC, audit trail, risk-adaptive policy | `knowledge/process/role-registry.md` |
 | OTel spans, 8 metrics, anomaly detection (opt-in, self-assessment only) | `knowledge/process/observability-system.md` |
 | Quality scoring, self-healing doctrine (opt-in, self-assessment only) | `knowledge/process/decision-quality-scoring.md` |
 | Parallel artifact conflict detection | `knowledge/process/divergence-detection.md` |

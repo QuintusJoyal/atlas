@@ -61,6 +61,7 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 - Run `python3 scripts/validate-refs.py` and, if you touched a file with a `## Lite mode` block, `python3 scripts/build-lite.py --check`. Both should exit clean.
 - If you changed any file under `agents/`, `rules/`, `skills/`, or `knowledge/`, run `python3 scripts/verify-integrity.py --update` to re-pin the SHA-256 hashes in `manifest.json`. `validate-refs.py` fails otherwise.
 - If you touched a file under `workflows/` or `manifest.json`'s `workflowMeta`, run `python3 scripts/validate-workflows.py`. It must exit clean.
+- If you changed a role definition under `agents/`, `python3 scripts/validate-roles.py` must exit clean (it also runs as step 4 of `validate-refs.py`). Role schema, RBAC, audit, and risk-policy details live in `knowledge/process/role-registry.md`.
 
 ## Repository automation
 

@@ -145,6 +145,17 @@ def main():
         for line in result.stdout.strip().splitlines():
             print(f"   {line}")
 
+    print("\n4. Checking role definitions against the Agent Specialization Registry...")
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "validate-roles.py")],
+        capture_output=True,
+        text=True,
+    )
+    for line in result.stdout.strip().splitlines():
+        print(f"   {line}")
+    if result.returncode != 0:
+        issues += 1
+
     print("\n" + "=" * 50)
     if issues == 0:
         print("RESULT: CLEAN - No issues found")

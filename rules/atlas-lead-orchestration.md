@@ -108,9 +108,20 @@ If the role-adherence critic (see `knowledge/critic-prompts/role-adherence.md`) 
 
 Invalid: `description: "Fix CRLF, timeout, jq, dry-run"`. Valid: `atlas-dev: normalize LF on fetch scripts`, `role: atlas-dev`.
 
+### Role registry check (RBAC)
+
+Before delegating, check the target role against the Agent Specialization Registry (`knowledge/process/role-registry.md`):
+
+1. **Capability fit:** the brief's work falls inside the role's `capabilities` and I DO list.
+2. **Permission fit:** the work needs no resource the role cannot read/write per its `permissions` and the resource-class table.
+3. **Boundary fit:** the brief asks for nothing on the role's I DO NOT list — if it does, route to the owning role (`ROLES.md`).
+4. **Risk level:** derive low/medium/high/critical from conditions (`agents/atlas-lead.md`) and apply the matching row (capability scope, tier floor, extra gates).
+
+If a needed permission is missing, do not silently widen the role: split the task to the owning role, or grant the specific resource in the brief and record a `permission-grant` audit entry. Log every assignment and permission decision to `$ATLAS_DATA_DIR/runs/<run-id>/permission-audit.jsonl` using the schema in `knowledge/process/role-registry.md`. Derive the live registry with `python3 scripts/validate-roles.py --json`.
+
 ### Allowed lead-only file touches
 
-`team.json`, `budget.md`, one-line entries in `decisions.md`, run folder creation. Nothing else unless the user explicitly waived delegation for this task.
+`team.json`, `budget.md`, one-line entries in `decisions.md`, run folder creation, `permission-audit.jsonl` entries. Nothing else unless the user explicitly waived delegation for this task.
 
 ## Batch delegation
 
