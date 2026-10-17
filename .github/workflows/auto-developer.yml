@@ -44,7 +44,18 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      - name: Protect .github/workflows
+        # PROMOTE_PAT deliberately lacks the `workflows` permission, so any
+        # commit touching .github/workflows is rejected at push time and the
+        # whole run fails (issue #26's run tried to edit release.yml). Make the
+        # directory read-only so the agent cannot spend its budget on a change
+        # that can never land, and cannot discover the problem only at the end.
+        # Best effort: it stops writes, not a determined `chmod`, which the
+        # prompt also covers.
+        run: chmod -R a-w .github/workflows
+
       - name: Run OpenCode
+        id: opencode
         uses: anomalyco/opencode/github@v1.18.4
         env:
           # Must NOT be secrets.GITHUB_TOKEN: GitHub suppresses workflow runs
@@ -68,6 +79,17 @@ jobs:
 
             Keep changes small and targeted. Follow existing patterns.
 
+            Do not create or modify anything under `.github/workflows/`. The
+            automation token cannot push those files — GitHub rejects the push
+            without the `workflows` permission and the entire run fails. If a
+            workflow change is genuinely needed, leave the workflows untouched
+            and describe the change in the pull request body so a human can
+            apply it separately.
+
+            Work efficiently. The job has a bounded time limit and the model is
+            slow here, so prefer one small correct change over an exhaustive
+            one, and stop as soon as the change is complete.
+
       - name: Finalize PR (retarget and title)
         # The opencode action hardcodes the PR base to the repository's
         # default branch (main); it exposes no input for it. Atlas never takes
@@ -84,6 +106,7 @@ jobs:
           GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
           ISSUE_NUM: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
+          OUTCOME: ${{ steps.opencode.outcome }}
         run: |
           set -euo pipefail
           # The runner names issue branches `opencode/issue<N>-<timestamp>`;
@@ -94,6 +117,14 @@ jobs:
             --jq ".[] | select(.headRefName | startswith(\"${prefix}\")) | [.number, .baseRefName] | @tsv")"
           if [ -z "${prs}" ]; then
             echo "No open PR from ${prefix}*; nothing to retarget."
+            # The agent ran cleanly but produced no branch, so there is nothing
+            # to review. Say so rather than leaving the issue sitting on
+            # `action:develop` with no visible reason. A failed step is reported
+            # by the next step instead.
+            if [ "${OUTCOME}" = "success" ]; then
+              gh issue comment "${ISSUE_NUM}" --repo "${GITHUB_REPOSITORY}" \
+                --body "Automated development produced no changes, so there is no pull request to review. Comment here or remove and re-add the \`action:develop\` label to retry."
+            fi
             exit 0
           fi
           while IFS=$'\t' read -r number base; do
@@ -105,3 +136,19 @@ jobs:
             gh pr edit "${number}" --repo "${GITHUB_REPOSITORY}" \
               --base "${TARGET_BRANCH}" --title "${ISSUE_TITLE}"
           done <<< "${prs}"
+
+      - name: Report failure on the issue
+        # "Intervene only when something breaks" only works if a break is
+        # visible. Without this, a failed run leaves an issue that looks queued
+        # forever. The retry is removing and re-adding the label.
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gh issue comment "${ISSUE_NUM}" --repo "${GITHUB_REPOSITORY}" --body \
+            "Automated development failed: ${RUN_URL}
+
+          Once the cause is fixed, remove and re-add the \`action:develop\` label to retry."

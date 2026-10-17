@@ -24,9 +24,15 @@ permissions:
 # need not be present in the `opened` payload — if it is applied a moment later,
 # the `labeled` event covers it.
 
+# `cancel-in-progress` must stay false. The hand-off step below labels the issue
+# `action:develop`, which raises a second `issues: labeled` event for the same
+# issue, so a new run enters this group. With `cancel-in-progress: true` that new
+# run (skipped by the job `if`) still cancels the run that just issued the label,
+# which is how a successful evaluation of issue #26 was reported as "cancelled".
+# The duplicate now waits, then skips, and costs nothing.
 concurrency:
   group: feature-reviewer-${{ github.event.issue.number }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   review:
