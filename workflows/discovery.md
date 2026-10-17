@@ -76,3 +76,35 @@ Tell the user which variant you picked and why.
 - [ ] Proposal or SOW outline ready for the user
 - [ ] No build started
 - [ ] User has signed off (full only; small auto-approves if all above pass)
+
+## Lite mode
+
+Generated into `lite/workflows/discovery.md` by `scripts/build-lite.py`. Edit the block below, then run the script — never hand-edit the `lite/` output directly.
+
+<!-- lite:start -->
+# Discovery (Lite)
+
+## Phase 1: Research
+- **Roles:** atlas-pm + atlas-ba
+- **Input:** user question or problem statement
+- **Output:** problem framing, success criteria
+- **Gate:** problem framed, success criteria set
+
+## Phase 2: Feasibility
+- **Roles:** atlas-architect (+ atlas-cloud if cloud-relevant)
+- **Input:** problem framing
+- **Output:** approach options with trade-offs
+- **Gate:** approach chosen, trade-offs named
+
+## Phase 3: Recommendation
+- **Roles:** atlas-pm
+- **Input:** feasibility analysis
+- **Output:** go/no-go recommendation with next steps
+- **Gate:** user decides go/no-go
+
+## Definition of Done
+- [ ] Problem clearly framed
+- [ ] At least 2 approaches evaluated
+- [ ] Recommendation with trade-offs
+- [ ] User decides go/no-go
+<!-- lite:end -->

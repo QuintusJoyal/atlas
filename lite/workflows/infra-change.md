@@ -1,3 +1,7 @@
+<!-- GENERATED FILE. Do not edit directly.
+     Source: workflows/infra-change.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # Infra Change (Lite)
 
 Infrastructure changes are high-risk. Design for reversibility. Test in staging. Rollback first, analyze later. This lite version has no lite agent for atlas-devops, atlas-architect, or atlas-data-eng — if the change needs one of them, tell the user this task needs a role outside lite's 5 and suggest the full bundle.

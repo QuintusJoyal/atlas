@@ -49,6 +49,11 @@ VARIANT_KEYS = {"description", "gates", "token-estimate", "kickoff", "auto-appro
 
 ROLE_RE = re.compile(r"atlas-[a-z0-9-]+")
 
+# Lite mode content is emitted from <!-- lite:start --> blocks and must not be
+# scanned as real preset phases (e.g. self-assessment's lite block has its own
+# `## Phases` heading). Strip marker blocks before parsing.
+LITE_BLOCK_RE = re.compile(r"\n?<!-- lite:start -->.*?<!-- lite:end -->\s*", re.DOTALL)
+
 
 def parse_value(raw):
     value = raw.strip()
@@ -236,7 +241,7 @@ def main():
     for path in sorted(WORKFLOWS_DIR.glob("*.md")):
         if path.name == "README.md":
             continue
-        text = path.read_text(encoding="utf-8")
+        text = LITE_BLOCK_RE.sub("\n", path.read_text(encoding="utf-8"))
         data = parse_frontmatter(text)
         if data is None:
             issues.append(f"{rel(path)}: missing or unparseable YAML frontmatter")

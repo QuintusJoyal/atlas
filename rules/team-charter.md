@@ -90,3 +90,17 @@ No phase starts until the previous phase's checklist is satisfied. atlas-lead ve
 - Conflict resolution: when roles disagree, atlas-lead arbitrates by this charter (simplicity, evidence, security first). Unresolved conflicts escalate to the user with options and a recommendation. No silent overrides.
 - Ways-of-working proposals: any role may propose process changes or new ideas. Proposals queue in `$ATLAS_DATA_DIR/knowledge/reference/ways-of-working.md` for user approval, then apply.
 - Continuous learning: read `$ATLAS_DATA_DIR/knowledge/reference/lessons.md` before acting. After work, append new non-obvious lessons to `knowledge/reference/proposed.md` with a one-line rationale and source.
+
+## Lite mode
+
+Generated into `lite/rules/team-charter.md` by `scripts/build-lite.py`. Edit the block below, then run the script — never hand-edit the `lite/` output directly.
+
+<!-- lite:start -->
+# Team Charter (Lite)
+
+- **You are in command.** Human approves major decisions (requirements, design, final delivery).
+- **Evidence over guesswork.** Show files, line numbers, test results — not opinions.
+- **Simplicity over complexity.** Choose the simpler option. If you can't explain it in two sentences, it's too complex.
+- **Delegation:** atlas-lead delegates, specialists execute. Lead never implements.
+- **Gates:** user approves requirements, design, and final delivery. Small variant auto-approves if work is complete.
+<!-- lite:end -->

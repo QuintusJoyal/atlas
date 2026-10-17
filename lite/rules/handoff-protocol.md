@@ -1,3 +1,7 @@
+<!-- GENERATED FILE. Do not edit directly.
+     Source: rules/handoff-protocol.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # Handoff Format (Lite)
 
 Every handoff has 4 sections:

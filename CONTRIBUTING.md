@@ -30,9 +30,9 @@ Each agent should include a `## Direct invocation` section (consultative) and a 
 
 ## Editing lite mode
 
-The lite agents, playbooks, and `lite/rules/atlas-core.md` are **generated**, not hand-authored (the other 4 `lite/rules/*.md` files and `lite/workflows/*.md` are small, self-contained, and don't need generation — they never had external references to drift). This exists so Atlas scales down to 3B-8B models with 4K-8K context, not just up to enterprise use — see the "Built to scale" value in `knowledge/reference/core-values-charter.md`.
+All 20 files under `lite/` (5 agents, 5 playbooks, 5 rules, 5 workflows) are **generated**, not hand-authored. This exists so Atlas scales down to 3B-8B models with 4K-8K context, not just up to enterprise use — see the "Built to scale" value in `knowledge/reference/core-values-charter.md`.
 
-If a role has a lite mode (currently: lead, dev, qa, architect, security — plus `rules/atlas-core.md`), its full source file (`agents/atlas-<role>.md`, `skills/atlas-<role>-playbook/SKILL.md`, or `rules/atlas-core.md`) ends with a `## Lite mode` section wrapping the exact lite content in markers:
+Each lite source file ends with a `## Lite mode` section wrapping the exact lite content in markers (`agents/atlas-<role>.md`, `skills/atlas-<role>-playbook/SKILL.md`, `rules/<name>.md`, `workflows/<name>.md`):
 
 ```markdown
 <!-- lite:start -->
@@ -40,7 +40,9 @@ If a role has a lite mode (currently: lead, dev, qa, architect, security — plu
 <!-- lite:end -->
 ```
 
-To change lite behavior: edit the block in the full source file, then run `python3 scripts/build-lite.py`. Never hand-edit a file under `lite/agents/`, `lite/skills/`, or `lite/rules/atlas-core.md` — it will be overwritten, and `python3 scripts/build-lite.py --check` (run this before opening a PR) will flag it as drift.
+To change lite behavior: edit the block in the full source file, then run `python3 scripts/build-lite.py`. Never hand-edit any file under `lite/` — it will be overwritten, and `python3 scripts/build-lite.py --check` (run this before opening a PR) will flag it as drift.
+
+`build-lite.py --check` also enforces the lite system-prompt token budget. It sums a chars/4 estimate of each role's rules, agent, and playbook (excluding YAML frontmatter and the generated-file banner) and fails when a specialist exceeds ~1,300 tokens or the lead exceeds ~1,700.
 
 Adding lite support to a new role: append a `## Lite mode` block to its agent file and playbook, add both source-to-output pairs to the `SOURCES` list in `scripts/build-lite.py`, then generate. Keep the lite content genuinely small and self-contained — no references to `knowledge/` or the `k/` shorthand; a small model can't reliably skip content it's told to ignore, so lite files must not depend on that.
 

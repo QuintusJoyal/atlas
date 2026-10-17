@@ -1,3 +1,7 @@
+<!-- GENERATED FILE. Do not edit directly.
+     Source: workflows/self-assessment.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # Workflow: self-assessment (Lite)
 
 Quick monthly review of Atlas performance.

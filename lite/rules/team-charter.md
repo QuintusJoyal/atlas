@@ -1,3 +1,7 @@
+<!-- GENERATED FILE. Do not edit directly.
+     Source: rules/team-charter.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # Team Charter (Lite)
 
 - **You are in command.** Human approves major decisions (requirements, design, final delivery).

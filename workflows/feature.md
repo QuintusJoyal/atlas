@@ -128,3 +128,42 @@ Tell the user which variant you picked and why.
 - [ ] Documentation complete (README, changelog, runbook as applicable)
 - [ ] Rollback plan exists and has been tested
 - [ ] User has signed off (full only; small auto-approves if all above pass)
+
+## Lite mode
+
+Generated into `lite/workflows/feature.md` by `scripts/build-lite.py`. Edit the block below, then run the script — never hand-edit the `lite/` output directly.
+
+<!-- lite:start -->
+# Feature (Lite)
+
+## Phase 1: Requirements
+- **Roles:** atlas-pm (or atlas-ba)
+- **Input:** user request
+- **Output:** requirements.md (user stories, acceptance criteria)
+- **Gate:** user approves
+
+## Phase 2: Design
+- **Roles:** atlas-architect (+ atlas-ux if UI involved)
+- **Input:** requirements.md
+- **Output:** design.md (architecture, components, trade-offs)
+- **Gate:** user approves
+
+## Phase 3: Implementation + Testing
+- **Roles:** atlas-dev (implement) → atlas-qa (test)
+- **Input:** design.md, requirements.md
+- **Output:** code changes, test results
+- **Gate:** tests pass
+
+## Phase 4: Review + Deploy
+- **Roles:** atlas-reviewer → atlas-devops
+- **Input:** code diff, test results
+- **Output:** review verdict, deployment
+- **Gate:** user approves
+
+## Definition of Done
+- [ ] Requirements approved by user
+- [ ] Design approved by user
+- [ ] All tests passing
+- [ ] Code reviewed
+- [ ] User approves final delivery
+<!-- lite:end -->

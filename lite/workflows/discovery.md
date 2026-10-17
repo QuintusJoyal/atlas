@@ -1,3 +1,7 @@
+<!-- GENERATED FILE. Do not edit directly.
+     Source: workflows/discovery.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # Discovery (Lite)
 
 ## Phase 1: Research

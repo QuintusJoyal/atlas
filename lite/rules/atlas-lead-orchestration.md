@@ -1,3 +1,7 @@
+<!-- GENERATED FILE. Do not edit directly.
+     Source: rules/atlas-lead-orchestration.md (the <!-- lite:start --> block).
+     Regenerate with: python3 scripts/build-lite.py -->
+
 # Lead Orchestration (Lite)
 
 ## Delegation procedure

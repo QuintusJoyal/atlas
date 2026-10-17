@@ -319,16 +319,16 @@
     "skills": "lite/skills/",
     "generatedFrom": {
       "tool": "scripts/build-lite.py",
-      "marker": "<!-- lite:start --> / <!-- lite:end --> blocks in the full agents/skills/rules/atlas-core.md source files",
-      "coverage": "Only the 5 lite agents, 5 lite playbooks, and lite/rules/atlas-core.md are generated (11 files). The other 4 lite/rules/*.md files and all of lite/workflows/*.md are hand-authored and NOT checked by build-lite.py --check — keep them small and self-contained by hand.",
-      "note": "Never hand-edit files under lite/agents, lite/skills, or lite/rules/atlas-core.md — run the generator instead. `build-lite.py --check` detects drift for those 11 files only."
+      "marker": "<!-- lite:start --> / <!-- lite:end --> blocks in the full agents/skills/rules/workflows source files",
+      "coverage": "All 20 lite/ files (5 agents, 5 playbooks, 5 rules, 5 workflows) are generated from marker blocks and checked by build-lite.py --check.",
+      "note": "Never hand-edit any file under lite/ — run the generator instead. `build-lite.py --check` detects drift for all 20 files and fails when a role's system prompt exceeds its token budget."
     },
     "knowledgeNote": "Lite roles inline their own essentials instead of pointing at knowledge/ (small models can't reliably self-filter a pointer they're told to ignore). lite/rules/atlas-core.md names knowledge/ once, only to say lite mode doesn't load it — that's the sole mention anywhere in lite/.",
     "tokenBudget": {
       "specialistSystemPrompt": "~1,300 tokens (atlas-core + engineering-standards + handoff-protocol + agent + playbook)",
       "leadSystemPrompt": "~1,700 tokens (atlas-core + atlas-lead-orchestration + handoff-protocol + team-charter + agent + playbook)",
       "remainingForTaskAt8K": "~6,300-6,700 tokens depending on role",
-      "note": "Rough chars/4 estimate, not measured. Recompute if lite source files change materially."
+      "note": "Estimate computed by scripts/build-lite.py: chars/4 over each role's rules + agent + playbook, excluding YAML frontmatter and the generated-file banner (neither is model-facing prompt text). `build-lite.py --check` enforces it: a specialist above ~1,300 or the lead above ~1,700 fails."
     },
     "differences": [
       "atlas-core: 10 imperative rules, no meta-cognitive instructions",
@@ -367,10 +367,10 @@
       "agents/atlas-consultant.md": "2143bcad89c0b22c141abe04c48eccd8a59dfb132c37058aecd8c718a2410542",
       "agents/atlas-compliance.md": "7c80b8107b28e13e0d5bea43d64b18ef99dd3b8c32f304cf12040b2b95cdf79a",
       "rules/atlas-core.md": "6609dd6074fb5d3a05e0333db582cd18daebe2ad1906b5c93f60af0cecdc9f2c",
-      "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
-      "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
-      "rules/engineering-standards.md": "0f5bb325119c5146de3126101c6048920bc397b8b810f4356e88bfe7ee5ab886",
-      "rules/handoff-protocol.md": "cfc031e6784092e829a030cffdbafb18eba6bac8f8e07cda068c4d5c1aa5fb48",
+      "rules/atlas-lead-orchestration.md": "dbee326fee653fcf8fe02bb1c0ff746c48381bc0ffe8a6009e9f570063219df0",
+      "rules/team-charter.md": "31be6550b9361639e4af2de9e63e2a07d271d81e754f948ac8211f5fa2d02672",
+      "rules/engineering-standards.md": "a6a32fae51bc34ae55b1f16f0dcf777ce6c0c59142397dd6026a7015fcc215f6",
+      "rules/handoff-protocol.md": "fbba03c75c2da28a3e6ffa2d7ea4581cefdbc46c2dd64fef831a4636afb55dd0",
       "rules/writing-style.md": "531ed82c3e4ac1a3b9813d4bee6f799e01c22853db912f5133c4fdcafcc03543",
       "rules/security.md": "92479c247958ec5962d8565e99f6d61096919dc7234a3abfdecb921ccc540a0b",
       "rules/data-governance.md": "990a231068deb938d9e761bfd181c8791d2feb88048e351e39c3d695b1f210e3",
