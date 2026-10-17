@@ -58,6 +58,7 @@ Each entry is a single JSON line:
 | `toolReceiptId` | conditional | Receipt for file-mutating operations (conflict detection) |
 | `checkpointId` | no | Links entry to a checkpoint (when checkpoint system active) |
 | `parentId` | no | ID of the entry that caused this one (e.g. a delegation entry that spawned a sub-role's entries) — lets you reconstruct a call tree by grepping for a shared `parentId` without a real tracing backend |
+| `provenanceHash` | no | `content_hash` of the signed context fragment this decision drew on (see `context-provenance.md`) — links a decision to its attestation chain so `scripts/provenance.py trace` can show which agents' context influenced it |
 
 ## When to record
 

@@ -171,3 +171,16 @@ Before advancing from a parallel stage to the next sequential stage:
 6. Log result to trajectory.jsonl
 
 See `knowledge/process/divergence-detection.md` for full detection protocol and resolution options.
+
+## Context provenance (additive)
+
+Handoff artifacts may carry an optional provenance block for transitive integrity across agent chains (lead → dev → reviewer). It is **appended after all other sections** so existing consumers of the 8-section (or 4-section small) format are unaffected.
+
+```markdown
+## Provenance
+- Fragment: <fragment-file>.json (content_hash <first 12 chars>…)
+- Parent: <parent content_hash> | none (origin fragment)
+- Verify: python3 scripts/provenance.py verify --fragment <fragment-file>.json --content <artifact-path>
+```
+
+Before incorporating a received context fragment, the receiving role **verifies** it with `scripts/provenance.py verify` (hash, signature, and parent-hash chain). A failed verification quarantines the fragment — do not use quarantined context; re-request it or escalate to atlas-lead. Signers create their key once with `init-key`. Full protocol, fragment schema, audit log (`$ATLAS_DATA_DIR/provenance.jsonl`), and trace queries: `knowledge/process/context-provenance.md`.

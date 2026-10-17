@@ -15,7 +15,7 @@ This is a layout spec, not a working dashboard. Every number in the panels below
 
 ## Quick Reference
 - 4 panels: Run Overview, Per-Role, Team Coordination, Anomaly Panel
-- Data sources: trajectory.jsonl, trust-profiles.json, usage-insights.md
+- Data sources: trajectory.jsonl, trust-profiles.json, usage-insights.md, provenance.jsonl (decision→context trace via `scripts/provenance.py trace`, see `context-provenance.md`)
 - Update frequency: real-time during runs, daily summary
 - Format: specification with mock layouts and data schemas
 
