@@ -56,6 +56,7 @@ Each entry is a single JSON line:
 | `tokensEstimate` | no | Estimated tokens consumed by tool output |
 | `recoveryAction` | conditional | What the agent did after the error (retry/re-escalate/abandon) |
 | `toolReceiptId` | conditional | Receipt for file-mutating operations (conflict detection) |
+| `evaluationId` | conditional | Groups the k independent evaluations of one pass^k gate (when action=gate-check); shared across the k entries |
 | `checkpointId` | no | Links entry to a checkpoint (when checkpoint system active) |
 | `parentId` | no | ID of the entry that caused this one (e.g. a delegation entry that spawned a sub-role's entries) — lets you reconstruct a call tree by grepping for a shared `parentId` without a real tracing backend |
 
@@ -109,6 +110,41 @@ Aggregate `tokens` field per role to understand token consumption patterns. Use 
   "tokens": 1200
 }
 ```
+
+## Trace-based scoring
+
+The trajectory is a process record, so it can be scored on **how** work was done, not only whether the output looked right. Three metrics computed from existing fields:
+
+### 1. Read-before-write ratio
+```
+read_before_write = read/grep entries preceding each edit on the same target
+                    / total edit entries
+```
+- 1.0: every edit was preceded by a read/grep of that target.
+- Low ratio means edits from memory — failure mode `REASON-02` (`knowledge/process/failure-mode-taxonomy.md`).
+
+### 2. Self-verification rate
+```
+self_verification = edits followed by a verifying action (test, lint, bash check)
+                    / total edits
+```
+A verifying action is a `bash`/`test` entry whose `outcome` is recorded after an edit. Low rate → failure mode `VERIFY-02`.
+
+### 3. Recovery-after-failure rate
+```
+recovery = failure entries followed by a success or explicit recoveryAction
+           / total failure entries
+```
+Uses the `recoveryAction` field. Low rate → failure mode `PROCESS-02`.
+
+### Feeding the scores
+
+- Report these three metrics per role alongside the run's quality scores in `usage-insights.md`.
+- They are the trace evidence behind the **Handoff Quality** and **Plan Fidelity** dimensions in `knowledge/process/decision-quality-scoring.md` (re-derivation and deviation are visible directly in the trace).
+- Gate-check entries (`action=gate-check`) carry the shared `evaluationId` of their pass^k gate; disagreement among the k entries is failure mode `VERIFY-01`.
+- Feed `self_verification` and `recovery` into `pass_k_rate` in `knowledge/process/role-trust-profiles.md`.
+
+These are computed from recorded entries, but the entries themselves are the agent's own description of its actions — treat a metric with no entries to back it as unmeasured, not as zero.
 
 ## Transition analysis
 

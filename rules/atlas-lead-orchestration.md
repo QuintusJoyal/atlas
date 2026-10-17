@@ -238,3 +238,16 @@ Deliverable received
 - Critics must NOT be run by the same role that produced the deliverable
 - atlas-lead orchestrates critic selection, but the critic runs in a separate context
 - If atlas-lead cannot delegate the critic, it runs the critic itself (lead is allowed to evaluate, just not to implement)
+
+## Pass^k gate evaluation
+
+Before marking a gate passed, check its pass^k variant (`workflows/README.md` → Gates → Pass^k gate variants).
+
+1. **Look up k.** `final` = pass^2; injected `security-review`/`compliance` = pass^3; design = pass^2 when `security-sensitive`, else pass^1; process gates (token-budget, requirements, scope, research) = pass^1.
+2. **Run k independent evaluations**, each in a **separate context** with no sight of the others' verdicts. Reuse the critic delegation loop and critic isolation rules above.
+3. **All must pass.** Any single fail = the gate fails. Do not average or majority-vote; a single false pass defeats the purpose.
+4. **On failure**, re-delegate to the producing role with the failing evaluation's findings, then re-run the full k evaluations. Do not resume the pipeline until all k pass.
+5. **Log each evaluation** as a `gate-check` trajectory entry with a shared `evaluationId` (`knowledge/process/trajectory-logging.md`).
+6. **Feed results forward.** pass^k outcomes feed `pass_k_rate` in `knowledge/process/role-trust-profiles.md`; persistent disagreement across evaluations is failure mode `VERIFY-01` in `knowledge/process/failure-mode-taxonomy.md`.
+
+k costs k× the evaluation tokens on that gate. Keep pass^1 on routine process gates; only raise k where a false pass is expensive.

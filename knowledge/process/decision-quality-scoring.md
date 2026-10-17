@@ -77,6 +77,24 @@ composite = (roleAdherence * 0.20) + (gateEffectiveness * 0.15) +
 
 Weights are configurable per project. Handoff Quality is weighted highest because it directly impacts downstream roles.
 
+## Role benchmark scoring
+
+The dimensions above score a single run. To compare roles consistently **across** runs, use the fixed suites in `knowledge/benchmark/role-benchmarks.md`:
+
+```
+benchmark_score = passing_cases / total_cases   (per category)
+```
+
+- Score 1.0: every case in the category passes.
+- Score 0.5: about half the cases pass — the role is inconsistent.
+- Score 0.0: the category fails wholesale.
+
+The benchmark score is the evidence behind the **Gate Effectiveness** dimension at the category level, and it is the most reliable input to `pass_k_rate` in `role-trust-profiles.md`. Because it is a fixed suite, it is comparable run to run in a way a free-form quality judgment is not.
+
+Like every other score in this file, a benchmark verdict is the agent's own judgment against the benchmark criteria unless the user supplies an external harness. Say so when reporting it. Do not fold the benchmark score into the composite by hand — record it separately and report it beside the composite.
+
+Map each failed benchmark case to a mode in `knowledge/process/failure-mode-taxonomy.md` so repeated failures raise a drift note.
+
 ## Storage
 
 Scores are stored in `usage-insights.md` per run:

@@ -27,17 +27,21 @@ This is opt-in, not part of the always-on core: the score formula below needs in
 ### Inputs
 1. **Quality scores** from `decision-quality-scoring.md` (weighted average of 6 dimensions)
 2. **Critic pass rate** — percentage of critic evaluations that pass
-3. **Rework rate** — percentage of tasks requiring re-work
-4. **Escalation rate** — percentage of tasks escalated to higher tiers
-5. **Task complexity** — adjusted for task difficulty
+3. **pass^k rate** — percentage of pass^k gate runs where **all k** evaluations passed (from `workflows/README.md` and trace `evaluationId` entries); a gate that needed a re-run counts as a miss
+4. **Rework rate** — percentage of tasks requiring re-work
+5. **Escalation rate** — percentage of tasks escalated to higher tiers
+6. **Task complexity** — adjusted for task difficulty
 
 ### Formula
 ```
-trust_score = (quality_avg * 0.40) +
-              (critic_pass_rate * 0.30) +
-              (1 - rework_rate * 0.20) +
+trust_score = (quality_avg * 0.35) +
+              (critic_pass_rate * 0.25) +
+              (pass_k_rate * 0.15) +
+              (1 - rework_rate * 0.15) +
               (1 - escalation_rate * 0.10)
 ```
+
+`pass_k_rate` is weighted above rework and escalation because a first-try pass on a k-independent gate is a stronger signal of reliability than the absence of a rework that might never have been triggered.
 
 ### Score decay
 If a role hasn't been used in 30+ days:
@@ -64,6 +68,7 @@ trust_score = trust_score * decay
     "tier": "TRUSTED",
     "qualityAvg": 0.91,
     "criticPassRate": 0.88,
+    "passKRate": 0.90,
     "reworkRate": 0.05,
     "escalationRate": 0.02,
     "taskCount": 47,
@@ -77,6 +82,7 @@ trust_score = trust_score * decay
     "tier": "STANDARD",
     "qualityAvg": 0.75,
     "criticPassRate": 0.70,
+    "passKRate": 0.60,
     "reworkRate": 0.15,
     "escalationRate": 0.10,
     "taskCount": 32,
@@ -109,9 +115,10 @@ trust_score = trust_score * decay
 
 After each task completion:
 1. Quality score is calculated (from `decision-quality-scoring.md`)
-2. Trust score is updated using the formula
-3. Trust tier is recalculated
-4. If tier changed, log the change in `usage-insights.md`
+2. pass^k gate outcomes are folded into `passKRate` (from trace `evaluationId` entries)
+3. Trust score is updated using the formula
+4. Trust tier is recalculated
+5. If tier changed, log the change in `usage-insights.md`
 
 ```
 Trust update: atlas-dev: 0.85 → 0.87 (TRUSTED, trend: stable)

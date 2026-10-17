@@ -191,4 +191,23 @@ Gates pause for user sign-off (full variant). Small variant auto-approves the fi
 | scope | Scoping → Audit (security-audit only) | No |
 | research | Research → Feasibility (discovery only) | No |
 
+### Pass^k gate variants
+
+Single-pass gate evaluation is unreliable — work that passes once may fail on the next run. A gate may therefore require **k independent evaluations**; the gate passes only when **all k** evaluations pass.
+
+| Gate | Variant | k | Rationale |
+| --- | --- | --- | --- |
+| final | pass^2 | 2 | Standard delivery; catches one-off false passes |
+| design | pass^1 / pass^2 | 1 / 2 | pass^1 by default; raise to pass^2 when the `security-sensitive` condition is matched |
+| security-review / compliance (injected) | pass^3 | 3 | Highest stakes; security and compliance failures ship real risk |
+| scope, research, requirements, token-budget | pass^1 | 1 | Process gates; a single structured decision is sufficient |
+
+Rules:
+
+- Each evaluation runs in a **separate context** and must not see the others' verdicts.
+- A gate passes only if **every** evaluation passes. Any single fail = gate failed → re-delegate with the findings.
+- Record each evaluation as a `gate-check` trajectory entry (`knowledge/process/trajectory-logging.md`) with a shared `evaluationId`.
+- pass^k adds latency (k evaluations). Use it where a false pass is expensive; do not raise k on routine process gates.
+- Independent re-evaluations are correlated, so pass^k reduces false passes less than a naive k-fold would suggest — treat it as a significant but not absolute improvement.
+
 **Every pipeline run starts with Phase 0 kickoff:** workflow selection (lead announces + persists), estimation huddle (roles via Task, atlas-ai-eng aggregates), `budget.md` with Predicted and per-role estimates. See `knowledge/reference/budget-template.md`.
