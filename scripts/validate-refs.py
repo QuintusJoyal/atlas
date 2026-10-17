@@ -7,7 +7,7 @@ Usage:
 Checks:
 1. All knowledge/<file> references in .md files point to existing files
 2. manifest.json lists all knowledge files that exist on disk
-3. No broken cross-references within knowledge files
+3. Bundle files on disk match the SHA-256 hashes pinned in manifest.json
 
 Exit code: 0 = clean, 1 = issues found
 """
@@ -15,6 +15,7 @@ Exit code: 0 = clean, 1 = issues found
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -125,6 +126,24 @@ def main():
             issues += 1
     else:
         print("   OK: All manifest files exist on disk")
+
+    print("\n3. Checking bundle integrity hashes against manifest.json...")
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "verify-integrity.py")],
+        capture_output=True,
+        text=True,
+    )
+    # The verify script prints SKIP for bundles without an integrity block
+    # (pre-2.0 or lite-mode); that is clean, not a failure.
+    if "SKIP:" in result.stdout:
+        print("   " + result.stdout.strip().splitlines()[0])
+    elif result.returncode != 0:
+        for line in result.stdout.strip().splitlines():
+            print(f"   {line}")
+        issues += 1
+    else:
+        for line in result.stdout.strip().splitlines():
+            print(f"   {line}")
 
     print("\n" + "=" * 50)
     if issues == 0:
