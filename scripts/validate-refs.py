@@ -8,6 +8,7 @@ Checks:
 1. All knowledge/<file> references in .md files point to existing files
 2. manifest.json lists all knowledge files that exist on disk
 3. Bundle files on disk match the SHA-256 hashes pinned in manifest.json
+4. Skill manifests satisfy the skill-registry schema (scripts/validate-skills.py)
 
 Exit code: 0 = clean, 1 = issues found
 """
@@ -138,6 +139,20 @@ def main():
     if "SKIP:" in result.stdout:
         print("   " + result.stdout.strip().splitlines()[0])
     elif result.returncode != 0:
+        for line in result.stdout.strip().splitlines():
+            print(f"   {line}")
+        issues += 1
+    else:
+        for line in result.stdout.strip().splitlines():
+            print(f"   {line}")
+
+    print("\n4. Checking skill manifests against the skill-registry schema...")
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "validate-skills.py")],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
         for line in result.stdout.strip().splitlines():
             print(f"   {line}")
         issues += 1
