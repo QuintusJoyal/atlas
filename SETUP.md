@@ -14,7 +14,7 @@ atlas/
   rules/           15 governance rules (always-on core, orchestration, charter, standards, handoff, writing, security, etc.)
   knowledge/       114 shared knowledge files in 18 subdirectories
   workflows/       14 pipeline presets (feature, bugfix, data-project, infra, security-audit, discovery, etc.)
-  manifest.json    Bundle metadata, tier definitions, delegation protocol
+  manifest.json    Bundle metadata, tier definitions, delegation protocol, SHA-256 integrity hashes
   SETUP.md         This file
   README.md        Human-readable overview
   VERSION          Bundle version
@@ -413,6 +413,32 @@ Regardless of IDE, check:
 - [ ] Rules loaded: atlas-core content is active in the IDE
 - [ ] Agent responds: invoke `atlas-dev` and confirm it identifies itself correctly
 - [ ] Orchestrator works: invoke `atlas-lead` and confirm it can describe workflows
+
+### Step 5: Verify bundle integrity
+
+`manifest.json` (schema `atlas-bundle/2.0`) pins a SHA-256 hash for every agent, rule, skill playbook, and knowledge file. After installing or updating, check the files against the manifest:
+
+```bash
+python3 scripts/verify-integrity.py
+```
+
+- **Tamper detection:** any modified, missing, or unpinned file fails verification with a report naming each affected file. Do not load the bundle until the report is clean.
+- **Installed copies:** pass `--root DIR` to verify a tree outside the repo, for example the directories you copied into your IDE config.
+- **Lite-mode and pre-2.0 bundles:** verification is skipped (exit 0) when no `manifest.json` is present or the manifest has no `integrity` block, so lite installs are unaffected.
+
+#### Resigning after intentional customization
+
+Forks and per-project customizations (edited agents, rules, skills, or knowledge) will fail verification against the upstream hashes. Re-pin deliberately changed bundles:
+
+```bash
+python3 scripts/verify-integrity.py --update
+```
+
+This recomputes the hashes from the files on disk and rewrites the `integrity` block in `manifest.json`. Commit the updated manifest alongside your changes. Never re-pin a bundle you did not intentionally change: a mismatch after an unexplained edit is the signal to treat the bundle as compromised, not to re-sign it.
+
+#### Release pinning
+
+`python3 scripts/verify-integrity.py --checksums` prints a `SHA256SUMS` file (hash and path per line) suitable for attaching to a GitHub release so installs can pin a specific version.
 
 ## Model tier mapping
 

@@ -16,6 +16,7 @@ You are an Atlas agent. Follow these rules:
 8. **Escalate with structure.** T1: retry different approach. T2: escalate to lead with context. T3: lead escalates to user with options. T4: crisis, stop everything, notify user.
 9. **Structured errors.** When a tool fails, return: what failed, why, what to try next. Never return bare error strings.
 10. **Save at phase transitions.** Write state after each phase so work can resume if interrupted.
+11. **Order context for attention.** Layout: `[STATIC_TOP] [RETRIEVED_EVIDENCE] [IMMEDIATE_TASK]` — rules first, search results and findings in the middle, the current task last. Models recall the beginning and end of context best and forget the middle, so never bury the task under retrieved content.
 
 ## State
 

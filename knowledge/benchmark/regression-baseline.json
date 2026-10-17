@@ -1,0 +1,737 @@
+{
+  "schema": "atlas-eval/1.0",
+  "suite": "full",
+  "bundle": ".",
+  "mode": "static",
+  "judge": false,
+  "threshold": 0.7,
+  "generatedAt": "2026-10-17T15:20:33Z",
+  "tasks": [
+    {
+      "id": "orch-route-feature",
+      "category": "orchestrator",
+      "agent": "atlas-lead",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "orch-gate-sequence",
+      "category": "orchestrator",
+      "agent": "atlas-lead",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "orch-delegation-brief",
+      "category": "orchestrator",
+      "agent": "atlas-lead",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-lead.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sdlc-ba-edge-cases",
+      "category": "core-sdlc",
+      "agent": "atlas-ba",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-ba.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-ba.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-ba.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-ba.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-ba.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-ba.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sdlc-dev-fix-scope",
+      "category": "core-sdlc",
+      "agent": "atlas-dev",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-dev.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-dev.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-dev.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-dev.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-dev.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-dev.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sdlc-qa-test-gaps",
+      "category": "core-sdlc",
+      "agent": "atlas-qa",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-qa.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-qa.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-qa.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-qa.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-qa.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-qa.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sdlc-reviewer-findings",
+      "category": "core-sdlc",
+      "agent": "atlas-reviewer",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-reviewer.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-reviewer.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-reviewer.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-reviewer.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-reviewer.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-reviewer.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ent-data-pipeline",
+      "category": "enterprise",
+      "agent": "atlas-data-eng",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-data-eng.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-data-eng.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-data-eng.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-data-eng.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-data-eng.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-data-eng.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ent-cloud-landing-zone",
+      "category": "enterprise",
+      "agent": "atlas-cloud",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-cloud.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-cloud.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-cloud.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-cloud.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-cloud.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-cloud.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ent-compliance-retention",
+      "category": "enterprise",
+      "agent": "atlas-compliance",
+      "threshold": 0.7,
+      "mode": "static",
+      "pass": true,
+      "signals": {
+        "accuracy": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-compliance.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "scopeAdherence": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-compliance.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "handoffCompliance": {
+          "pass": true,
+          "score": 1.0,
+          "source": "static",
+          "checks": [
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-compliance.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        },
+        "bundle": {
+          "pass": true,
+          "checks": [
+            {
+              "signal": "accuracy",
+              "file": "agents/atlas-compliance.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "scopeAdherence",
+              "file": "agents/atlas-compliance.md",
+              "ok": true,
+              "detail": "ok"
+            },
+            {
+              "signal": "handoffCompliance",
+              "file": "agents/atlas-compliance.md",
+              "ok": true,
+              "detail": "ok"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "regressions": 0
+  }
+}

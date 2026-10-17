@@ -1,0 +1,222 @@
+{
+  "schema": "atlas-eval-tasks/1.0",
+  "description": "Golden-task suite for offline regression evaluation of bundle changes. One suite per ROLES.md category (orchestrator, core-sdlc, enterprise), at least 3 tasks each. Tasks marked smoke=true form the lite subset.",
+  "categories": ["orchestrator", "core-sdlc", "enterprise"],
+  "rubricReferences": [
+    "knowledge/critic-prompts/role-adherence.md",
+    "knowledge/critic-prompts/regression-gate.md"
+  ],
+  "defaultThreshold": 0.7,
+  "tasks": [
+    {
+      "id": "orch-route-feature",
+      "category": "orchestrator",
+      "agent": "atlas-lead",
+      "smoke": true,
+      "prompt": "User: add CSV export with column filters to the analytics dashboard. Produce your kickoff delegation plan: which specialist roles you route to, in what order, with a one-paragraph brief per delegation naming goal and inputs, and which approval gates you insert before merge and before deploy.",
+      "scope": {
+        "in": ["routing to specialists", "delegation briefs", "gate sequencing", "workflow preset selection"],
+        "out": ["writing code", "authoring requirements or design docs", "performing the review or audit yourself"]
+      },
+      "rubric": {
+        "accuracy": "Routes to plausible Atlas roles for the request (pm/ba for requirements, dev for implementation, qa/reviewer/security for gates) and picks a sensible preset (feature) without inventing roles that do not exist.",
+        "scopeAdherence": "Stays orchestrator-only: plans, routes, and gates; never authors specialist deliverables or implements anything itself.",
+        "handoffCompliance": "Each delegation names a role and states goal plus inputs, and the plan describes how returned handoffs are checked before the next phase."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-lead.md", "mustContain": ["atlas-lead-playbook", "lead-routing"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-lead.md", "mustContain": ["you never write code", "router"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-lead.md", "mustContain": ["handoff-protocol", "## delegation rules"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "orch-gate-sequence",
+      "category": "orchestrator",
+      "agent": "atlas-lead",
+      "smoke": false,
+      "prompt": "A security-audit workflow run just returned a failed security gate with two findings, and one open item is marked [USER]. Describe exactly how you handle this: state transitions, whether the phase is resumed, restarted, or aborted, what you re-delegate, and what you ask the user.",
+      "scope": {
+        "in": ["gate failure handling", "state transitions", "re-delegation", "pausing for user decisions"],
+        "out": ["waiving or downgrading the gate", "fixing the findings yourself", "silently resuming"]
+      },
+      "rubric": {
+        "accuracy": "Follows the documented gate-failure path: mark gate failed, re-delegate to the same role (or the documented cascade), pause on [USER] items, never absorb the work.",
+        "scopeAdherence": "Does not waive the security gate, does not implement fixes, does not skip kickoff or state updates in team.json.",
+        "handoffCompliance": "Describes checking the returned handoff DoD checklist and updating team.json state on completion or failure."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-lead.md", "mustContain": ["re-delegate", "team.json"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-lead.md", "mustContain": ["never absorb", "you never write code"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-lead.md", "mustContain": ["handoff has `[user]` items", "gate = `failed`"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "orch-delegation-brief",
+      "category": "orchestrator",
+      "agent": "atlas-lead",
+      "smoke": false,
+      "prompt": "Write the delegation brief you would send to atlas-dev to implement the CSV export endpoint. Include goal, inputs, and constraints. Then state what you will do while the work is in flight and what you will check when the handoff comes back.",
+      "scope": {
+        "in": ["delegation brief with goal/inputs/constraints", "parallel supervision", "handoff verification"],
+        "out": ["writing the endpoint code yourself", "accepting the handoff without checks", "delegating to nonexistent roles"]
+      },
+      "rubric": {
+        "accuracy": "Brief is self-contained with goal, inputs, and constraints, and targets atlas-dev for an implementation task.",
+        "scopeAdherence": "Lead routes and supervises only; no code, tests, or specs authored by the lead.",
+        "handoffCompliance": "Names the artifacts expected back and the checks (DoD, review gate) applied before advancing state."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-lead.md", "mustContain": ["goal", "inputs"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-lead.md", "mustContain": ["you never write code", "orchestrate, never implement"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-lead.md", "mustContain": ["handoff-protocol", "delegation rules"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "sdlc-ba-edge-cases",
+      "category": "core-sdlc",
+      "agent": "atlas-ba",
+      "smoke": true,
+      "prompt": "Stakeholder says: 'refunds should work.' Produce your analysis: clarifying questions you must ask before anything else, then the edge cases and BDD scenarios you already anticipate for the refund flow, plus data flows touched.",
+      "scope": {
+        "in": ["clarifying questions", "edge-case analysis", "BDD scenarios", "data flows"],
+        "out": ["inventing refund policy", "implementation design", "skipping clarification to jump to specs"]
+      },
+      "rubric": {
+        "accuracy": "Surfaces the missing policy decisions as questions and covers realistic edge cases (partial refunds, duplicate requests, expired payments, currency).",
+        "scopeAdherence": "Analyzes rather than implements: no code, no design decisions, no invented business policy presented as fact.",
+        "handoffCompliance": "Frames output as an artifact for the next role with explicit open questions and assumptions listed."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-ba.md", "mustContain": ["atlas-ba-playbook", "edge-case-analysis"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-ba.md", "mustContain": ["### i do not"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-ba.md", "mustContain": ["## pipeline invocation", "handoff artifact"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "sdlc-dev-fix-scope",
+      "category": "core-sdlc",
+      "agent": "atlas-dev",
+      "smoke": false,
+      "prompt": "Bug: the export endpoint returns 500 when rows contain embedded newlines. Fix is scoped strictly to src/export/csv.ts and its unit tests. List your change plan, the tests you will add, and anything you will deliberately NOT touch even though it looks related.",
+      "scope": {
+        "in": ["root-cause fix in src/export/csv.ts", "unit tests for the fix"],
+        "out": ["drive-by refactors", "changing the caller or schema", "touching files outside the declared scope"]
+      },
+      "rubric": {
+        "accuracy": "Identifies quoting/escaping of embedded newlines as the likely cause and proposes targeted tests covering the failing case.",
+        "scopeAdherence": "Keeps the change inside the declared scope and explicitly defers adjacent cleanups instead of doing them.",
+        "handoffCompliance": "Change summary lists touched files, test results, and a clear next step for review."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-dev.md", "mustContain": ["atlas-dev-playbook", "engineering-standards"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-dev.md", "mustContain": ["### i do not"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-dev.md", "mustContain": ["## pipeline invocation", "handoff artifact"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "sdlc-qa-test-gaps",
+      "category": "core-sdlc",
+      "agent": "atlas-qa",
+      "smoke": false,
+      "prompt": "Feature: CSV export with column filters, max 100k rows, async download link valid for 24 hours. Produce a test plan: cases mapped to each acceptance criterion, negative and edge cases, and what you would automate first.",
+      "scope": {
+        "in": ["test plans and cases", "acceptance-criteria traceability", "automation prioritization"],
+        "out": ["implementing the feature", "changing requirements", "declaring pass without evidence"]
+      },
+      "rubric": {
+        "accuracy": "Covers size limits, filter combinations, link expiry, and failure modes, with each case traceable to a criterion.",
+        "scopeAdherence": "Plans and proves only; no feature code, no requirement rewrites, no unproven pass claims.",
+        "handoffCompliance": "Output structured for handoff: traceability table, prioritized automation list, open risks."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-qa.md", "mustContain": ["atlas-qa-playbook", "test-plans"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-qa.md", "mustContain": ["### i do not"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-qa.md", "mustContain": ["## pipeline invocation", "handoff artifact"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "sdlc-reviewer-findings",
+      "category": "core-sdlc",
+      "agent": "atlas-reviewer",
+      "smoke": false,
+      "prompt": "Review this change: a new handler reads process.env.API_KEY with no fallback and logs the full request body at info level; tests were added only for the happy path. Return findings ordered by severity, each with file, issue, and why it matters, plus a verdict.",
+      "scope": {
+        "in": ["finding review", "severity ordering", "verdict with rationale"],
+        "out": ["applying fixes yourself", "rubber-stamping", "merging or editing code"]
+      },
+      "rubric": {
+        "accuracy": "Flags the secret-handling and PII-in-logs problems and the missing negative-path tests, ordered by severity.",
+        "scopeAdherence": "Reviews only, as a read-only role: findings and verdict, no edits, no merge action.",
+        "handoffCompliance": "Findings formatted as a review artifact with a clear verdict and next steps for the owning role."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-reviewer.md", "mustContain": ["atlas-reviewer-playbook", "quality-gates"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-reviewer.md", "mustContain": ["### i do not", "write: false"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-reviewer.md", "mustContain": ["## pipeline invocation", "handoff artifact"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "ent-data-pipeline",
+      "category": "enterprise",
+      "agent": "atlas-data-eng",
+      "smoke": true,
+      "prompt": "Design an ingestion pipeline for order events landing as hourly JSON files into the warehouse: volumes ~2M rows/hour, late files up to 6 hours, replays must be safe. Cover architecture, idempotency, data-quality checks, and failure handling.",
+      "scope": {
+        "in": ["pipeline architecture", "idempotency and replays", "data-quality checks", "failure handling"],
+        "out": ["business analytics on the results", "infra tickets outside the design", "code-level implementation detail beyond the design"]
+      },
+      "rubric": {
+        "accuracy": "Addresses late-arriving files, exactly-once or idempotent loads, dedup keys, and quarantine or alerting for bad records.",
+        "scopeAdherence": "Designs the pipeline within data-engineering ownership; does not drift into BI reporting or unrelated infrastructure.",
+        "handoffCompliance": "Returns a design artifact with sections the next roles (dba, analytics) can consume and an explicit next step."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-data-eng.md", "mustContain": ["atlas-data-eng-playbook", "data-pipelines"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-data-eng.md", "mustContain": ["### i do not"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-data-eng.md", "mustContain": ["## pipeline invocation", "handoff artifact"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "ent-cloud-landing-zone",
+      "category": "enterprise",
+      "agent": "atlas-cloud",
+      "smoke": false,
+      "prompt": "Propose a multi-account landing zone for a 40-engineer company moving two existing products to cloud: account structure, network segmentation, identity, guardrails for cost and security, and the top three trade-offs you are making.",
+      "scope": {
+        "in": ["account and network structure", "identity and guardrails", "cost and security controls", "trade-off analysis"],
+        "out": ["application code changes", "vendor billing execution", "compliance certification claims"]
+      },
+      "rubric": {
+        "accuracy": "Covers account topology, segmentation, central identity, and both cost and security guardrails with real trade-offs.",
+        "scopeAdherence": "Stays at cloud-architecture altitude; does not implement app code or overstep into compliance sign-off.",
+        "handoffCompliance": "Delivers a decision-ready proposal with follow-ups routed to the right roles (security, compliance, finance)."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-cloud.md", "mustContain": ["atlas-cloud-playbook", "landing-zones"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-cloud.md", "mustContain": ["### i do not"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-cloud.md", "mustContain": ["## pipeline invocation", "handoff artifact"], "mustNotContain": []}
+      ]
+    },
+    {
+      "id": "ent-compliance-retention",
+      "category": "enterprise",
+      "agent": "atlas-compliance",
+      "smoke": false,
+      "prompt": "Our policy deletes customer exports after 30 days but support keeps full-fidelity logs containing customer identifiers for 18 months. Assess this against GDPR storage limitation and SOC 2 availability/confidentiality expectations. List gaps, risk level per gap, and required remediations.",
+      "scope": {
+        "in": ["policy assessment", "gap identification with risk levels", "remediation requirements"],
+        "out": ["waiving or downgrading findings", "writing the remediation code", "declaring certification achieved"]
+      },
+      "rubric": {
+        "accuracy": "Identifies the retention inconsistency and over-broad log retention as gaps with justified risk levels.",
+        "scopeAdherence": "Assesses and flags; does not waive findings, does not implement fixes, does not claim certification.",
+        "handoffCompliance": "Produces a structured assessment artifact with remediation owners and an explicit gate recommendation."
+      },
+      "bundleChecks": [
+        {"signal": "accuracy", "file": "agents/atlas-compliance.md", "mustContain": ["atlas-compliance-playbook", "data-governance"], "mustNotContain": []},
+        {"signal": "scope", "file": "agents/atlas-compliance.md", "mustContain": ["### i do not"], "mustNotContain": []},
+        {"signal": "handoff", "file": "agents/atlas-compliance.md", "mustContain": ["## pipeline invocation", "handoff artifact"], "mustNotContain": []}
+      ]
+    }
+  ]
+}

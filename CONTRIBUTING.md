@@ -59,7 +59,10 @@ Adding lite support to a new role: append a `## Lite mode` block to its agent fi
 - Update `CHANGELOG.md` and bump `VERSION` when behavior changes.
 - Do not commit secrets. Keep the knowledge base free of credentials and PII.
 - Run `python3 scripts/validate-refs.py` and, if you touched a file with a `## Lite mode` block, `python3 scripts/build-lite.py --check`. Both should exit clean.
+- If you changed any file under `agents/`, `rules/`, `skills/`, or `knowledge/`, run `python3 scripts/verify-integrity.py --update` to re-pin the SHA-256 hashes in `manifest.json`. `validate-refs.py` fails otherwise.
 - If you touched a file under `workflows/` or `manifest.json`'s `workflowMeta`, run `python3 scripts/validate-workflows.py`. It must exit clean.
+- If you changed any file under `agents/`, `rules/`, `skills/`, or `workflows/`, run `python3 scripts/eval run` before release. It scores the golden-task suite (`knowledge/benchmark/golden-tasks.json`, three or more tasks per role category) with deterministic bundle checks plus an LLM-as-judge scorecard when `ATLAS_EVAL_JUDGE_CMD` is set, and diffs the result against `knowledge/benchmark/regression-baseline.json`. It must exit clean; regressions fail the release gate.
+- `python3 scripts/eval run --lite` is the fast smoke subset (one task per role category, no judge). When a behavior change is intentional, re-pin with `python3 scripts/eval run --write-baseline` and commit the updated baseline. `python3 scripts/eval collect` folds `$ATLAS_DATA_DIR/runs/*/trajectory.jsonl` into `knowledge/benchmark/online-signals.json` and checks online drift against the baseline (`--update-baseline` refreshes it).
 
 ## Repository automation
 

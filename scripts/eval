@@ -1,0 +1,570 @@
+#!/usr/bin/env python3
+"""Atlas framework regression evaluation harness.
+
+Usage:
+    python3 scripts/eval run [--lite] [--bundle PATH] [--out PATH] [--write-baseline]
+                             [--responses FILE] [--agent-cmd CMD] [--judge-cmd CMD]
+                             [--no-diff] [--threshold FLOAT]
+    python3 scripts/eval diff --run FILE [--baseline FILE]
+    python3 scripts/eval collect [--runs DIR] [--out PATH] [--update-baseline] [--no-write]
+
+What it does:
+1. Loads the golden-task suite from knowledge/benchmark/golden-tasks.json
+   (>=3 tasks per ROLES.md category: orchestrator, core-sdlc, enterprise).
+2. Always runs deterministic bundle checks per task (agent exists, declares its
+   playbook, role boundaries, and handoff contract sections). These are the
+   offline, no-LLM regression gate.
+3. When ATLAS_EVAL_JUDGE_CMD is set (and --lite is not), scores task responses
+   with an LLM-as-judge at temperature=0 against a fixed JSON schema:
+   {accuracy, scope_adherence, handoff_compliance} each 0..1, plus notes.
+   Responses come from ATLAS_EVAL_AGENT_CMD (stdin task JSON, stdout text) or
+   --responses FILE ({task_id: text}). --lite never runs the judge.
+4. Writes/compares results against knowledge/benchmark/regression-baseline.json
+   and prints regressions (baseline pass -> run fail).
+5. collect ingests $ATLAS_DATA_DIR/runs/*/trajectory.jsonl online signals into
+   knowledge/benchmark/online-signals.json and checks them against drift
+   thresholds, optionally folding them into the baseline.
+
+Exit code: 0 = pass, 1 = failures or regressions found
+"""
+
+import argparse
+import json
+import os
+import shlex
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+TASKS_PATH = ROOT / "knowledge" / "benchmark" / "golden-tasks.json"
+BASELINE_PATH = ROOT / "knowledge" / "benchmark" / "regression-baseline.json"
+ONLINE_PATH = ROOT / "knowledge" / "benchmark" / "online-signals.json"
+
+SCORED_SIGNALS = ("accuracy", "scopeAdherence", "handoffCompliance")
+# Golden-task checks tag their signal with these short names.
+SIGNAL_ALIAS = {"accuracy": "accuracy", "scope": "scopeAdherence",
+                "handoff": "handoffCompliance"}
+DEFAULT_THRESHOLD = 0.7
+
+ONLINE_THRESHOLDS = {
+    "errorRate": {"max": 0.10},
+    "blockedRate": {"max": 0.10},
+    "recoveryRate": {"min": 0.50},
+}
+
+
+def now_iso():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def display_path(path):
+    """Repo-relative path when possible, so baselines are machine-independent."""
+    path = Path(path).resolve()
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def load_json(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def write_json(path, data):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+# ---------------------------------------------------------------- suite loading
+
+def select_tasks(suite, lite):
+    tasks = suite.get("tasks", [])
+    if lite:
+        smoke = [t for t in tasks if t.get("smoke")]
+        if not smoke:
+            raise SystemExit("ERROR: no smoke tasks marked in golden-tasks.json")
+        return smoke
+    return tasks
+
+
+# ---------------------------------------------------------------- static checks
+
+def run_check(bundle, check):
+    rel = check.get("file", "")
+    result = {"signal": check.get("signal", "bundle"), "file": rel, "ok": False, "detail": ""}
+    path = Path(bundle) / rel
+    if not path.is_file():
+        result["detail"] = "file missing from bundle"
+        return result
+    text = path.read_text(encoding="utf-8").lower()
+    for needle in check.get("mustContain", []):
+        if needle.lower() not in text:
+            result["detail"] = f"missing required content: {needle!r}"
+            return result
+    for needle in check.get("mustNotContain", []):
+        if needle.lower() in text:
+            result["detail"] = f"forbidden content present: {needle!r}"
+            return result
+    result["ok"] = True
+    result["detail"] = "ok"
+    return result
+
+
+def static_signals(bundle, task):
+    """Group bundle checks per signal: accuracy, scope, handoff, plus overall."""
+    checks = [run_check(bundle, c) for c in task.get("bundleChecks", [])]
+    for c in checks:
+        c["signal"] = SIGNAL_ALIAS.get(c["signal"], c["signal"])
+    signals = {}
+    for signal in SCORED_SIGNALS:
+        mine = [c for c in checks if c["signal"] == signal]
+        ok = all(c["ok"] for c in mine) if mine else True
+        signals[signal] = {"pass": ok, "score": 1.0 if ok else 0.0, "source": "static",
+                           "checks": mine}
+    signals["bundle"] = {"pass": all(c["ok"] for c in checks) if checks else False,
+                         "checks": checks}
+    return signals
+
+
+# ---------------------------------------------------------------- LLM judge
+
+def run_external(cmd, payload, timeout):
+    """Run an external command, feeding JSON on stdin, returning (text, error)."""
+    try:
+        proc = subprocess.run(
+            shlex.split(cmd),
+            input=json.dumps(payload),
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except (OSError, ValueError) as exc:
+        return None, f"cannot run {cmd!r}: {exc}"
+    except subprocess.TimeoutExpired:
+        return None, f"{cmd!r} timed out after {timeout}s"
+    if proc.returncode != 0:
+        err = (proc.stderr or proc.stdout or "").strip()[:300]
+        return None, f"{cmd!r} exited {proc.returncode}: {err}"
+    return proc.stdout, None
+
+
+def load_responses(tasks, agent_cmd, responses_file, timeout):
+    """Return {task_id: response_text}. Raises SystemExit on hard failure."""
+    if responses_file:
+        data = load_json(responses_file)
+        missing = [t["id"] for t in tasks if t["id"] not in data]
+        if missing:
+            raise SystemExit(f"ERROR: responses file {responses_file} lacks: {', '.join(missing)}")
+        return data
+    if not agent_cmd:
+        return None
+    responses = {}
+    for task in tasks:
+        payload = {k: task.get(k) for k in ("id", "category", "agent", "prompt", "scope", "rubric")}
+        text, err = run_external(agent_cmd, payload, timeout)
+        if err:
+            raise SystemExit(f"ERROR: agent command failed for {task['id']}: {err}")
+        responses[task["id"]] = text
+    return responses
+
+
+def judge_response(judge_cmd, task, response, threshold, timeout):
+    """Score one response. Returns dict of three signals or an error string."""
+    payload = {
+        "schema": "atlas-eval-judge/1.0",
+        "temperature": 0,
+        "task": {k: task.get(k) for k in ("id", "category", "agent", "prompt", "scope", "rubric")},
+        "response": response,
+        "threshold": threshold,
+    }
+    text, err = run_external(judge_cmd, payload, timeout)
+    if err:
+        return None, err
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return None, f"judge returned invalid JSON: {exc}"
+    scores = {}
+    for key, judge_key in (("accuracy", "accuracy"),
+                           ("scopeAdherence", "scope_adherence"),
+                           ("handoffCompliance", "handoff_compliance")):
+        raw = data.get(judge_key)
+        if not isinstance(raw, (int, float)):
+            return None, f"judge output missing numeric {judge_key!r}"
+        scores[key] = max(0.0, min(1.0, float(raw)))
+    notes = str(data.get("notes", ""))[:500]
+    return {"scores": scores, "notes": notes}, None
+
+
+# ---------------------------------------------------------------- scoring
+
+def build_result(task, static, threshold, judged=None, judge_error=None):
+    """Merge static checks and optional judge output into a scorecard entry."""
+    signals = dict(static)
+    if judged:
+        for key in SCORED_SIGNALS:
+            score = judged["scores"][key]
+            signals[key] = {"pass": score >= threshold, "score": round(score, 3),
+                            "source": "judge", "notes": judged["notes"]}
+    elif judge_error:
+        for key in SCORED_SIGNALS:
+            signals[key] = {"pass": False, "score": 0.0, "source": "judge",
+                            "notes": f"judge error: {judge_error}"}
+    task_pass = signals["bundle"]["pass"] and all(signals[k]["pass"] for k in SCORED_SIGNALS)
+    return {
+        "id": task["id"],
+        "category": task.get("category", ""),
+        "agent": task.get("agent", ""),
+        "threshold": threshold,
+        "mode": "judged" if (judged or judge_error) else "static",
+        "pass": task_pass,
+        "signals": signals,
+    }
+
+
+def diff_runs(current, baseline):
+    base_map = {t["id"]: t for t in baseline.get("tasks", [])}
+    cur_map = {t["id"]: t for t in current.get("tasks", [])}
+    diff = {"regressions": [], "fixed": [], "added": [], "removed": [], "unchanged": 0}
+    for tid, cur in cur_map.items():
+        base = base_map.get(tid)
+        if base is None:
+            diff["added"].append(tid)
+        elif base.get("pass") and not cur.get("pass"):
+            diff["regressions"].append(tid)
+        elif not base.get("pass") and cur.get("pass"):
+            diff["fixed"].append(tid)
+        else:
+            diff["unchanged"] += 1
+    for tid in base_map:
+        if tid not in cur_map:
+            diff["removed"].append(tid)
+    return diff
+
+
+def print_diff(diff, baseline_label):
+    print(f"\nDiff vs {baseline_label}:")
+    for tid in diff["regressions"]:
+        print(f"   REGRESSION {tid}: pass -> fail")
+    for tid in diff["fixed"]:
+        print(f"   FIXED      {tid}: fail -> pass")
+    for tid in diff["added"]:
+        print(f"   NEW        {tid}: not in baseline")
+    for tid in diff["removed"]:
+        print(f"   REMOVED    {tid}: in baseline, not in this run")
+    if not (diff["regressions"] or diff["fixed"] or diff["added"] or diff["removed"]):
+        print(f"   OK: {diff['unchanged']} tasks unchanged")
+
+
+# ---------------------------------------------------------------- subcommands
+
+def cmd_run(args):
+    print("Atlas Framework Regression Eval")
+    print("=" * 50)
+
+    if not TASKS_PATH.is_file():
+        print(f"ERROR: golden task suite not found: {TASKS_PATH}")
+        return 1
+    suite = load_json(TASKS_PATH)
+    tasks = select_tasks(suite, args.lite)
+    threshold = args.threshold or suite.get("defaultThreshold", DEFAULT_THRESHOLD)
+    bundle = Path(args.bundle).resolve() if args.bundle else ROOT
+
+    agent_cmd = args.agent_cmd or os.environ.get("ATLAS_EVAL_AGENT_CMD")
+    judge_cmd = args.judge_cmd or os.environ.get("ATLAS_EVAL_JUDGE_CMD")
+    use_judge = bool(judge_cmd) and not args.lite
+
+    print(f"\n1. Loaded suite '{suite.get('schema', '?')}': {len(tasks)} tasks"
+          f" ({'lite smoke subset' if args.lite else 'full suite'})")
+    print(f"   Bundle: {bundle}")
+    print(f"   Threshold: {threshold}")
+
+    responses = None
+    if use_judge:
+        responses = load_responses(tasks, agent_cmd, args.responses, args.timeout)
+        if responses is None:
+            print("   WARNING: judge requested but no ATLAS_EVAL_AGENT_CMD or --responses;"
+                  " falling back to static-only scoring")
+            use_judge = False
+
+    print(f"\n2. Scoring ({'judged, temperature=0' if use_judge else 'static, no judge'})...")
+    results = []
+    for task in tasks:
+        static = static_signals(bundle, task)
+        judged = judge_error = None
+        if use_judge:
+            judged, judge_error = judge_response(
+                judge_cmd, task, responses[task["id"]], threshold, args.timeout)
+        results.append(build_result(task, static, threshold, judged, judge_error))
+
+    failures = [r for r in results if not r["pass"]]
+    run_doc = {
+        "schema": "atlas-eval/1.0",
+        "suite": "lite" if args.lite else "full",
+        "bundle": display_path(bundle),
+        "mode": "judged" if use_judge else "static",
+        "judge": use_judge,
+        "threshold": threshold,
+        "generatedAt": now_iso(),
+        "tasks": results,
+        "summary": {
+            "total": len(results),
+            "passed": len(results) - len(failures),
+            "failed": len(failures),
+        },
+    }
+
+    for r in results:
+        flag = "pass" if r["pass"] else "FAIL"
+        parts = [f"{k}={r['signals'][k]['source']}:{r['signals'][k]['score']}" for k in SCORED_SIGNALS]
+        print(f"   [{flag:>4}] {r['id']} ({r['category']}) {' '.join(parts)}")
+        if not r["pass"]:
+            for c in r["signals"]["bundle"]["checks"]:
+                if not c["ok"]:
+                    print(f"          bundle check failed: {c['file']}: {c['detail']}")
+            for k in SCORED_SIGNALS:
+                if not r["signals"][k]["pass"]:
+                    print(f"          {k} failed: score={r['signals'][k]['score']}")
+
+    regressions = []
+    if args.diff:
+        if BASELINE_PATH.is_file():
+            baseline = load_json(BASELINE_PATH)
+            diff = diff_runs(run_doc, baseline)
+            if args.lite:
+                # The baseline stores the full suite; a lite run only scores the
+                # smoke subset, so tasks it did not run are not "removed".
+                diff["removed"] = []
+            print_diff(diff, "knowledge/benchmark/regression-baseline.json")
+            regressions = diff["regressions"]
+            run_doc["summary"]["regressions"] = len(regressions)
+        else:
+            print("\n   NOTE: no baseline found; run with --write-baseline to create one")
+
+    if args.out:
+        write_json(args.out, run_doc)
+        print(f"\n3. Results written to {args.out}")
+    if args.write_baseline:
+        if args.lite:
+            print("\nERROR: refusing to store a lite (smoke) run as the baseline;"
+                  " run the full suite: python3 scripts/eval run --write-baseline")
+            return 1
+        write_json(BASELINE_PATH, run_doc)
+        print(f"\n3. Baseline written to knowledge/benchmark/regression-baseline.json")
+
+    print("\n" + "=" * 50)
+    issues = len(failures) + len(regressions)
+    if issues == 0:
+        print("RESULT: CLEAN - No failures or regressions")
+        return 0
+    print(f"RESULT: {issues} ISSUES FOUND ({len(failures)} failed, {len(regressions)} regressions)")
+    return 1
+
+
+def cmd_diff(args):
+    current = load_json(args.run)
+    baseline = load_json(args.baseline) if args.baseline else BASELINE_PATH
+    if not Path(baseline).is_file():
+        print(f"ERROR: baseline not found: {baseline}")
+        return 1
+    diff = diff_runs(current, load_json(baseline))
+    print_diff(diff, str(baseline))
+    return 1 if diff["regressions"] else 0
+
+
+def collect_signals(runs_dir):
+    """Aggregate trajectory signals across runs under runs_dir."""
+    agg = {"runs": 0, "entries": 0, "failure": 0, "blocked": 0, "escalated": 0,
+           "success": 0, "withError": 0, "recovered": 0, "delegations": 0,
+           "gates": 0, "roles": set(), "perRun": []}
+    if not runs_dir.is_dir():
+        return None
+    for run_dir in sorted(p for p in runs_dir.iterdir() if p.is_dir()):
+        traj = run_dir / "trajectory.jsonl"
+        if not traj.is_file():
+            continue
+        run = {"id": run_dir.name, "entries": 0, "failure": 0}
+        for line in traj.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            agg["entries"] += 1
+            run["entries"] += 1
+            outcome = entry.get("outcome", "")
+            if outcome in ("failure", "blocked", "escalated"):
+                agg[outcome] += 1
+                run["failure"] += 1
+            elif outcome == "success":
+                agg["success"] += 1
+            if outcome in ("failure", "blocked") or entry.get("error"):
+                agg["withError"] += 1
+                if entry.get("recoveryAction"):
+                    agg["recovered"] += 1
+            if entry.get("action") == "delegate":
+                agg["delegations"] += 1
+            if entry.get("action") == "gate-check":
+                agg["gates"] += 1
+            if entry.get("role"):
+                agg["roles"].add(entry["role"])
+        agg["runs"] += 1
+        agg["perRun"].append(run)
+    return agg
+
+
+def evaluate_online(agg):
+    n = agg["entries"]
+    error_rate = agg["failure"] / n if n else 0.0
+    blocked_rate = agg["blocked"] / n if n else 0.0
+    recovery_rate = agg["recovered"] / agg["withError"] if agg["withError"] else None
+    values = {"errorRate": round(error_rate, 4), "blockedRate": round(blocked_rate, 4),
+              "recoveryRate": round(recovery_rate, 4) if recovery_rate is not None else None}
+    signals = {}
+    for name, limits in ONLINE_THRESHOLDS.items():
+        value = values[name]
+        if value is None:
+            signals[name] = {"value": None, "limits": limits, "pass": True,
+                             "notes": "no errors observed; not applicable"}
+        elif "max" in limits:
+            signals[name] = {"value": value, "limits": limits, "pass": value <= limits["max"]}
+        else:
+            signals[name] = {"value": value, "limits": limits, "pass": value >= limits["min"]}
+    return values, signals, all(s["pass"] for s in signals.values())
+
+
+def cmd_collect(args):
+    print("Atlas Eval: Online Signal Collection")
+    print("=" * 50)
+    if args.runs:
+        runs_dir = Path(args.runs)
+    else:
+        data_home = Path(os.environ.get("ATLAS_DATA_DIR", str(Path.home() / ".atlas" / "data")))
+        runs_dir = data_home.expanduser() / "runs"
+
+    agg = collect_signals(runs_dir)
+    if agg is None or agg["runs"] == 0:
+        print(f"\nSKIPPED: no trajectory runs found under {runs_dir}")
+        print("\nRESULT: SKIPPED - No online data (not a failure)")
+        return 0
+
+    values, signals, online_pass = evaluate_online(agg)
+    doc = {
+        "schema": "atlas-eval-online/1.0",
+        "source": str(runs_dir),
+        "collectedAt": now_iso(),
+        "runs": agg["runs"],
+        "entries": agg["entries"],
+        "roles": sorted(agg["roles"]),
+        "delegations": agg["delegations"],
+        "gates": agg["gates"],
+        "values": values,
+        "signals": signals,
+        "pass": online_pass,
+        "perRun": agg["perRun"],
+    }
+    print(f"\n1. Scanned {agg['runs']} runs, {agg['entries']} trajectory entries under {runs_dir}")
+    for name, sig in signals.items():
+        flag = "pass" if sig["pass"] else "FAIL"
+        print(f"   [{flag:>4}] {name} = {sig['value']} (limits {sig['limits']})")
+
+    baseline_online = None
+    if BASELINE_PATH.is_file():
+        baseline_online = load_json(BASELINE_PATH).get("online")
+    if baseline_online:
+        print("\n2. Drift vs baseline online signals:")
+        for name in ONLINE_THRESHOLDS:
+            old = baseline_online.get("values", {}).get(name)
+            new = values.get(name)
+            if old is None or new is None:
+                print(f"   {name}: baseline n/a, current {new}")
+                continue
+            delta = round(new - old, 4)
+            drift = "DRIFT" if (delta > 0.05 and not signals[name]["pass"]) else "ok"
+            print(f"   {name}: baseline {old} -> current {new} (delta {delta:+}) [{drift}]")
+
+    out_path = Path(args.out) if args.out else ONLINE_PATH
+    if not args.no_write:
+        write_json(out_path, doc)
+        step = 3 if baseline_online else 2
+        print(f"\n{step}. Online signals written to {out_path}")
+
+    if args.update_baseline:
+        if not BASELINE_PATH.is_file():
+            print("   ERROR: no baseline to update; run 'scripts/eval run --write-baseline' first")
+            return 1
+        baseline = load_json(BASELINE_PATH)
+        baseline["online"] = {"collectedAt": doc["collectedAt"], "runs": doc["runs"],
+                              "entries": doc["entries"], "values": doc["values"],
+                              "pass": doc["pass"]}
+        write_json(BASELINE_PATH, baseline)
+        print("   Baseline online section updated.")
+
+    print("\n" + "=" * 50)
+    if online_pass:
+        print("RESULT: CLEAN - Online signals within drift thresholds")
+        return 0
+    print("RESULT: DRIFT DETECTED - Online signals exceed drift thresholds")
+    return 1
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="scripts/eval",
+        description="Atlas framework regression evaluation harness for bundle changes")
+    sub = parser.add_subparsers(dest="command")
+
+    p_run = sub.add_parser("run", help="run the golden-task suite against the bundle")
+    p_run.add_argument("--lite", action="store_true",
+                       help="smoke subset (one task per role category), no judge")
+    p_run.add_argument("--bundle", default=None,
+                       help="bundle root to evaluate (default: this repo)")
+    p_run.add_argument("--out", default=None, help="write run results JSON to this path")
+    p_run.add_argument("--write-baseline", action="store_true",
+                       help="store these results as knowledge/benchmark/regression-baseline.json")
+    p_run.add_argument("--no-diff", dest="diff", action="store_false",
+                       help="skip baseline comparison")
+    p_run.add_argument("--responses", default=None,
+                       help="JSON file of {task_id: response} instead of running the agent command")
+    p_run.add_argument("--agent-cmd", default=None,
+                       help="override ATLAS_EVAL_AGENT_CMD (stdin task JSON, stdout response)")
+    p_run.add_argument("--judge-cmd", default=None,
+                       help="override ATLAS_EVAL_JUDGE_CMD (stdin judge payload, stdout scores JSON)")
+    p_run.add_argument("--threshold", type=float, default=None,
+                       help=f"pass threshold per signal (default: suite default or {DEFAULT_THRESHOLD})")
+    p_run.add_argument("--timeout", type=int, default=120,
+                       help="seconds per external command (default: 120)")
+
+    p_diff = sub.add_parser("diff", help="compare a run result file against the baseline")
+    p_diff.add_argument("--run", required=True, help="run results JSON to compare")
+    p_diff.add_argument("--baseline", default=None,
+                        help="baseline path (default: knowledge/benchmark/regression-baseline.json)")
+
+    p_col = sub.add_parser("collect", help="ingest run trajectories into online eval signals")
+    p_col.add_argument("--runs", default=None,
+                       help="runs directory (default: $ATLAS_DATA_DIR/runs)")
+    p_col.add_argument("--out", default=None,
+                       help="output path (default: knowledge/benchmark/online-signals.json)")
+    p_col.add_argument("--update-baseline", action="store_true",
+                       help="fold current online signals into the regression baseline")
+    p_col.add_argument("--no-write", action="store_true", help="print only, write nothing")
+
+    argv = sys.argv[1:]
+    if not argv or argv[0] not in ("run", "diff", "collect", "-h", "--help"):
+        argv = ["run"] + argv
+    args = parser.parse_args(argv)
+    if args.command == "diff":
+        return cmd_diff(args)
+    if args.command == "collect":
+        return cmd_collect(args)
+    return cmd_run(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
