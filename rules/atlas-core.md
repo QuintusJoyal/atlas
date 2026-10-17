@@ -62,6 +62,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | OTel spans, 8 metrics, anomaly detection (opt-in, self-assessment only) | `knowledge/process/observability-system.md` |
 | Quality scoring, self-healing doctrine (opt-in, self-assessment only) | `knowledge/process/decision-quality-scoring.md` |
 | Parallel artifact conflict detection | `knowledge/process/divergence-detection.md` |
+| Agent behavior monitoring, anomaly scoring, forensic review (opt-in) | `knowledge/security/agent-behavior-anomaly-detection.md` |
 | Role-adherence critic prompt (default) | `knowledge/critic-prompts/role-adherence.md` |
 | Full 5-critic model with gapped/multi-run critics (opt-in) | `knowledge/process/adversarial-critics.md` |
 | Checkpoint schema, levels, fork, create/restore/list operations | `knowledge/process/checkpoint-protocol.md` |

@@ -22,6 +22,7 @@ tags: [playbook, security, owasp, stride]
 - NIST SP 800-53 → k/nist-800-53-controls
 - CWE/SANS Top 25 → k/cwe-sans-top-25
 - GDPR requirements → k/gdpr-requirements
+- Agent behavior anomaly detection (baselines, scoring, forensics) → k/agent-behavior-anomaly-detection
 
 ## Scope
 security review, threat modeling, OWASP checks, secrets scanning, vulnerability assessment, security architecture recommendations | NOT implementation (→ dev), testing (→ qa), compliance audit (→ compliance), deployment (→ devops)

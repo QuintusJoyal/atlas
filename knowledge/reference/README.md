@@ -56,6 +56,7 @@ Each file is standalone and shareable. Agents search via playbook Knowledge Inde
 | stride-threat-modeling.md | Threat identification | security, architect |
 | nist-800-53-controls.md | Security control families | security, compliance |
 | cwe-sans-top-25.md | Most dangerous weaknesses | security, dev |
+| agent-behavior-anomaly-detection.md | Agent behavior baselines, anomaly scoring, forensics | security, lead, devops |
 
 ### Architecture
 | File | Topic | Used By |
