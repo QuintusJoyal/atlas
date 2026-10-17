@@ -161,6 +161,7 @@
     "context/observe-before-act.md",
     "context/pre-handoff-quality-check.md",
     "context/escalation-tiers.md",
+    "context/adaptive-autonomy.md",
     "context/memory-hierarchy.md",
     "context/prompt-cache-strategy.md",
     "context/lead-routing.md",
@@ -248,6 +249,13 @@
       "active→paused": "Scope change detected",
       "paused→active": "Re-evaluation complete, resume",
       "paused→aborted": "Re-evaluation determines restart needed"
+    },
+    "autonomyLevels": {
+      "L0": "Full auto (risk 0-24): proceed and commit, audit entry only.",
+      "L1": "Auto with audit trail (risk 25-49): proceed, record every decision point.",
+      "L2": "Human review before commit (risk 50-74): prepare, pause for sign-off.",
+      "L3": "Human-led with agent assist (risk 75-100): human owns the action.",
+      "reference": "knowledge/context/adaptive-autonomy.md"
     }
   },
   "tiers": {
@@ -365,7 +373,7 @@
       "agents/atlas-consultant.md": "2143bcad89c0b22c141abe04c48eccd8a59dfb132c37058aecd8c718a2410542",
       "agents/atlas-compliance.md": "7c80b8107b28e13e0d5bea43d64b18ef99dd3b8c32f304cf12040b2b95cdf79a",
       "rules/atlas-core.md": "c4baaaa32781edca944d64f3b1f4ae7eb648be1208f53e6c52bc1d1194466687",
-      "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
+      "rules/atlas-lead-orchestration.md": "a34ed204ca6012e62134b10bda17d7cc6cd3dd9142ecf0a438e630e469b8ebe7",
       "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
       "rules/engineering-standards.md": "0f5bb325119c5146de3126101c6048920bc397b8b810f4356e88bfe7ee5ab886",
       "rules/handoff-protocol.md": "cfc031e6784092e829a030cffdbafb18eba6bac8f8e07cda068c4d5c1aa5fb48",
@@ -489,13 +497,14 @@
       "knowledge/context/problem-domain-classification.md": "1c56146aa6c851059687b970cbf818944ae965bf1edafcbeb48e6fc4b230a2a0",
       "knowledge/context/observe-before-act.md": "4b1dd8d7017d62bfd5132c09c11a8f74475da8d5ed957fabf859e9346f42a26f",
       "knowledge/context/pre-handoff-quality-check.md": "5187252a5c47c4ec5321d76d950c3476a4837de7f5715ea1ecad21a4125f248c",
-      "knowledge/context/escalation-tiers.md": "94916c63fff418bb29e9a0bf4ddc28b737f3363d81a95877eb499ac0fb34ef1f",
+      "knowledge/context/escalation-tiers.md": "5d7226b456a680b4074d36105bb20e4758cfb2b0460db3671f5e8a5f56b5aefb",
+      "knowledge/context/adaptive-autonomy.md": "e589d264d29020a517274d061f5a61629caffc1d265ee1d2738dc959f8f15ca0",
       "knowledge/context/memory-hierarchy.md": "6acd96f60ed5886a67684942457125815b25894d2907a6298c9e5f3d836b9ec5",
       "knowledge/context/prompt-cache-strategy.md": "d230f34150f00307f44069e9a4f26f9b8f1742cdf253788cba4d7861459ef0b1",
       "knowledge/context/lead-routing.md": "6243aba7669948f50e5222a10801108e84b39c2236c7dbce79e03b89397b63ee",
       "knowledge/context/codebase-context.md": "9615f8862748c0bb2bd2da464b558ab829239051ffeed79feb9093051ae96fd5",
       "knowledge/process/tool-registry.md": "25c1a840dd54c853c5c78656c78b18ba4ca1c4113ac53ea39e55b145cf050d59",
-      "knowledge/process/trajectory-logging.md": "a0dbede15fb5a609864d48a330c9feea1b6cdf07c3cea71834a8311a805c136b",
+      "knowledge/process/trajectory-logging.md": "2757f4e398f9f5959a6a7a4e58c16a01585eb239cd7c5868b9093720546ed9b4",
       "knowledge/process/aci-enforcement.md": "cb7d03847dafd617a50c3f6d3686bb717cbda536f912df15aa74ce18963b466e",
       "knowledge/process/role-tool-scoping.md": "4746619da89465955e8a5065623602d0e6cea3279274c08cabaa23c1b176e2de",
       "knowledge/process/divergence-detection.md": "9d71f2600e728b6f9b3aa9db7a0943804ad20d425bc4b7a2f86dbb4ac5498d04",

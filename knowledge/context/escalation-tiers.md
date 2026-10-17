@@ -47,3 +47,7 @@ Every escalation must include:
 4. What help is needed
 
 "I'm stuck" without this context wastes everyone's time.
+
+## Relationship to autonomy levels
+
+Escalation tiers describe how a stuck agent asks for help. They compose with the risk-tiered autonomy levels (L0-L3) in `knowledge/context/adaptive-autonomy.md`: a T1/T2 retry stays at the current autonomy level, while T3/T4 forces at least L2/L3 and a human. A confidence drop below threshold escalates autonomy by one level even before an escalation tier is reached.

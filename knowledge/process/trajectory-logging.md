@@ -58,11 +58,15 @@ Each entry is a single JSON line:
 | `toolReceiptId` | conditional | Receipt for file-mutating operations (conflict detection) |
 | `checkpointId` | no | Links entry to a checkpoint (when checkpoint system active) |
 | `parentId` | no | ID of the entry that caused this one (e.g. a delegation entry that spawned a sub-role's entries) — lets you reconstruct a call tree by grepping for a shared `parentId` without a real tracing backend |
+| `autonomyLevel` | conditional | Selected autonomy level (L0-L3) for risk-adaptive routing/escalation — required when action=`route` or `escalate` (see `knowledge/context/adaptive-autonomy.md`) |
+| `autonomyRationale` | conditional | Why that level was chosen or escalated to (signals scored, confidence trigger) — required when action=`route` or `escalate` |
+| `confidence` | no | Agent self-assessed confidence (0-1) at the decision point; drives mid-task escalation |
 
 ## When to record
 
 Record a trajectory entry when:
 - Making a non-obvious decision (multiple valid approaches existed)
+- Routing a task to an autonomy level, or escalating one level mid-task (see `knowledge/context/adaptive-autonomy.md`)
 - Escalating (T1→T2→T3)
 - Delegating to a new role
 - Hitting a gate checkpoint

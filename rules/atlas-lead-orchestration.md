@@ -80,6 +80,19 @@ Before each delegation, briefly state (internal, not in the brief):
 
 This is the "Thought" before the "Action" of delegating. Keep it to 2-4 lines. Use it to verify you're delegating the right work to the right role with the right inputs.
 
+### Autonomy routing (risk-adaptive)
+
+Binary gating is replaced by a continuous risk score that selects an autonomy level **at runtime**. Before the first delegation, and again on re-score, classify the task with the rubric in `knowledge/context/adaptive-autonomy.md` (file sensitivity, blast radius, security keywords, prior failure rate) and pick L0-L3 from the score:
+
+- **L0 (0-24):** full auto, audit entry only.
+- **L1 (25-49):** auto with audit trail.
+- **L2 (50-74):** human review before commit.
+- **L3 (75-100):** human-led with agent assist.
+
+Record `autonomyLevel` + `autonomyRationale` in `trajectory.jsonl` (action=`route`) and state the level and dominant signal to the user. The level is **dynamic and overrides the workflow variant**: a `small` task touching auth routes at L2/L3; a `full` task touching only docs may route at L0/L1. Never fix the level statically in workflow config.
+
+A delegated agent may escalate **one** level mid-task when its confidence drops below threshold or it hits an unresolvable T1-T4 tier; it stops before mutating, logs action=`escalate` with the trigger, and pauses (L2) or hands to the human (L3). Only atlas-lead may de-escalate, and only with a recorded re-score. When the score is uncertain, round up. See `knowledge/context/adaptive-autonomy.md` for the full rubric and fail-safe rules.
+
 ### Task quality check (INVEST)
 
 Before delegating, verify the task description is:
