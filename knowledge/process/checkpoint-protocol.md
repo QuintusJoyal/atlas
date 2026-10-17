@@ -49,6 +49,10 @@ ACP enables multi-day work by saving and restoring agent state. Every checkpoint
     "lastEntry": "tr-20260711-0042",
     "entryCount": 42
   },
+  "cassette": {
+    "path": "runs/run-20260711-central-data-home/cassette.jsonl",
+    "lastSeq": 120
+  },
   "budget": {
     "predicted": "light",
     "actualTokens": 14400,
@@ -74,6 +78,7 @@ ACP enables multi-day work by saving and restoring agent state. Every checkpoint
 ### Level 3: Deep (full context)
 - Stored as JSON + compressed context dump
 - Everything in standard + full conversation history + tool outputs
+- References the covering flight-recorder cassette (`cassette.path`, `cassette.lastSeq`) when recording was on, so fork-level replay can be deterministic
 - Good for: multi-day projects, complex debugging sessions
 - Restore: full context available, but larger file
 
@@ -84,6 +89,7 @@ ACP enables multi-day work by saving and restoring agent state. Every checkpoint
 - Same inputs, same decisions
 - Good for: reproducing results, testing reproducibility
 - Risk: may produce different results if environment changed
+- When a flight-recorder cassette covers the checkpointed range, prefer the deterministic variant: restore the checkpoint, serve model/tool exchanges from the cassette instead of resampling, then continue live. Without a cassette, replay is a best-effort live re-run: say so rather than implying reproducibility. See `knowledge/process/flight-recorder.md`.
 
 ### Fork Level 2: Branch
 - Create alternative path from this checkpoint

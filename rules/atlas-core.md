@@ -65,6 +65,7 @@ When you need deeper guidance, grep or load the relevant knowledge file:
 | Role-adherence critic prompt (default) | `knowledge/critic-prompts/role-adherence.md` |
 | Full 5-critic model with gapped/multi-run critics (opt-in) | `knowledge/process/adversarial-critics.md` |
 | Checkpoint schema, levels, fork, create/restore/list operations | `knowledge/process/checkpoint-protocol.md` |
+| Deterministic record/replay, cassettes, network-free replay, regression fixtures | `knowledge/process/flight-recorder.md` |
 | DAG construction, critical path, parallel safety (large workflows) | `knowledge/process/dag-orchestration.md` |
 | Trust scoring, tier allocation, decay (opt-in, self-assessment only) | `knowledge/process/role-trust-profiles.md` |
 | Post-run extraction, retrospective, cross-run learning | `knowledge/process/knowledge-compounding.md` |
