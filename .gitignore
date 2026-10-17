@@ -14,6 +14,9 @@ docker-compose.override.yml
 .env.*
 !.env.example
 
+# Exported rule packs (scripts/export-pack.py output)
+dist/
+
 # Python bytecode from scripts/ validators
 __pycache__/
 *.pyc

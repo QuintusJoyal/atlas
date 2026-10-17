@@ -17,6 +17,7 @@ Atlas learns from every run. After each workflow completes, a retrospective phas
 - Extracts: new lessons, tool improvements, role corrections. Trust updates are opt-in (see below) — most runs won't have them.
 - Updates: `lessons.md` and role playbooks, via the approval flow below — never written directly.
 - Cross-run: patterns detected across multiple runs can queue a drift note for `proposed.md`.
+- Cross-project: approved lessons, skills, and rules export as portable rule packs; an import merges through `proposed.md` with conflict detection, never straight into `lessons.md` (see `knowledge/process/rule-packs.md`).
 - Human approves all knowledge changes.
 
 ## Retrospective phase
