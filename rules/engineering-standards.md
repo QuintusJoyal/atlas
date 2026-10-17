@@ -23,6 +23,12 @@ Applies when editing source. Keep it simple, tested, and secure.
 - New logic needs tests. Follow the test pyramid: many unit, fewer integration, few end-to-end.
 - A change is not done until its tests pass.
 
+## Agent-facing interfaces
+- Design APIs, tools, and skills to be called by agents, not people: the description is the routing key, the schema is the documentation.
+- Every agent-facing interface declares a complete parameter schema (inputs, outputs, permissions, defaults) and documents each field in the interface body. An agent must bind it without reading the implementation.
+- Descriptions are one imperative sentence (20–300 chars, ends with a period) stating what the caller gets — never vague claims. Safe defaults, structured errors, narrow permissions.
+- Follow `knowledge/process/agent-interface-contract.md` for the full contract; validate with `python3 scripts/lint-interfaces.py` (step 5 of `scripts/validate-refs.py`).
+
 ## Version control
 - Conventional commits: `type(scope): summary` (feat, fix, docs, refactor, test, chore).
 - Branch naming: `type/short-description` (for example `feat/user-auth`, `fix/login-redirect`).

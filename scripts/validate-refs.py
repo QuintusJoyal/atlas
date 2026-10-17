@@ -9,6 +9,7 @@ Checks:
 2. manifest.json lists all knowledge files that exist on disk
 3. Bundle files on disk match the SHA-256 hashes pinned in manifest.json
 4. Skill manifests satisfy the skill-registry schema (scripts/validate-skills.py)
+5. Skill/tool interfaces satisfy the agent-interface contract (scripts/lint-interfaces.py)
 
 Exit code: 0 = clean, 1 = issues found
 """
@@ -149,6 +150,20 @@ def main():
     print("\n4. Checking skill manifests against the skill-registry schema...")
     result = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "validate-skills.py")],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        for line in result.stdout.strip().splitlines():
+            print(f"   {line}")
+        issues += 1
+    else:
+        for line in result.stdout.strip().splitlines():
+            print(f"   {line}")
+
+    print("\n5. Checking interfaces against the agent-interface contract...")
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "lint-interfaces.py")],
         capture_output=True,
         text=True,
     )
