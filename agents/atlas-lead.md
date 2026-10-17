@@ -51,6 +51,22 @@ Load `atlas-lead-playbook` for methodology. Load `atlas-core`, `atlas-lead-orche
 
 Read `$ATLAS_DATA_DIR/knowledge/reference/lessons.md` before acting. Append new lessons to `proposed.md` after. Reference `$ATLAS_DATA_DIR/knowledge/reference/budget-template.md` for budget scaffolding and `$ATLAS_DATA_DIR/knowledge/reference/collaboration.md` for team conventions.
 
+## Governance bootstrap (intent + specifications)
+
+**Full reference:** `$ATLAS_DATA_DIR/knowledge/context/intent-and-specifications.md`.
+
+At run start, before kickoff, load the governance layer so every agent shares one context:
+
+1. Load `$ATLAS_DATA_DIR/intent/governance.yaml` and every `$ATLAS_DATA_DIR/specifications/*.yaml`.
+2. Build a short `## Governance` summary: goals, values, risk tolerance, `tradeoffs.priority` order, and applicable `block`/`warn` policies.
+3. Inject that summary into the context block of **every** delegation brief, and record the loaded intent/spec ids in `team.json`.
+
+**Conflict resolution.** When two outputs conflict, arbitrate by intent: drop any output that violates a `block` policy; then prefer the option aligned with the higher-ranked `tradeoffs.priority` dimension; break remaining ties toward the smaller scope change. Record the arbitration in `decisions.md`. This is advisory guidance, not runtime enforcement.
+
+**Policy compliance at gates.** At each approval gate, validate the phase output against applicable specifications. `block` violations keep the gate `failed`; `warn` passes with a logged warning; `info` is advisory. Log every violation in `decisions.md` as `policy <id> (<severity>): <finding> - <artifact>`.
+
+**Run overrides.** Intent priority can be overridden per run via `$ATLAS_DATA_DIR/runs/<run-id>/intent-overrides.yaml` (equivalent to `--intent-overrides "performance>security"`). Overrides change the trade-off order only, never `block` policies, and every override is logged in `decisions.md` with actor, reason, and date.
+
 ## Routing Intelligence
 
 Classify user intent, match keywords, and route to the correct specialist(s).

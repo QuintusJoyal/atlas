@@ -164,6 +164,7 @@
     "context/memory-hierarchy.md",
     "context/prompt-cache-strategy.md",
     "context/lead-routing.md",
+    "context/intent-and-specifications.md",
     "context/codebase-context.md",
     "process/tool-registry.md",
     "process/trajectory-logging.md",
@@ -188,6 +189,12 @@
     "critic-prompts/implementation.md",
     "critic-prompts/socratic-quality.md",
     "critic-prompts/regression-gate.md"
+  ],
+  "intent": [
+    "governance.yaml"
+  ],
+  "specifications": [
+    "delivery.yaml"
   ],
   "workflows": [
     "feature.md",
@@ -340,7 +347,7 @@
   "integrity": {
     "algorithm": "sha256",
     "files": {
-      "agents/atlas-lead.md": "d6eedd670b183435aaeb00639543f611e757431dfef60ab70eeb8b3f1665df99",
+      "agents/atlas-lead.md": "6a437685a099746e6cb74ba78eab5c6cc73486b8c3bd471361bf0e8f3c753fc7",
       "agents/atlas-pm.md": "6160a3b9616136afcd80118a9a698c0705362c3509d005b05d5d6b61a6c6b45f",
       "agents/atlas-ba.md": "90761be1191746f401bdcfb9b08a9e7f36a77c3a4d3eb6807877769a4b511f68",
       "agents/atlas-architect.md": "1e0ca5161732bf199a1806966b580a58e840a296474e2922dda702a9b1b0ef98",
@@ -493,6 +500,7 @@
       "knowledge/context/memory-hierarchy.md": "6acd96f60ed5886a67684942457125815b25894d2907a6298c9e5f3d836b9ec5",
       "knowledge/context/prompt-cache-strategy.md": "07a5c64fde2932f6078874be1a8e8eb49ddafb2ff0df0212dcdcde4ac71ff7b0",
       "knowledge/context/lead-routing.md": "6243aba7669948f50e5222a10801108e84b39c2236c7dbce79e03b89397b63ee",
+      "knowledge/context/intent-and-specifications.md": "15dd8cd649854790680bc65efd19bf125bef153a8ed3471ab2d4060d3888a795",
       "knowledge/context/codebase-context.md": "9615f8862748c0bb2bd2da464b558ab829239051ffeed79feb9093051ae96fd5",
       "knowledge/process/tool-registry.md": "25c1a840dd54c853c5c78656c78b18ba4ca1c4113ac53ea39e55b145cf050d59",
       "knowledge/process/trajectory-logging.md": "a0dbede15fb5a609864d48a330c9feea1b6cdf07c3cea71834a8311a805c136b",
@@ -516,7 +524,9 @@
       "knowledge/critic-prompts/oracle.md": "0771f1042897075aecfcd0c3857cfb9085413e27fe99858e4153967097b6ba33",
       "knowledge/critic-prompts/implementation.md": "99fa85d233381f7e6badd01332c3e4203fcdf12642db178d2ec36d0fe932788f",
       "knowledge/critic-prompts/socratic-quality.md": "7d75da439d39ac9dc1ed74efc93f3037367df8619d4e0199194faa02748d6b1a",
-      "knowledge/critic-prompts/regression-gate.md": "5a3b50b9f2decc8244271a05589cff61bd96f45961b346902d1606ae06353e26"
+      "knowledge/critic-prompts/regression-gate.md": "5a3b50b9f2decc8244271a05589cff61bd96f45961b346902d1606ae06353e26",
+      "intent/governance.yaml": "ce1063293c85dca8b1f2258ff7ca52d9049da0625cd388010ebd4be248061fea",
+      "specifications/delivery.yaml": "cab3c91cf1e3d057e147fcfbe07c4b4c2b326059af02e386d0c21320ac6278a2"
     }
   }
 }

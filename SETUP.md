@@ -44,6 +44,14 @@ Copy the knowledge base:
 cp -r knowledge/* "$ATLAS_KNOWLEDGE_DIR/"
 ```
 
+Copy the governance layer (intent and specifications):
+
+```bash
+mkdir -p "$ATLAS_DATA_DIR/intent" "$ATLAS_DATA_DIR/specifications"
+cp -r intent/* "$ATLAS_DATA_DIR/intent/"
+cp -r specifications/* "$ATLAS_DATA_DIR/specifications/"
+```
+
 ### Step 2: Detect your IDE
 
 Read the environment to determine which IDE you are running in:

@@ -8,7 +8,8 @@ Usage:
     python3 scripts/verify-integrity.py --checksums   # print SHA256SUMS for release
 
 manifest.json (schema atlas-bundle/2.0) pins a SHA-256 hash for every agent,
-rule, skill playbook, and knowledge file under integrity.files. Verification
+rule, skill playbook, knowledge file, and intent/specification file under
+integrity.files. Verification
 fails with a per-file report when any pinned file is modified, missing, or
 unpinned, so a tampered bundle is caught before the orchestrator loads it.
 
@@ -39,6 +40,10 @@ def collect_files(manifest):
         paths.append(f"skills/{name}/SKILL.md")
     for name in manifest.get("knowledge", []):
         paths.append(f"knowledge/{name}")
+    for name in manifest.get("intent", []):
+        paths.append(f"intent/{name}")
+    for name in manifest.get("specifications", []):
+        paths.append(f"specifications/{name}")
     return paths
 
 

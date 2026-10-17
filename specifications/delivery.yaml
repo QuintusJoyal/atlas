@@ -1,0 +1,41 @@
+# Atlas specifications: enforceable policies validated at Atlas approval gates.
+# Schema documented in knowledge/context/intent-and-specifications.md.
+schema: atlas-specification/1.0
+id: delivery
+name: Delivery Policies
+description: Baseline enforceable policies for Atlas delivery runs.
+scope: global
+
+policies:
+  - id: spec-security-pass
+    description: Security-sensitive changes require an atlas-security pass before delivery.
+    severity: block
+    scope: global
+    applies_to: [security-sensitive]
+    reference: knowledge/reference/quality-gates.md
+
+  - id: spec-compliance-gate
+    description: Regulated-domain changes require atlas-compliance sign-off before delivery.
+    severity: block
+    scope: phase
+    applies_to: [regulated, final-gate]
+    reference: knowledge/compliance/gdpr-requirements.md
+
+  - id: spec-reviewer-required
+    description: Every code change is reviewed by atlas-reviewer before the final gate.
+    severity: block
+    scope: role
+    applies_to: [atlas-reviewer]
+    reference: knowledge/reference/quality-gates.md
+
+  - id: spec-dod-complete
+    description: A handoff is not gate-ready until its Definition of Done checklist is complete.
+    severity: warn
+    scope: global
+    reference: knowledge/reference/definition-of-done.md
+
+  - id: spec-decisions-recorded
+    description: Non-trivial decisions and trade-off arbitrations are recorded in decisions.md.
+    severity: info
+    scope: global
+    reference: knowledge/reference/collaboration.md
