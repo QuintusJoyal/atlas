@@ -127,3 +127,7 @@ Critic verdicts get one plain JSONL entry each, per `knowledge/process/trajector
 - Ignoring critic findings because "it's probably fine"
 - Having the same role that produced the deliverable also run the critic (critics must be isolated)
 - Skipping critics during "fast iteration" (that's when you need them most)
+
+## Related
+
+A `fail` verdict that contradicts the producing role's position — or two critics that disagree — opens a conflict. Hand off to `knowledge/process/conflict-resolution.md`, which treats critic verdicts as structured positions and resolves them by consensus vote, priority-weighted selection, or human escalation.

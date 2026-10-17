@@ -73,6 +73,8 @@ When divergence is detected, present these options to the user:
 | **Override** | User has a strong preference | Low — one role adapts |
 | **Accept divergence** | Known divergence, acceptable for now | Zero now, technical debt later |
 
+When the conflict cannot be reconciled by user choice — or when three or more agents hold competing positions — hand off to `knowledge/process/conflict-resolution.md` for cross-validation, consensus/priority resolution, and the disagreement manifest.
+
 ## Integration with handoff protocol
 
 The divergence check runs between parallel stage completion and the next sequential stage. It is performed by atlas-lead as a lightweight reasoning step (2-5 turns), not a separate delegation.
