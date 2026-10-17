@@ -169,6 +169,7 @@
     "process/trajectory-logging.md",
     "process/aci-enforcement.md",
     "process/role-tool-scoping.md",
+    "process/delegation-authority.md",
     "process/divergence-detection.md",
     "process/observability-system.md",
     "process/decision-quality-scoring.md",
@@ -296,7 +297,18 @@
     "protocol": "artifact-based",
     "requires": ["spawn-subagent", "pass-context", "collect-artifact"],
     "maxDepth": "varies-by-ide",
-    "description": "Roles communicate through structured handoff artifacts, not shared chat. The orchestrator spawns specialists with self-contained briefs and collects their output artifacts."
+    "authority": {
+      "attenuation": "strict-subset",
+      "rebroadening": "forbidden",
+      "escalation": ["atlas-lead", "human"],
+      "tokenFields": ["id", "principal", "chain", "delegate", "scope", "delegatorScope", "authorizedBy", "runId"],
+      "chainRecord": "$ATLAS_DATA_DIR/runs/<run-id>/delegation-chain.jsonl",
+      "chainMutability": "append-only",
+      "lite": "attenuation-only",
+      "validator": "scripts/validate-delegation.py",
+      "spec": "knowledge/process/delegation-authority.md"
+    },
+    "description": "Roles communicate through structured handoff artifacts, not shared chat. The orchestrator spawns specialists with self-contained briefs and collects their output artifacts. Every spawn is an attenuating delegation: the token's scope is a strict subset of the delegator's, deviations escalate to atlas-lead or a human gate, and each edge is appended to the run's delegation-chain.jsonl for post-hoc reconstruction."
   },
   "dataHome": {
     "envVar": "ATLAS_DATA_DIR",
@@ -368,7 +380,7 @@
       "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
       "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
       "rules/engineering-standards.md": "0f5bb325119c5146de3126101c6048920bc397b8b810f4356e88bfe7ee5ab886",
-      "rules/handoff-protocol.md": "cfc031e6784092e829a030cffdbafb18eba6bac8f8e07cda068c4d5c1aa5fb48",
+      "rules/handoff-protocol.md": "f7a7112ff2d96a0f12ed7fa79f7799dc15ce02ef31e0f8c6df16424fbb70d055",
       "rules/writing-style.md": "531ed82c3e4ac1a3b9813d4bee6f799e01c22853db912f5133c4fdcafcc03543",
       "rules/security.md": "92479c247958ec5962d8565e99f6d61096919dc7234a3abfdecb921ccc540a0b",
       "rules/data-governance.md": "990a231068deb938d9e761bfd181c8791d2feb88048e351e39c3d695b1f210e3",
@@ -497,7 +509,8 @@
       "knowledge/process/tool-registry.md": "25c1a840dd54c853c5c78656c78b18ba4ca1c4113ac53ea39e55b145cf050d59",
       "knowledge/process/trajectory-logging.md": "a0dbede15fb5a609864d48a330c9feea1b6cdf07c3cea71834a8311a805c136b",
       "knowledge/process/aci-enforcement.md": "cb7d03847dafd617a50c3f6d3686bb717cbda536f912df15aa74ce18963b466e",
-      "knowledge/process/role-tool-scoping.md": "4746619da89465955e8a5065623602d0e6cea3279274c08cabaa23c1b176e2de",
+      "knowledge/process/role-tool-scoping.md": "7e17508409e56b52ce1b14f5aca938bb47a871815c40569ea80ebfbeccfc8fd6",
+      "knowledge/process/delegation-authority.md": "18708f48b952f4adc1f999736ca3a191ed22d15144487aedb8dc813b8269af29",
       "knowledge/process/divergence-detection.md": "9d71f2600e728b6f9b3aa9db7a0943804ad20d425bc4b7a2f86dbb4ac5498d04",
       "knowledge/process/observability-system.md": "8386a1392ff3e28dafd850610f6b5b42f6664af9281a24924ce93ec8732fb51e",
       "knowledge/process/decision-quality-scoring.md": "a9d3353ba732c7480f3cb551e0e8738a8d4174f88b9faa11e874e1fd3840f330",

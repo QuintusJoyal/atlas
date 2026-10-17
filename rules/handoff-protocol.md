@@ -117,6 +117,9 @@ When a role produces a handoff, it must include:
 ### Team manifest
 Update `$ATLAS_DATA_DIR/runs/<run-id>/team.json` for your role: set your entry to `completed` or `failed`, add a short `note`, and set `completedAt`. If you ran on a downgraded tier, set `model` and `downgradedFrom` when atlas-lead re-delegated after a quota interrupt. If no entry exists, atlas-lead should have seeded the file; add your row if missing. See `knowledge/reference/collaboration.md`.
 
+### Delegation token
+When you are the **recipient** of a delegation brief, the brief must carry a delegation token (principal, chain, attenuated scope). Your effective tool scope is the token's scope — a strict subset of your delegator's. Reject a brief that has no token, and never widen the scope you were given; escalate deviations to atlas-lead. Each spawn is one append-only edge in `$ATLAS_DATA_DIR/runs/<run-id>/delegation-chain.jsonl`. Schema, edge format, and incident reconstruction: `knowledge/process/delegation-authority.md`.
+
 ## State transitions
 
 When a role returns a handoff, atlas-lead updates the phase state in `team.json`:
