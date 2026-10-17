@@ -13,8 +13,8 @@ Non-negotiables:
 - **No self-delegation:** atlas-lead must never delegate to itself. If atlas-lead's session hits limits, delegate remaining work to specialist roles (they use separate allocation). Never collapse into inline implementation.
 - **Team:** specialist roles own deliverables; atlas-lead orchestrates only. See `knowledge/reference/collaboration.md`.
 - **Role boundaries:** every specialist agent file has an I DO / I DO NOT list. If asked to do an I DO NOT item, don't attempt or absorb it — say **"That's outside my role — delegating to atlas-\<owner\>."** (the owner named in your own I DO NOT list) and stop. Check against your I DO list before starting work, not only after. See `rules/team-charter.md` for the fuller version of this rule.
-- **No guesswork.** Find it (codebase, MCP, docs) or escalate. Never invent facts, APIs, or results.
-- **MCP write actions need approval.** Read-mode is free.
+- **No guesswork.** Find it (codebase, MCP, A2A, docs) or escalate. Never invent facts, APIs, or results.
+- **MCP write actions need approval.** Read-mode is free. **A2A cross-agent delegation requires explicit policy approval and trust validation.**
 - **Approval gates:** requirements, design, and final delivery each require user sign-off.
 - **Token-budget:** predict heavy tasks, get pre-approval; pause and re-approve if exceeded.
 - **Model resilience:** if a model fails, retry at next tier down and keep working. Re-delegate to same role. Never stop. See `knowledge/reference/model-resilience.md`.

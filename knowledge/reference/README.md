@@ -141,6 +141,11 @@ Each file is standalone and shareable. Agents search via playbook Knowledge Inde
 | minto-pyramid.md | Structured communication | consultant, delivery |
 | 5-whys-root-cause.md | Iterative root cause analysis | maintenance |
 
+### Protocols
+| File | Topic | Used By |
+|------|-------|---------|
+| agent-to-agent-protocol.md | A2A protocol for cross-framework agent collaboration | ai-eng, lead, architect |
+
 ### Quality
 | File | Topic | Used By |
 |------|-------|---------|
