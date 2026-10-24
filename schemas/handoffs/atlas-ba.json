@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.ai/schemas/handoffs/atlas-ba.json",
+  "title": "Atlas BA Handoff Schema",
+  "description": "Structured typed handoff schema for atlas-ba role",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["role", "runId", "variant", "phaseState", "workDone", "outputs", "nextRole"],
+  "properties": {
+    "role": {
+      "type": "string",
+      "const": "atlas-ba"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"],
+      "default": "full"
+    },
+    "phaseState": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"]
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "requirements": {"type": "string"}
+      }
+    },
+    "workDone": {
+      "type": "string"
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "path"],
+        "additionalProperties": true,
+        "properties": {
+          "type": {"type": "string"},
+          "path": {"type": "string"},
+          "description": {"type": "string"}
+        }
+      },
+      "default": [
+        {"type": "refinedRequirements", "path": "refined-requirements.md"}
+      ]
+    },
+    "refinedRequirements": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "edgeCases": {"type": "array", "items": {"type": "string"}},
+        "bddScenarios": {"type": "array", "items": {"type": "string"}},
+        "dataFlows": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": true}
+    },
+    "resourceRequests": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": true}
+    },
+    "tokenBudget": {
+      "type": "object",
+      "required": ["estimate"],
+      "additionalProperties": true,
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {"type": "string"}
+      }
+    },
+    "definitionOfDone": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "done"],
+        "additionalProperties": true,
+        "properties": {
+          "item": {"type": "string"},
+          "done": {"type": "boolean"},
+          "flagged": {"type": "boolean"}
+        }
+      }
+    },
+    "nextRole": {
+      "type": "string"
+    },
+    "nextAction": {
+      "type": "string"
+    }
+  }
+}

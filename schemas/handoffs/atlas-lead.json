@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.ai/schemas/handoffs/atlas-lead.json",
+  "title": "Atlas Lead Handoff Schema",
+  "description": "Structured typed handoff schema for atlas-lead role",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["role", "runId", "variant", "phaseState", "workDone", "outputs", "nextRole"],
+  "properties": {
+    "role": {
+      "type": "string",
+      "const": "atlas-lead"
+    },
+    "runId": {
+      "type": "string",
+      "description": "Run identifier"
+    },
+    "workflow": {
+      "type": "string",
+      "description": "Workflow preset"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"],
+      "default": "full"
+    },
+    "phaseState": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"]
+    },
+    "inputs": {
+      "type": "object",
+      "description": "Inputs received",
+      "additionalProperties": true
+    },
+    "workDone": {
+      "type": "string",
+      "description": "Summary of work done"
+    },
+    "outputs": {
+      "type": "array",
+      "description": "Concrete deliverables",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["type", "path"],
+        "properties": {
+          "type": {"type": "string"},
+          "path": {"type": "string"},
+          "description": {"type": "string"}
+        }
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "resourceRequests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "required": ["estimate"],
+      "additionalProperties": true,
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {"type": "string"},
+        "tierChange": {"type": "boolean"},
+        "premiumGateDowngrade": {"type": "boolean"}
+      }
+    },
+    "definitionOfDone": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "done"],
+        "additionalProperties": true,
+        "properties": {
+          "item": {"type": "string"},
+          "done": {"type": "boolean"},
+          "flagged": {"type": "boolean"}
+        }
+      }
+    },
+    "nextRole": {
+      "type": "string",
+      "description": "Next role to pick up"
+    },
+    "nextAction": {
+      "type": "string",
+      "description": "Concrete next action"
+    }
+  }
+}

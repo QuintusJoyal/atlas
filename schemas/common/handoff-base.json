@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.ai/schemas/common/handoff-base.json",
+  "title": "Atlas Handoff Base Schema",
+  "description": "Shared base schema for common handoff fields",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["role", "runId", "variant", "phaseState"],
+  "properties": {
+    "role": {
+      "type": "string"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"]
+    },
+    "phaseState": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"]
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "workDone": {
+      "type": "string"
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "resourceRequests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "required": ["estimate"],
+      "additionalProperties": true,
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {"type": "string"},
+        "tierChange": {"type": "boolean"},
+        "premiumGateDowngrade": {"type": "boolean"}
+      }
+    },
+    "definitionOfDone": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["item", "done"],
+        "properties": {
+          "item": {"type": "string"},
+          "done": {"type": "boolean"},
+          "flagged": {"type": "boolean"}
+        }
+      }
+    },
+    "nextRole": {
+      "type": "string"
+    },
+    "nextAction": {
+      "type": "string"
+    }
+  }
+}
