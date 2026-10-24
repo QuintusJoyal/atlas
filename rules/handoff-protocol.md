@@ -10,6 +10,30 @@ When a role finishes a pipeline step, it returns a structured artifact so the **
 
 Keep the body concise, but never omit context the next actor needs to act.
 
+## Schema validation (structured typed handoffs)
+
+Atlas uses JSON Schema validation for role handoff artifacts to enable deterministic gate validation without LLM reasoning.
+
+### Schema locations
+- **Base schema:** `schemas/handoffs/base.json` - Common fields for all handoffs (schemaVersion, role, runId, variant, phaseState, inputs, outputs, tokenBudget, nextRole, etc.)
+- **Role schemas:** `schemas/handoffs/roles/<role>.json` - Per-role schemas extending the base schema
+- **Schema index:** `schemas/handoffs/index.json` - Maps roles to their schemas and required outputs
+- **Lite schemas:** `schemas/handoffs/lite/base-lite.json` - For small variant (4-section format: Summary, Outputs, Issues, Next)
+
+### Schema versioning
+All handoffs must include `schemaVersion` in semver format (e.g., `1.0.0`). Schema versioning enables forward compatibility as the contract evolves.
+
+### Validation rules
+1. **Deterministic validation at gate checks:** atlas-lead performs schema validation before LLM-based quality evaluation. Validation checks schema compliance, required field presence, and type correctness.
+2. **Backward compatibility:** Existing markdown handoffs are still accepted during the transition period. Both formats can coexist.
+3. **Lite mode:** Small variant handoffs use the lite schema (4-section format). Full variant uses the complete base schema with all required sections.
+4. **Required fields:** All handoffs must pass schema validation. Missing required fields or type mismatches cause gate validation failure.
+5. **Role contracts:** Each role's schema enforces its specific output contract as defined in the handoff contracts table.
+
+### Migration
+Roles may emit either structured JSON handoffs (validated against schemas) or markdown handoffs (legacy format). atlas-lead will attempt schema validation first for JSON artifacts, falling back to markdown structure validation for backward compatibility.
+
+
 ```
 ## Role: <role name>
 ## Workflow: <preset> | Run: <run-id>

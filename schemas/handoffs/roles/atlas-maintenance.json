@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas/handoffs/roles/atlas-maintenance.json",
+  "title": "Atlas atlas-maintenance Handoff Schema",
+  "allOf": [
+    { "$ref": "../base.json" }
+  ],
+  "type": "object",
+  "required": ["schemaVersion", "role", "runId", "variant", "phaseState", "nextRole"],
+  "additionalProperties": true
+}

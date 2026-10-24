@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas/handoffs/lite/base-lite.json",
+  "title": "Atlas Lite Handoff Base Schema (4-section format)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "role", "runId", "variant"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "role": {
+      "type": "string",
+      "pattern": "^atlas-[a-z-]+$"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small"]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

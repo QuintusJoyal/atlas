@@ -211,7 +211,15 @@
     "documentation.md"
   ],
   "workflowMeta": {
-    "stateMachine": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"],
+    "stateMachine": [
+      "pending",
+      "active",
+      "gated",
+      "completed",
+      "failed",
+      "paused",
+      "aborted"
+    ],
     "variants": {
       "small": "Lightweight path: skip unnecessary gates, no estimation huddle, start immediately. Auto-approves final gate if DoD is met. No tracking (no team.json, no budget.md). Compressed handoff (4 sections).",
       "full": "Standard path: all gates, estimation huddle, token-budget approval. Full tracking. User approves all gates."
@@ -231,34 +239,56 @@
       "technical-deep-dive": "Adds atlas-architect role"
     },
     "autoDetect": {
-      "security-sensitive": ["auth", "payment", "secret", "token", "credential"],
-      "regulated": ["GDPR", "SOC2", "ISO", "compliance", "regulated"],
-      "data-changes": ["pipeline", "data model", "analytics", "SQL", "query"]
+      "security-sensitive": [
+        "auth",
+        "payment",
+        "secret",
+        "token",
+        "credential"
+      ],
+      "regulated": [
+        "GDPR",
+        "SOC2",
+        "ISO",
+        "compliance",
+        "regulated"
+      ],
+      "data-changes": [
+        "pipeline",
+        "data model",
+        "analytics",
+        "SQL",
+        "query"
+      ]
     },
     "gates": {
-      "token-budget": "Kickoff → first phase (full only; user approves heavy runs)",
-      "requirements": "Requirements → Design (full only)",
-      "design": "Design → next phase (full only)",
-      "final": "Final review → Delivery (auto-approve if small)",
-      "scope": "Scoping → Audit (security-audit only)",
-      "research": "Research → Feasibility (discovery only)"
+      "token-budget": "Kickoff \u2192 first phase (full only; user approves heavy runs)",
+      "requirements": "Requirements \u2192 Design (full only)",
+      "design": "Design \u2192 next phase (full only)",
+      "final": "Final review \u2192 Delivery (auto-approve if small)",
+      "scope": "Scoping \u2192 Audit (security-audit only)",
+      "research": "Research \u2192 Feasibility (discovery only)"
     },
     "transitions": {
-      "pending→active": "Lead delegates to role",
-      "active→gated": "Role returns handoff",
-      "gated→completed": "User approves gate (or auto-approve if small)",
-      "gated→failed": "Gate criteria not met",
-      "active→failed": "Role fails or model exhausted",
-      "any→aborted": "User or lead cancels",
-      "active→paused": "Scope change detected",
-      "paused→active": "Re-evaluation complete, resume",
-      "paused→aborted": "Re-evaluation determines restart needed"
+      "pending\u2192active": "Lead delegates to role",
+      "active\u2192gated": "Role returns handoff",
+      "gated\u2192completed": "User approves gate (or auto-approve if small)",
+      "gated\u2192failed": "Gate criteria not met",
+      "active\u2192failed": "Role fails or model exhausted",
+      "any\u2192aborted": "User or lead cancels",
+      "active\u2192paused": "Scope change detected",
+      "paused\u2192active": "Re-evaluation complete, resume",
+      "paused\u2192aborted": "Re-evaluation determines restart needed"
     }
   },
   "tiers": {
     "premium": {
       "label": "Premium",
-      "capabilities": ["deep-reasoning", "long-context", "complex-planning"],
+      "capabilities": [
+        "deep-reasoning",
+        "long-context",
+        "complex-planning"
+      ],
       "description": "For gate roles requiring careful analysis: architect, security, reviewer, enterprise architect, cloud, compliance.",
       "modelHints": {
         "cursor": "claude-opus-4-8-thinking-high",
@@ -271,7 +301,10 @@
     },
     "standard": {
       "label": "Standard",
-      "capabilities": ["balanced", "general-purpose"],
+      "capabilities": [
+        "balanced",
+        "general-purpose"
+      ],
       "description": "For orchestrator and everyday specialist work: lead, PM, BA, UX, QA, DevOps, maintenance, and enterprise specialists.",
       "modelHints": {
         "cursor": "composer-2.5",
@@ -284,7 +317,10 @@
     },
     "fast": {
       "label": "Fast",
-      "capabilities": ["high-volume", "low-latency"],
+      "capabilities": [
+        "high-volume",
+        "low-latency"
+      ],
       "description": "For implementation-heavy and documentation roles: dev, docs, data analyst.",
       "modelHints": {
         "cursor": "composer-2.5",
@@ -299,7 +335,11 @@
   },
   "delegation": {
     "protocol": "artifact-based",
-    "requires": ["spawn-subagent", "pass-context", "collect-artifact"],
+    "requires": [
+      "spawn-subagent",
+      "pass-context",
+      "collect-artifact"
+    ],
     "maxDepth": "varies-by-ide",
     "description": "Roles communicate through structured handoff artifacts, not shared chat. The orchestrator spawns specialists with self-contained briefs and collects their output artifacts."
   },
@@ -328,10 +368,10 @@
     "generatedFrom": {
       "tool": "scripts/build-lite.py",
       "marker": "<!-- lite:start --> / <!-- lite:end --> blocks in the full agents/skills/rules/atlas-core.md source files",
-      "coverage": "Only the 5 lite agents, 5 lite playbooks, and lite/rules/atlas-core.md are generated (11 files). The other 4 lite/rules/*.md files and all of lite/workflows/*.md are hand-authored and NOT checked by build-lite.py --check — keep them small and self-contained by hand.",
-      "note": "Never hand-edit files under lite/agents, lite/skills, or lite/rules/atlas-core.md — run the generator instead. `build-lite.py --check` detects drift for those 11 files only."
+      "coverage": "Only the 5 lite agents, 5 lite playbooks, and lite/rules/atlas-core.md are generated (11 files). The other 4 lite/rules/*.md files and all of lite/workflows/*.md are hand-authored and NOT checked by build-lite.py --check \u2014 keep them small and self-contained by hand.",
+      "note": "Never hand-edit files under lite/agents, lite/skills, or lite/rules/atlas-core.md \u2014 run the generator instead. `build-lite.py --check` detects drift for those 11 files only."
     },
-    "knowledgeNote": "Lite roles inline their own essentials instead of pointing at knowledge/ (small models can't reliably self-filter a pointer they're told to ignore). lite/rules/atlas-core.md names knowledge/ once, only to say lite mode doesn't load it — that's the sole mention anywhere in lite/.",
+    "knowledgeNote": "Lite roles inline their own essentials instead of pointing at knowledge/ (small models can't reliably self-filter a pointer they're told to ignore). lite/rules/atlas-core.md names knowledge/ once, only to say lite mode doesn't load it \u2014 that's the sole mention anywhere in lite/.",
     "tokenBudget": {
       "specialistSystemPrompt": "~1,300 tokens (atlas-core + engineering-standards + handoff-protocol + agent + playbook)",
       "leadSystemPrompt": "~1,700 tokens (atlas-core + atlas-lead-orchestration + handoff-protocol + team-charter + agent + playbook)",
@@ -344,9 +384,37 @@
       "workflows: most use a flat phase-list format with no frontmatter; infra-change.md and self-assessment.md are the exceptions with lighter structure",
       "state tracked in state.md (not team.json)",
       "no estimation huddle or budget tracking",
-      "roster is 5 roles only (lead, dev, qa, architect, security) — a task needing any other role should be told to switch to full mode, not delegated to a nonexistent lite agent"
+      "roster is 5 roles only (lead, dev, qa, architect, security) \u2014 a task needing any other role should be told to switch to full mode, not delegated to a nonexistent lite agent"
     ]
   },
+  "schemas": [
+    "schemas/handoffs/base.json",
+    "schemas/handoffs/index.json",
+    "schemas/handoffs/lite/base-lite.json",
+    "schemas/handoffs/roles/atlas-ai-eng.json",
+    "schemas/handoffs/roles/atlas-architect.json",
+    "schemas/handoffs/roles/atlas-ba.json",
+    "schemas/handoffs/roles/atlas-cloud.json",
+    "schemas/handoffs/roles/atlas-compliance.json",
+    "schemas/handoffs/roles/atlas-consultant.json",
+    "schemas/handoffs/roles/atlas-data-analyst.json",
+    "schemas/handoffs/roles/atlas-data-eng.json",
+    "schemas/handoffs/roles/atlas-data-sci.json",
+    "schemas/handoffs/roles/atlas-dba.json",
+    "schemas/handoffs/roles/atlas-delivery.json",
+    "schemas/handoffs/roles/atlas-dev.json",
+    "schemas/handoffs/roles/atlas-devops.json",
+    "schemas/handoffs/roles/atlas-docs.json",
+    "schemas/handoffs/roles/atlas-ent-arch.json",
+    "schemas/handoffs/roles/atlas-maintenance.json",
+    "schemas/handoffs/roles/atlas-network.json",
+    "schemas/handoffs/roles/atlas-pm.json",
+    "schemas/handoffs/roles/atlas-qa.json",
+    "schemas/handoffs/roles/atlas-reviewer.json",
+    "schemas/handoffs/roles/atlas-security.json",
+    "schemas/handoffs/roles/atlas-sysinfra.json",
+    "schemas/handoffs/roles/atlas-ux.json"
+  ],
   "integrity": {
     "algorithm": "sha256",
     "files": {
@@ -378,7 +446,7 @@
       "rules/atlas-lead-orchestration.md": "512dc672bc18230fc2e0fb84840768ca98f8459299786f38f737898d9a6c2c5e",
       "rules/team-charter.md": "b301ebc1f9c397855d2f70b4b00ed22db67815653ccf81c3d5c1a8d561ca5fd7",
       "rules/engineering-standards.md": "831b65e7e8db0fac7df5141db97d83ce0ceb70deed2f7d31ed2277cfd0f8e81d",
-      "rules/handoff-protocol.md": "cfc031e6784092e829a030cffdbafb18eba6bac8f8e07cda068c4d5c1aa5fb48",
+      "rules/handoff-protocol.md": "5dc4677fee162d40cd11afaf26d770e9d0f819e4b014f413dd5fd58b40a4c4c5",
       "rules/writing-style.md": "531ed82c3e4ac1a3b9813d4bee6f799e01c22853db912f5133c4fdcafcc03543",
       "rules/security.md": "92479c247958ec5962d8565e99f6d61096919dc7234a3abfdecb921ccc540a0b",
       "rules/data-governance.md": "990a231068deb938d9e761bfd181c8791d2feb88048e351e39c3d695b1f210e3",

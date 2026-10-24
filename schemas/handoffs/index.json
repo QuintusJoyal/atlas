@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0.0",
+  "description": "Schema index for all role handoff artifacts",
+  "defaultSchema": "base.json",
+  "liteSchema": "lite/base-lite.json",
+  "roles": {
+    "atlas-pm": {
+      "schema": "roles/atlas-pm.json",
+      "requiredOutputs": ["requirements.md"]
+    },
+    "atlas-ba": {
+      "schema": "roles/atlas-ba.json",
+      "requiredOutputs": ["refined-requirements.md"]
+    },
+    "atlas-architect": {
+      "schema": "roles/atlas-architect.json",
+      "requiredOutputs": ["design.md"]
+    },
+    "atlas-ux": {
+      "schema": "roles/atlas-ux.json",
+      "requiredOutputs": ["wireframes"]
+    },
+    "atlas-dev": {
+      "schema": "roles/atlas-dev.json",
+      "requiredOutputs": ["implementation summary"]
+    },
+    "atlas-qa": {
+      "schema": "roles/atlas-qa.json",
+      "requiredOutputs": ["test-plan.md"]
+    },
+    "atlas-security": {
+      "schema": "roles/atlas-security.json",
+      "requiredOutputs": ["security-assessment.md"]
+    },
+    "atlas-reviewer": {
+      "schema": "roles/atlas-reviewer.json",
+      "requiredOutputs": ["review.md"]
+    },
+    "atlas-devops": {
+      "schema": "roles/atlas-devops.json",
+      "requiredOutputs": ["deployment artifact"]
+    },
+    "atlas-maintenance": {
+      "schema": "roles/atlas-maintenance.json",
+      "requiredOutputs": ["triage summary"]
+    },
+    "atlas-docs": {
+      "schema": "roles/atlas-docs.json",
+      "requiredOutputs": ["documentation artifact"]
+    },
+    "atlas-network": {
+      "schema": "roles/atlas-network.json",
+      "requiredOutputs": ["network-topology.md"]
+    },
+    "atlas-sysinfra": {
+      "schema": "roles/atlas-sysinfra.json",
+      "requiredOutputs": ["server-inventory.md"]
+    },
+    "atlas-cloud": {
+      "schema": "roles/atlas-cloud.json",
+      "requiredOutputs": ["cloud-architecture.md"]
+    },
+    "atlas-dba": {
+      "schema": "roles/atlas-dba.json",
+      "requiredOutputs": ["database-schema.md"]
+    },
+    "atlas-data-eng": {
+      "schema": "roles/atlas-data-eng.json",
+      "requiredOutputs": ["pipeline architecture"]
+    },
+    "atlas-data-sci": {
+      "schema": "roles/atlas-data-sci.json",
+      "requiredOutputs": ["model-results.md"]
+    },
+    "atlas-ai-eng": {
+      "schema": "roles/atlas-ai-eng.json",
+      "requiredOutputs": ["ai-component-spec.md"]
+    },
+    "atlas-data-analyst": {
+      "schema": "roles/atlas-data-analyst.json",
+      "requiredOutputs": ["kpi-report.md"]
+    },
+    "atlas-ent-arch": {
+      "schema": "roles/atlas-ent-arch.json",
+      "requiredOutputs": ["enterprise-architecture.md"]
+    },
+    "atlas-delivery": {
+      "schema": "roles/atlas-delivery.json",
+      "requiredOutputs": ["delivery-status.md"]
+    },
+    "atlas-consultant": {
+      "schema": "roles/atlas-consultant.json",
+      "requiredOutputs": ["engagement-scope.md"]
+    },
+    "atlas-compliance": {
+      "schema": "roles/atlas-compliance.json",
+      "requiredOutputs": ["compliance-report.md"]
+    }
+  }
+}

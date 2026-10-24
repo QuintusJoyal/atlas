@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas/handoffs/base.json",
+  "title": "Atlas Handoff Base Schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "role", "runId", "variant", "phaseState"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version for forward compatibility"
+    },
+    "role": {
+      "type": "string",
+      "pattern": "^atlas-[a-z-]+$"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"]
+    },
+    "phaseState": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"]
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "inputs": {
+      "type": "object"
+    },
+    "workDone": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resourceRequests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["estimate"],
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "downgraded": {
+          "type": "boolean"
+        }
+      }
+    },
+    "definitionOfDone": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["item", "checked"],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "checked": {
+            "type": "boolean"
+          },
+          "flagged": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "nextRole": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["role", "why", "nextAction"],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        },
+        "nextAction": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
