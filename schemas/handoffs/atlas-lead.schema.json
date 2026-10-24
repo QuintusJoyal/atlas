@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-lead.schema.json",
+  "title": "Atlas Lead Handoff Schema",
+  "description": "Structured typed handoff schema for atlas-lead",
+  "allOf": [
+    {
+      "$ref": "./base.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "nextRole",
+    "tokenBudget"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-lead"
+    },
+    "orchestration": {
+      "type": "object",
+      "description": "Lead orchestration details",
+      "additionalProperties": true,
+      "properties": {
+        "team": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "role": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "phaseState": {
+          "type": "string",
+          "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"]
+        },
+        "gateApproval": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "approved": {
+              "type": "boolean"
+            },
+            "approvedBy": {
+              "type": "string"
+            }
+          }
+        },
+        "escalations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

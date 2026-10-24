@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.dev/schemas/handoffs/base.schema.json",
+  "title": "Atlas Handoff Base Schema",
+  "description": "Shared fields for all structured typed handoffs",
+  "type": "object",
+  "required": [
+    "role",
+    "workflow",
+    "runId",
+    "variant",
+    "phaseState",
+    "tokenBudget",
+    "nextRole"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The role producing this handoff"
+    },
+    "workflow": {
+      "type": "string",
+      "description": "Workflow preset name"
+    },
+    "runId": {
+      "type": "string",
+      "description": "Run identifier"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"],
+      "description": "Handoff variant"
+    },
+    "phaseState": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"],
+      "description": "Current phase state"
+    },
+    "inputs": {
+      "type": "object",
+      "description": "Inputs received by this role",
+      "additionalProperties": true,
+      "properties": {
+        "priorArtifactPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "userDecisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "openQuestions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "workDone": {
+      "type": "string",
+      "description": "Summary of work performed"
+    },
+    "outputs": {
+      "type": "object",
+      "description": "Concrete deliverables",
+      "additionalProperties": true,
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path"],
+            "additionalProperties": true,
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Unresolved questions"
+    },
+    "resourceRequests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["resource", "justification"],
+        "additionalProperties": true,
+        "properties": {
+          "resource": {
+            "type": "string"
+          },
+          "justification": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "required": ["estimate", "rationale"],
+      "additionalProperties": true,
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "downgraded": {
+          "type": "boolean"
+        },
+        "tierChange": {
+          "type": "string"
+        },
+        "premiumGateDowngrade": {
+          "type": "boolean"
+        }
+      }
+    },
+    "definitionOfDone": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "done"],
+        "additionalProperties": true,
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean"
+          },
+          "flagged": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "nextRole": {
+      "type": "object",
+      "required": ["role", "why", "firstAction"],
+      "additionalProperties": true,
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        },
+        "firstAction": {
+          "type": "string"
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short summary for small variant"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Blockers, questions, or risks for small variant"
+    }
+  }
+}

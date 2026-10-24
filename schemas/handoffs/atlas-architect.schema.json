@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-architect.schema.json",
+  "title": "Atlas Architect Handoff Schema",
+  "description": "Structured typed handoff schema for atlas-architect",
+  "allOf": [
+    {
+      "$ref": "./base.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "nextRole",
+    "tokenBudget",
+    "outputs"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-architect"
+    },
+    "outputs": {
+      "type": "object",
+      "required": ["artifacts"],
+      "additionalProperties": true,
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path"],
+            "additionalProperties": true,
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["design", "adr", "diagram", "contract", "nfr", "other"]
+              }
+            }
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "design": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "c4Diagrams": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "adrs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nfrs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "apiContracts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "componentBoundaries": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
