@@ -1,0 +1,90 @@
+name: Issue Splitter
+
+# Splits large feature issues into sub-issues that each stay under the
+# review budget (20 files / 1000 lines). The queue processes them one by
+# one serially, so splitting prevents the loop of creating oversized PRs
+# that get rejected by the size gate.
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: issue-splitter-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  split:
+    if: github.event.label.name == 'type:feature' && !contains(github.event.issue.labels.*.name, 'split:parent')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Evaluate if issue needs splitting
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          
+          # Heuristic: issues asking for "all N roles/files/schemas" are typically large
+          body=$(gh issue view "$ISSUE_NUM" --repo "${GITHUB_REPOSITORY}" --json body --jq '.body')
+          title=$(gh issue view "$ISSUE_NUM" --repo "${GITHUB_REPOSITORY}" --json title --jq '.title')
+          
+          combined="$title $body"
+          
+          # Check for patterns that indicate large scope
+          if echo "$combined" | grep -qiE "(all [0-9]+ (role|schema|agent|file)|24 role|define.*all|across all)"; then
+            echo "needs_split=true" >> "$GITHUB_OUTPUT"
+          elif echo "$combined" | grep -qiE "(schemas/handoffs|multiple.*component|entire|comprehensive)"; then
+            echo "needs_split=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "needs_split=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Split into sub-issues
+        if: steps.check.outputs.needs_split == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          set -euo pipefail
+          repo="${GITHUB_REPOSITORY}"
+          
+          # Mark parent
+          gh issue edit "$ISSUE_NUM" --repo "$repo" --add-label "split:parent"
+          
+          # Create sub-issues for this specific case (typed handoffs)
+          if echo "$ISSUE_TITLE" | grep -qi "handoff"; then
+            # Split by role groups to stay under size limit
+            gh issue create --repo "$repo" \
+              --title "[SUB] $ISSUE_TITLE - Core schemas (lead, architect, pm, ba)" \
+              --label "type:feature,priority:P1,action:develop" \
+              --body "## Parent Issue\n#$ISSUE_NUM\n\n## Scope\nDefine JSON schemas for handoffs: atlas-lead, atlas-architect, atlas-pm, atlas-ba\n\n## Requirements\n- Create schema files in \`schemas/handoffs/\` for these roles\n- Add basic validation structure\n- Update manifest.json if needed\n\n## Constraint\nKeep this PR under 20 files and 1000 lines changed."
+            
+            gh issue create --repo "$repo" \
+              --title "[SUB] $ISSUE_TITLE - Engineering roles (dev, qa, security, devops)" \
+              --label "type:feature,priority:P1,action:develop" \
+              --body "## Parent Issue\n#$ISSUE_NUM\n\n## Scope\nDefine JSON schemas for handoffs: atlas-dev, atlas-qa, atlas-security, atlas-devops\n\n## Requirements\n- Create schema files in \`schemas/handoffs/\` for these roles\n- Ensure compatibility with gate checks\n\n## Constraint\nKeep this PR under 20 files and 1000 lines changed."
+            
+            gh issue create --repo "$repo" \
+              --title "[SUB] $ISSUE_TITLE - Data & AI roles (data-eng, data-sci, ai-eng, data-analyst)" \
+              --label "type:feature,priority:P1,action:develop" \
+              --body "## Parent Issue\n#$ISSUE_NUM\n\n## Scope\nDefine JSON schemas for handoffs: atlas-data-eng, atlas-data-sci, atlas-ai-eng, atlas-data-analyst\n\n## Requirements\n- Create schema files in \`schemas/handoffs/\` for these roles\n\n## Constraint\nKeep this PR under 20 files and 1000 lines changed."
+            
+            gh issue create --repo "$repo" \
+              --title "[SUB] $ISSUE_TITLE - Remaining roles + integration" \
+              --label "type:feature,priority:P1,action:develop" \
+              --body "## Parent Issue\n#$ISSUE_NUM\n\n## Scope\nDefine JSON schemas for remaining roles and add integration:\n- atlas-ux, atlas-reviewer, atlas-maintenance, atlas-docs, atlas-network, atlas-sysinfra, atlas-cloud, atlas-dba, atlas-ent-arch, atlas-delivery, atlas-consultant\n- Add schema validation to gate checks\n- Update rules/handoff-protocol.md\n- Add schemas/ to manifest.json\n\n## Constraint\nKeep this PR under 20 files and 1000 lines changed."
+          fi
+          
+          # Close original issue or mark it blocked pending sub-issues
+          gh issue comment "$ISSUE_NUM" --repo "$repo" \
+            --body "This issue has been split into smaller sub-issues to stay within the 20-file / 1000-line review budget. Each sub-issue will be processed serially by the WIP-1 pipeline."
