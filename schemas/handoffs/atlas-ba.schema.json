@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-ba.schema.json",
+  "title": "Atlas BA Handoff Schema",
+  "description": "Structured typed handoff schema for atlas-ba",
+  "allOf": [
+    {
+      "$ref": "./base.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "nextRole",
+    "tokenBudget",
+    "outputs"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-ba"
+    },
+    "outputs": {
+      "type": "object",
+      "required": ["artifacts"],
+      "additionalProperties": true,
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path"],
+            "additionalProperties": true,
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["refined-requirements", "bdd", "edge-cases", "data-flows", "other"]
+              }
+            }
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "analysis": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "bddScenarios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "given", "when", "then"],
+                "additionalProperties": true,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "given": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "when": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "then": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "edgeCases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "dataFlows": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "processFlows": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "assumptions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

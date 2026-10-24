@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-pm.schema.json",
+  "title": "Atlas PM Handoff Schema",
+  "description": "Structured typed handoff schema for atlas-pm",
+  "allOf": [
+    {
+      "$ref": "./base.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "nextRole",
+    "tokenBudget",
+    "outputs"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-pm"
+    },
+    "outputs": {
+      "type": "object",
+      "required": ["artifacts"],
+      "additionalProperties": true,
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path"],
+            "additionalProperties": true,
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["requirements", "prd", "backlog", "other"]
+              }
+            }
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requirements": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "userStories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "title"],
+                "additionalProperties": true,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "asA": {
+                    "type": "string"
+                  },
+                  "iWant": {
+                    "type": "string"
+                  },
+                  "soThat": {
+                    "type": "string"
+                  },
+                  "acceptanceCriteria": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": ["must", "should", "could", "wont"]
+                  }
+                }
+              }
+            },
+            "moscow": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "scope": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "inScope": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "outOfScope": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "successMetrics": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
