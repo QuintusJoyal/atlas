@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.dev/schemas/handoffs/base-handoff.schema.json",
+  "title": "Atlas Base Handoff",
+  "description": "Base schema for all role handoffs",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "role",
+    "workflow",
+    "runId",
+    "variant",
+    "phaseState",
+    "outputs"
+  ],
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "Role producing the handoff"
+    },
+    "workflow": {
+      "type": "string",
+      "description": "Workflow preset or name"
+    },
+    "runId": {
+      "type": "string",
+      "description": "Run identifier"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"],
+      "description": "Pipeline variant"
+    },
+    "phaseState": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"],
+      "description": "Phase state"
+    },
+    "inputs": {
+      "type": "object",
+      "description": "What this role received",
+      "additionalProperties": true,
+      "properties": {
+        "priorArtifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "userDecisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "relevantFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "workDone": {
+      "type": "string",
+      "description": "Summary of what was produced or decided"
+    },
+    "outputs": {
+      "type": "object",
+      "description": "Concrete deliverables",
+      "additionalProperties": true,
+      "required": ["artifacts"],
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path"],
+            "additionalProperties": true,
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["question"],
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "needsUser": {
+            "type": "boolean",
+            "default": false
+          },
+          "routeTo": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "resourceRequests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["resource", "justification"],
+        "properties": {
+          "resource": {
+            "type": "string"
+          },
+          "justification": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "required": ["estimate", "rationale"],
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "downgraded": {
+          "type": "boolean"
+        },
+        "tierChange": {
+          "type": "string"
+        }
+      }
+    },
+    "definitionOfDone": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "done"],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean"
+          },
+          "flagged": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "nextRole": {
+      "type": "object",
+      "required": ["role", "reason", "firstAction"],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "firstAction": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0"
+    }
+  }
+}

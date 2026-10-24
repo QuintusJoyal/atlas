@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-network.schema.json",
+  "title": "Atlas atlas-network Handoff",
+  "allOf": [
+    {
+      "$ref": "base-handoff.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "outputs",
+    "tokenBudget",
+    "nextRole"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-network"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0"
+    }
+  }
+}

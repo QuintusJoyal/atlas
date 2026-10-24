@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-maintenance.schema.json",
+  "title": "Atlas atlas-maintenance Handoff",
+  "allOf": [
+    {
+      "$ref": "base-handoff.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "outputs",
+    "tokenBudget",
+    "nextRole"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-maintenance"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0"
+    }
+  }
+}

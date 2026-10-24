@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.dev/schemas/lite/handoff-lite.schema.json",
+  "title": "Atlas Lite Handoff",
+  "description": "Lite mode handoffs use a subset schema (4-section format)",
+  "type": "object",
+  "required": ["role", "runId", "variant", "summary", "outputs", "issues", "next"],
+  "additionalProperties": true,
+  "properties": {
+    "role": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "variant": {
+      "const": "small"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next": {
+      "type": "object",
+      "required": ["role", "action"],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0"
+    }
+  }
+}

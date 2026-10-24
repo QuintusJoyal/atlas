@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-docs.schema.json",
+  "title": "Atlas atlas-docs Handoff",
+  "allOf": [
+    {
+      "$ref": "base-handoff.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "outputs",
+    "tokenBudget",
+    "nextRole"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-docs"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0"
+    }
+  }
+}

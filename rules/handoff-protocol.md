@@ -171,3 +171,22 @@ Before advancing from a parallel stage to the next sequential stage:
 6. Log result to trajectory.jsonl
 
 See `knowledge/process/divergence-detection.md` for full detection protocol and resolution options.
+
+
+## Schema validation
+
+All handoffs MUST conform to JSON Schemas for deterministic validation. Schema validation runs before LLM-based quality evaluation at gate checks.
+
+### Schema locations
+- **Base schema:** `schemas/handoffs/base-handoff.schema.json` — common fields for all roles
+- **Role schemas:** `schemas/handoffs/{role}.schema.json` — role-specific contracts (all 24 roles)
+- **Lite schema:** `schemas/lite/handoff-lite.schema.json` — subset schema for small variant (4-section format)
+- **Schema index:** `schemas/README.md`
+
+### Validation rules
+1. **Deterministic validation first:** Schema validation (structure, types, required fields) runs before LLM quality evaluation. No LLM reasoning required for structural validation.
+2. **Backward compatibility:** Existing markdown handoffs are still accepted during transition. Both formats coexist.
+3. **Lite mode:** For `variant: small`, handoffs may use the lite schema format (4 sections). Small variant DoD remains implicit as before.
+4. **Schema versioning:** All handoffs include `schemaVersion` (default `1.0`) for forward compatibility. Schemas evolve with versioning support.
+5. **Gate enforcement:** Atlas-lead validates handoffs against schemas at gate checks. Schema validation failures block progression until corrected.
+6. **Machine-readable contracts:** Role output contracts are enforced by schemas (e.g., each role must provide required fields per its schema).

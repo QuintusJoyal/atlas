@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-data-analyst.schema.json",
+  "title": "Atlas atlas-data-analyst Handoff",
+  "allOf": [
+    {
+      "$ref": "base-handoff.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "role",
+    "outputs",
+    "tokenBudget",
+    "nextRole"
+  ],
+  "properties": {
+    "role": {
+      "const": "atlas-data-analyst"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "default": "1.0"
+    }
+  }
+}
