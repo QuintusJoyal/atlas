@@ -1,0 +1,42 @@
+name: Auto Retry on Changes Requested
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: retry-changes-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  retry:
+    if: github.event.review.state == 'changes_requested'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Re-queue for fixes
+        env:
+          GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          repo="${GITHUB_REPOSITORY}"
+          
+          if [[ "${BRANCH}" =~ opencode/issue([0-9]+)- ]]; then
+            issue="${BASH_REMATCH[1]}"
+          else
+            exit 0
+          fi
+          
+          echo "Re-queueing issue #${issue} for fixes"
+          gh pr close "${PR_NUM}" --repo "${repo}" --comment "Closing for fixes. Serial pipeline will re-run with feedback addressed."
+          gh issue edit "${issue}" --repo "${repo}" --remove-label action:develop 2>/dev/null || true
+          sleep 2
+          gh issue edit "${issue}" --repo "${repo}" --add-label action:develop
+          gh workflow run queue.yml --repo "${repo}" --ref main 2>/dev/null || true
