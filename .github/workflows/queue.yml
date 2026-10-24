@@ -9,13 +9,13 @@ name: Queue
 #
 # A concurrency group can only serialise *runs*; it cannot express "wait until
 # that PR has merged". So the lane is drained here on a schedule: when nothing is
-# in flight, re-trigger the oldest waiting issue by re-adding `action:develop`,
-# which is the one event auto-developer.yml listens for.
+# in flight, re-trigger the oldest waiting issue. This is a safety net as
+# well - an issue whose run yielded the lane, or whose PR was closed, is picked
+# up on the next pass rather than sitting forever.
 #
-# The schedule doubles as the safety net. An issue whose run yielded the lane,
-# whose PR was closed, or whose development failed is picked up on a later pass
-# instead of sitting on a label forever. It does not retry a PR the reviewer has
-# rejected — those are parked for a human by design.
+# Development is started by re-adding `action:develop`, which is the one trigger
+# auto-developer.yml listens for and which `gh` can raise where GITHUB_TOKEN
+# cannot.
 
 on:
   schedule:
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Start the next issue if the lane is free
+      - name: Start the next queued issue if the lane is free
         env:
           GH_TOKEN: ${{ secrets.PROMOTE_PAT }}
         run: |
@@ -60,19 +60,41 @@ jobs:
           fi
 
           # Oldest waiting issue: labelled for development with no open PR of its
-          # own. Re-adding the label raises a fresh `issues: labeled` event.
+          # own. Skip sub-issues until their dependencies are closed/merged.
           waiting="$(gh issue list --repo "${repo}" --state open --label action:develop \
-            --limit 300 --json number,createdAt --jq 'sort_by(.createdAt) | .[].number')"
+            --limit 300 --json number,createdAt,body,title --jq 'sort_by(.createdAt) | .[] | \"\(.number)|\(.body|tostring)|\(.title)\"')"
           if [ -z "${waiting}" ]; then
             echo "Queue empty."
             exit 0
           fi
 
-          while read -r n; do
+          while IFS='|' read -r n body title; do
             [ -n "${n}" ] || continue
+            # Check if it's a sub-issue with dependencies
+            if echo "$title" | grep -q '^\[SUB\]'; then
+              # Check if all dependencies (issue refs) are closed/merged
+              deps=$(echo "$body" | grep -oP '(?<=Depends on:)[^\n]+' | grep -oP '#\d+' || true)
+              if [ -n "$deps" ]; then
+                blocked=0
+                while read -r dep; do
+                  [ -n "$dep" ] || continue
+                  depnum=$(echo "$dep" | tr -d '#')
+                  state=$(gh issue view "$depnum" --repo "$repo" --json state --jq '.state' 2>/dev/null || echo "OPEN")
+                  if [ "$state" = "OPEN" ]; then
+                    echo "Issue #${n} blocked by #${depnum} (still open)"
+                    blocked=1
+                    break
+                  fi
+                done <<< "$deps"
+                if [ "$blocked" -eq 1 ]; then
+                  continue
+                fi
+              fi
+            fi
+            
             open="$(gh pr list --repo "${repo}" --state open --limit 300 \
               --json headRefName \
-              --jq "[.[] | select(.headRefName | startswith(\"opencode/issue${n}-\"))] | length")"
+              --jq \"[.[] | select(.headRefName | startswith(\\\"opencode/issue${n}-\\\"))] | length\")"
             if [ "${open}" -gt 0 ]; then
               continue
             fi
@@ -83,4 +105,4 @@ jobs:
             exit 0
           done <<< "${waiting}"
 
-          echo "Every waiting issue already has an open PR."
+          echo "Every waiting issue is either blocked by dependencies or already has an open PR."
