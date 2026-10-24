@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.dev/schemas/handoffs/atlas-ba.json",
+  "title": "Atlas BA Handoff",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["role", "workflow", "run_id", "phase_state", "outputs", "next_role"],
+  "properties": {
+    "role": {
+      "type": "string",
+      "const": "atlas-ba"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["small", "full"]
+    },
+    "phase_state": {
+      "type": "string",
+      "enum": ["pending", "active", "gated", "completed", "failed", "paused", "aborted"]
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "work_done": {
+      "type": "string"
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "analysis": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "resource_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "token_budget": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["estimate", "rationale"],
+      "properties": {
+        "estimate": {
+          "type": "string",
+          "enum": ["light", "medium", "heavy"]
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    },
+    "definition_of_done": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["item", "done"],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "next_role": {
+      "type": "string"
+    },
+    "next_action": {
+      "type": "string"
+    }
+  }
+}
