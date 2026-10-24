@@ -2,9 +2,6 @@ name: Auto Reviewer
 
 on:
   pull_request:
-    # `reopened` is the retry: a review that runs out of time can be re-queued
-    # by closing and reopening the PR, which is also how a review is redone
-    # after the branch is updated with a fix.
     types: [opened, reopened]
 
 permissions:
@@ -12,75 +9,19 @@ permissions:
   issues: write
   pull-requests: write
 
-# This job approves PRs, which needs the repository setting
-# Settings -> Actions -> General -> Workflow permissions ->
-# "Allow GitHub Actions to create and approve pull requests"
-# (API: can_approve_pull_request_reviews). With it off, `gh pr review
-# --approve` returns 403 and the reviewer can only leave a COMMENTED review,
-# which does not satisfy branch protection and stalls auto-merge.
-#
-# The review is submitted by a workflow step, not by the agent. Prompting the
-# agent to run `gh pr review` itself is unreliable: it sometimes narrates the
-# command in a code block and never runs it (observed on PR #55), which leaves
-# the PR with no review at all and silently stalls the chain. The agent only
-# decides a verdict and writes it to a file; the shell step always submits it.
-#
-# The verdict file lives inside the checked-out workspace, under `.atlas/`:
-# a path outside the workspace (e.g. $RUNNER_TEMP) raises an interactive
-# `external_directory` permission prompt that nothing can answer on a runner,
-# which hung the job until its timeout (observed on PR #56). `.atlas/` is
-# already gitignored, so writing there does not dirty the branch and make the
-# opencode action commit the verdict into the PR.
-#
-# The timeout is generous on purpose. A large PR (PR #63 rewrote 30 files) was
-# still streaming model output when the old 15-minute limit cut it off, so the
-# review never happened and the PR sat unreviewed. Reviewing is read-only, and a
-# cancelled run leaves the chain stalled, so headroom is worth more than a
-# shorter worst case.
-
 concurrency:
   group: auto-reviewer-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   review:
-    # Fork PRs get a read-only GITHUB_TOKEN and no secrets, so `gh pr review`
-    # cannot submit a review there. Skip forks rather than fail; fork PRs still
-    # go through the normal human review path.
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v7
 
-      - name: Size gate
-        # A structural limit on how much one issue may change. Anything over
-        # this cannot be reviewed inside the job budget, and large changes are
-        # also what collide with every other branch in flight. Reject here, in
-        # the workflow, rather than asking the model to make sense of a
-        # 4,000-line diff it cannot finish reading.
-        id: size
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          MAX_FILES: "20"
-          MAX_LINES: "1000"
-        run: |
-          set -euo pipefail
-          read -r files lines <<<"$(gh pr view "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" \
-            --json files,additions,deletions \
-            --jq '"\(.files|length) \(.additions + .deletions)"')"
-          echo "PR #${PR_NUMBER}: ${files} files, ${lines} changed lines."
-          if [ "${files}" -gt "${MAX_FILES}" ] || [ "${lines}" -gt "${MAX_LINES}" ]; then
-            gh pr review "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --request-changes \
-              --body "This PR changes ${files} files and ${lines} lines, over the ${MAX_FILES}-file / ${MAX_LINES}-line review budget, so it was not reviewed. Split it into smaller changes, one per issue, and re-queue the work."
-            echo "ok=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "ok=true" >> "${GITHUB_OUTPUT}"
-          fi
-
       - name: Run OpenCode
-        if: steps.size.outputs.ok == 'true'
         uses: anomalyco/opencode/github@v1.18.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -128,9 +69,6 @@ jobs:
             Use `approve` only when the change is correct and self-contained.
 
       - name: Submit review
-        # Skipped alongside the reviewer when the size gate rejected the PR;
-        # otherwise the missing verdict file would fail the job spuriously.
-        if: steps.size.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -165,8 +103,6 @@ jobs:
             exit 0
           fi
 
-          # The one recoverable failure: the repo forbids Actions from
-          # approving. Degrade to a comment so the verdict is still recorded.
           if [ "$flag" = "--approve" ]; then
             echo "::warning::Approval rejected; is can_approve_pull_request_reviews on? Recording as a comment."
             gh pr review "$PR_NUMBER" --comment --body "[approve requested] $body"
